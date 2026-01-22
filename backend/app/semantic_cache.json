@@ -1,0 +1,46 @@
+{
+  "tables": {
+    "audit_checks": "AuditCheck",
+    "site_master": "SiteOwner",
+    "event_log": "EventLog",
+    "staff": "StaffMember",
+    "learning_records": "LearningRecord",
+    "org_units": "Organization"
+  },
+  "columns": {
+    "audit_pk": "auditPrimaryKey",
+    "site_fk": "siteforeignkey",
+    "audit_dt": "auditdate",
+    "auditor": "auditorname",
+    "audit_score": "auditscorerating",
+    "site_pk": "siteprimarykey",
+    "event_pk": "eventprimarykey",
+    "staff_fk": "staffforeignkey",
+    "event_dt": "eventDate",
+    "event_category": "eventcategoryname",
+    "risk_level": "riskLevel",
+    "staff_pk": "staffPrimaryKey",
+    "learning_pk": "learningkey",
+    "course_name": "courseTitle",
+    "course_dt": "courseDateTime",
+    "completion_status": "completionstatus",
+    "unit_pk": "unitprimarykey",
+    "unit_title": "unittitle",
+    "unit_head": "unitheadname",
+    "created_on": "createdDate",
+    "site_title": "sitetitle",
+    "nation": "countryname",
+    "region": "regionname",
+    "staff_fullname": "stafffullname",
+    "unit_fk": "unitreference",
+    "role_name": "businessrolename",
+    "joining_date": "joiningDate"
+  },
+  "relationships": {
+    "audit_checks->site_master": "AUDITED_BY_SITE_MASTER",
+    "event_log->staff": "ASSIGNED_TO_THIS_RELATIONSHIP_TYPE_REPRESENTS_THE_BUSINESS_MEANING_OF_A_STAFF_MEMBER_BEING_ASSIGNED_TO_AN_EVENT_LOG",
+    "learning_records->staff": "TEACHES_STAFF",
+    "org_units->site_master": "CONTAINS_THIS_RELATIONSHIP_TYPE_INDICATES_THAT_AN_ORG_UNIT_IS_CONTAINED_WITHIN_A_SITE_MASTER",
+    "staff->org_units": "ASSIGNED_TO_THIS_RELATIONSHIP_TYPE_REPRESENTS_THE_BUSINESS_MEANING_OF_STAFF_BEING_ASSIGNED_TO_ORG_UNITS"
+  }
+}
