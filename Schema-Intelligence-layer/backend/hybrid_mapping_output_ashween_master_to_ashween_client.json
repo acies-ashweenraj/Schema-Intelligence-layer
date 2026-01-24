@@ -1,0 +1,1715 @@
+{
+  "generated_at": "2026-01-23T18:14:11.392998Z",
+  "output_format": "csv",
+  "saved_file": "hybrid_mapping_output_20260123_234411.csv",
+  "table_match_count": 6,
+  "column_match_count": 30,
+  "result": {
+    "column_match_count": 30,
+    "table_match_count": 6,
+    "tables": [
+      {
+        "source_table": "inspections",
+        "best_match_table": "audit_checks",
+        "confidence": 0.9674,
+        "column_match_count": 5,
+        "column_matches": [
+          {
+            "source": "inspections.inspection_id",
+            "best_match": "audit_checks.audit_pk",
+            "confidence": 0.9708,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "audit_checks.audit_pk",
+                "bm25_score": 1.0,
+                "minilm_score": 0.9167,
+                "mpnet_score": 1.0,
+                "final_score": 0.9708
+              },
+              {
+                "candidate": "audit_checks.audit_score",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.9948,
+                "final_score": 0.7479
+              },
+              {
+                "candidate": "audit_checks.site_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8412,
+                "mpnet_score": 0.8481,
+                "final_score": 0.6336
+              },
+              {
+                "candidate": "audit_checks.auditor",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.8269,
+                "final_score": 0.3308
+              },
+              {
+                "candidate": "event_log.event_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.8116,
+                "final_score": 0.3246
+              },
+              {
+                "candidate": "event_log.risk_level",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7323,
+                "mpnet_score": 0.0,
+                "final_score": 0.2563
+              },
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.721,
+                "mpnet_score": 0.0,
+                "final_score": 0.2523
+              }
+            ]
+          },
+          {
+            "source": "inspections.location_id",
+            "best_match": "audit_checks.audit_pk",
+            "confidence": 0.9665,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "audit_checks.audit_pk",
+                "bm25_score": 1.0,
+                "minilm_score": 0.9411,
+                "mpnet_score": 0.9679,
+                "final_score": 0.9665
+              },
+              {
+                "candidate": "audit_checks.site_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9962,
+                "mpnet_score": 1.0,
+                "final_score": 0.7487
+              },
+              {
+                "candidate": "audit_checks.audit_score",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.9245,
+                "final_score": 0.7198
+              },
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8898,
+                "mpnet_score": 0.9212,
+                "final_score": 0.6799
+              },
+              {
+                "candidate": "org_units.site_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.9149,
+                "final_score": 0.366
+              },
+              {
+                "candidate": "staff.unit_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8169,
+                "mpnet_score": 0.0,
+                "final_score": 0.2859
+              }
+            ]
+          },
+          {
+            "source": "inspections.inspection_date",
+            "best_match": "audit_checks.audit_dt",
+            "confidence": 1.0,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "audit_checks.audit_dt",
+                "bm25_score": 1.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 1.0,
+                "final_score": 1.0
+              },
+              {
+                "candidate": "event_log.event_dt",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6366,
+                "mpnet_score": 0.8652,
+                "final_score": 0.5689
+              },
+              {
+                "candidate": "learning_records.course_dt",
+                "bm25_score": 0.0,
+                "minilm_score": 0.695,
+                "mpnet_score": 0.8016,
+                "final_score": 0.5639
+              },
+              {
+                "candidate": "staff.joining_date",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6591,
+                "mpnet_score": 0.812,
+                "final_score": 0.5555
+              },
+              {
+                "candidate": "audit_checks.audit_score",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.762,
+                "final_score": 0.3048
+              },
+              {
+                "candidate": "audit_checks.audit_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.526,
+                "mpnet_score": 0.0,
+                "final_score": 0.1841
+              }
+            ]
+          },
+          {
+            "source": "inspections.inspector_name",
+            "best_match": "audit_checks.auditor",
+            "confidence": 1.0,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "audit_checks.auditor",
+                "bm25_score": 1.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 1.0,
+                "final_score": 1.0
+              },
+              {
+                "candidate": "staff.staff_fullname",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8155,
+                "mpnet_score": 0.8736,
+                "final_score": 0.6349
+              },
+              {
+                "candidate": "staff.role_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8542,
+                "mpnet_score": 0.8043,
+                "final_score": 0.6207
+              },
+              {
+                "candidate": "learning_records.course_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7817,
+                "mpnet_score": 0.7938,
+                "final_score": 0.5911
+              },
+              {
+                "candidate": "audit_checks.audit_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.8041,
+                "final_score": 0.3216
+              },
+              {
+                "candidate": "audit_checks.audit_score",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6418,
+                "mpnet_score": 0.0,
+                "final_score": 0.2246
+              }
+            ]
+          },
+          {
+            "source": "inspections.score",
+            "best_match": "audit_checks.audit_pk",
+            "confidence": 0.8997,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "audit_checks.audit_pk",
+                "bm25_score": 1.0,
+                "minilm_score": 0.7135,
+                "mpnet_score": 1.0,
+                "final_score": 0.8997
+              },
+              {
+                "candidate": "audit_checks.audit_score",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.9927,
+                "final_score": 0.7471
+              },
+              {
+                "candidate": "event_log.risk_level",
+                "bm25_score": 0.0,
+                "minilm_score": 0.5816,
+                "mpnet_score": 0.8697,
+                "final_score": 0.5515
+              },
+              {
+                "candidate": "audit_checks.auditor",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.8841,
+                "final_score": 0.3536
+              },
+              {
+                "candidate": "audit_checks.site_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6124,
+                "mpnet_score": 0.0,
+                "final_score": 0.2143
+              },
+              {
+                "candidate": "staff.unit_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.53,
+                "mpnet_score": 0.0,
+                "final_score": 0.1855
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "source_table": "departments",
+        "best_match_table": "staff",
+        "confidence": 0.7964,
+        "column_match_count": 5,
+        "column_matches": [
+          {
+            "source": "departments.dept_id",
+            "best_match": "staff.unit_fk",
+            "confidence": 0.7498,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "staff.unit_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9994,
+                "mpnet_score": 1.0,
+                "final_score": 0.7498
+              },
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.948,
+                "final_score": 0.7292
+              },
+              {
+                "candidate": "staff.staff_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8399,
+                "mpnet_score": 0.9932,
+                "final_score": 0.6913
+              },
+              {
+                "candidate": "org_units.site_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8507,
+                "mpnet_score": 0.8973,
+                "final_score": 0.6567
+              },
+              {
+                "candidate": "event_log.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7977,
+                "mpnet_score": 0.9153,
+                "final_score": 0.6453
+              },
+              {
+                "candidate": "audit_checks.audit_pk",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              }
+            ]
+          },
+          {
+            "source": "departments.dept_name",
+            "best_match": "staff.staff_fullname",
+            "confidence": 0.75,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "staff.staff_fullname",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 1.0,
+                "final_score": 0.75
+              },
+              {
+                "candidate": "staff.role_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9918,
+                "mpnet_score": 0.934,
+                "final_score": 0.7208
+              },
+              {
+                "candidate": "learning_records.course_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9696,
+                "mpnet_score": 0.8569,
+                "final_score": 0.6821
+              },
+              {
+                "candidate": "org_units.unit_title",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8177,
+                "mpnet_score": 0.9005,
+                "final_score": 0.6464
+              },
+              {
+                "candidate": "org_units.unit_head",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7318,
+                "mpnet_score": 0.9036,
+                "final_score": 0.6176
+              },
+              {
+                "candidate": "audit_checks.auditor",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              }
+            ]
+          },
+          {
+            "source": "departments.location_id",
+            "best_match": "learning_records.staff_fk",
+            "confidence": 0.7464,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.991,
+                "final_score": 0.7464
+              },
+              {
+                "candidate": "staff.unit_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9422,
+                "mpnet_score": 1.0,
+                "final_score": 0.7298
+              },
+              {
+                "candidate": "org_units.site_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.895,
+                "mpnet_score": 0.9978,
+                "final_score": 0.7123
+              },
+              {
+                "candidate": "event_log.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8157,
+                "mpnet_score": 0.9329,
+                "final_score": 0.6587
+              },
+              {
+                "candidate": "staff.staff_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7758,
+                "mpnet_score": 0.9643,
+                "final_score": 0.6573
+              },
+              {
+                "candidate": "audit_checks.audit_pk",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              }
+            ]
+          },
+          {
+            "source": "departments.manager_name",
+            "best_match": "staff.staff_fullname",
+            "confidence": 0.7491,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "staff.staff_fullname",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9974,
+                "mpnet_score": 1.0,
+                "final_score": 0.7491
+              },
+              {
+                "candidate": "staff.role_name",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.9536,
+                "final_score": 0.7314
+              },
+              {
+                "candidate": "org_units.unit_title",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7139,
+                "mpnet_score": 0.8633,
+                "final_score": 0.5952
+              },
+              {
+                "candidate": "org_units.unit_head",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.8927,
+                "final_score": 0.3571
+              },
+              {
+                "candidate": "site_master.nation",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.8117,
+                "final_score": 0.3247
+              },
+              {
+                "candidate": "learning_records.course_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7937,
+                "mpnet_score": 0.0,
+                "final_score": 0.2778
+              },
+              {
+                "candidate": "audit_checks.auditor",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              },
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6571,
+                "mpnet_score": 0.0,
+                "final_score": 0.23
+              }
+            ]
+          },
+          {
+            "source": "departments.created_at",
+            "best_match": "org_units.created_on",
+            "confidence": 0.9868,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "org_units.created_on",
+                "bm25_score": 1.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.967,
+                "final_score": 0.9868
+              },
+              {
+                "candidate": "site_master.created_on",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9085,
+                "mpnet_score": 0.8545,
+                "final_score": 0.6598
+              },
+              {
+                "candidate": "staff.joining_date",
+                "bm25_score": 0.0,
+                "minilm_score": 0.5744,
+                "mpnet_score": 1.0,
+                "final_score": 0.6011
+              },
+              {
+                "candidate": "learning_records.course_dt",
+                "bm25_score": 0.0,
+                "minilm_score": 0.5872,
+                "mpnet_score": 0.0,
+                "final_score": 0.2055
+              },
+              {
+                "candidate": "audit_checks.audit_dt",
+                "bm25_score": 0.0,
+                "minilm_score": 0.5759,
+                "mpnet_score": 0.0,
+                "final_score": 0.2016
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "source_table": "locations",
+        "best_match_table": "org_units",
+        "confidence": 0.7907,
+        "column_match_count": 5,
+        "column_matches": [
+          {
+            "source": "locations.location_id",
+            "best_match": "org_units.site_fk",
+            "confidence": 0.75,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "org_units.site_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 1.0,
+                "final_score": 0.75
+              },
+              {
+                "candidate": "staff.staff_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8532,
+                "mpnet_score": 0.9881,
+                "final_score": 0.6939
+              },
+              {
+                "candidate": "staff.unit_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9076,
+                "mpnet_score": 0.9384,
+                "final_score": 0.693
+              },
+              {
+                "candidate": "event_log.event_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.9644,
+                "final_score": 0.3857
+              },
+              {
+                "candidate": "site_master.site_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.9427,
+                "final_score": 0.3771
+              },
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9712,
+                "mpnet_score": 0.0,
+                "final_score": 0.3399
+              },
+              {
+                "candidate": "event_log.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.921,
+                "mpnet_score": 0.0,
+                "final_score": 0.3224
+              },
+              {
+                "candidate": "audit_checks.audit_pk",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              }
+            ]
+          },
+          {
+            "source": "locations.location_name",
+            "best_match": "staff.staff_fullname",
+            "confidence": 0.7412,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "staff.staff_fullname",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9748,
+                "mpnet_score": 1.0,
+                "final_score": 0.7412
+              },
+              {
+                "candidate": "learning_records.course_name",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.9525,
+                "final_score": 0.731
+              },
+              {
+                "candidate": "staff.role_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9655,
+                "mpnet_score": 0.9104,
+                "final_score": 0.7021
+              },
+              {
+                "candidate": "site_master.region",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8996,
+                "mpnet_score": 0.9557,
+                "final_score": 0.6971
+              },
+              {
+                "candidate": "site_master.nation",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.9718,
+                "final_score": 0.3887
+              },
+              {
+                "candidate": "event_log.event_category",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9177,
+                "mpnet_score": 0.0,
+                "final_score": 0.3212
+              },
+              {
+                "candidate": "audit_checks.auditor",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              }
+            ]
+          },
+          {
+            "source": "locations.country",
+            "best_match": "site_master.region",
+            "confidence": 0.7179,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "site_master.region",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.9198,
+                "final_score": 0.7179
+              },
+              {
+                "candidate": "site_master.nation",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9037,
+                "mpnet_score": 1.0,
+                "final_score": 0.7163
+              },
+              {
+                "candidate": "staff.staff_fullname",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.7555,
+                "final_score": 0.3022
+              },
+              {
+                "candidate": "org_units.unit_title",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.7494,
+                "final_score": 0.2997
+              },
+              {
+                "candidate": "org_units.unit_head",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.7429,
+                "final_score": 0.2972
+              },
+              {
+                "candidate": "event_log.event_category",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8095,
+                "mpnet_score": 0.0,
+                "final_score": 0.2833
+              },
+              {
+                "candidate": "audit_checks.auditor",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              },
+              {
+                "candidate": "staff.role_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6952,
+                "mpnet_score": 0.0,
+                "final_score": 0.2433
+              },
+              {
+                "candidate": "learning_records.course_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6447,
+                "mpnet_score": 0.0,
+                "final_score": 0.2256
+              }
+            ]
+          },
+          {
+            "source": "locations.state",
+            "best_match": "site_master.region",
+            "confidence": 0.75,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "site_master.region",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 1.0,
+                "final_score": 0.75
+              },
+              {
+                "candidate": "learning_records.completion_status",
+                "bm25_score": 0.0,
+                "minilm_score": 0.942,
+                "mpnet_score": 0.8698,
+                "final_score": 0.6776
+              },
+              {
+                "candidate": "site_master.nation",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7376,
+                "mpnet_score": 0.9758,
+                "final_score": 0.6485
+              },
+              {
+                "candidate": "staff.staff_fullname",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.8309,
+                "final_score": 0.3323
+              },
+              {
+                "candidate": "staff.role_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.7754,
+                "final_score": 0.3102
+              },
+              {
+                "candidate": "event_log.event_category",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8451,
+                "mpnet_score": 0.0,
+                "final_score": 0.2958
+              },
+              {
+                "candidate": "learning_records.course_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7174,
+                "mpnet_score": 0.0,
+                "final_score": 0.2511
+              },
+              {
+                "candidate": "audit_checks.auditor",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              }
+            ]
+          },
+          {
+            "source": "locations.created_at",
+            "best_match": "org_units.created_on",
+            "confidence": 0.9943,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "org_units.created_on",
+                "bm25_score": 1.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.9857,
+                "final_score": 0.9943
+              },
+              {
+                "candidate": "site_master.created_on",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9845,
+                "mpnet_score": 1.0,
+                "final_score": 0.7446
+              },
+              {
+                "candidate": "staff.joining_date",
+                "bm25_score": 0.0,
+                "minilm_score": 0.479,
+                "mpnet_score": 0.8775,
+                "final_score": 0.5187
+              },
+              {
+                "candidate": "event_log.event_dt",
+                "bm25_score": 0.0,
+                "minilm_score": 0.5645,
+                "mpnet_score": 0.0,
+                "final_score": 0.1976
+              },
+              {
+                "candidate": "audit_checks.audit_dt",
+                "bm25_score": 0.0,
+                "minilm_score": 0.5068,
+                "mpnet_score": 0.0,
+                "final_score": 0.1774
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "source_table": "incidents",
+        "best_match_table": "event_log",
+        "confidence": 0.7647,
+        "column_match_count": 5,
+        "column_matches": [
+          {
+            "source": "incidents.incident_id",
+            "best_match": "event_log.staff_fk",
+            "confidence": 0.7488,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "event_log.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.9969,
+                "final_score": 0.7488
+              },
+              {
+                "candidate": "event_log.risk_level",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9877,
+                "mpnet_score": 1.0,
+                "final_score": 0.7457
+              },
+              {
+                "candidate": "event_log.event_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8999,
+                "mpnet_score": 0.9058,
+                "final_score": 0.6773
+              },
+              {
+                "candidate": "event_log.event_category",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.9039,
+                "final_score": 0.3616
+              },
+              {
+                "candidate": "audit_checks.audit_score",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9259,
+                "mpnet_score": 0.0,
+                "final_score": 0.3241
+              },
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.922,
+                "mpnet_score": 0.0,
+                "final_score": 0.3227
+              },
+              {
+                "candidate": "audit_checks.audit_pk",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              }
+            ]
+          },
+          {
+            "source": "incidents.emp_id",
+            "best_match": "event_log.staff_fk",
+            "confidence": 0.6841,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "event_log.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.8352,
+                "final_score": 0.6841
+              },
+              {
+                "candidate": "event_log.risk_level",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8689,
+                "mpnet_score": 0.937,
+                "final_score": 0.6789
+              },
+              {
+                "candidate": "event_log.event_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 1.0,
+                "final_score": 0.4
+              },
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9942,
+                "mpnet_score": 0.0,
+                "final_score": 0.348
+              },
+              {
+                "candidate": "staff.staff_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.8239,
+                "final_score": 0.3295
+              },
+              {
+                "candidate": "audit_checks.audit_score",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8918,
+                "mpnet_score": 0.0,
+                "final_score": 0.3121
+              },
+              {
+                "candidate": "staff.unit_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8874,
+                "mpnet_score": 0.0,
+                "final_score": 0.3106
+              },
+              {
+                "candidate": "audit_checks.audit_pk",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              }
+            ]
+          },
+          {
+            "source": "incidents.incident_date",
+            "best_match": "audit_checks.audit_dt",
+            "confidence": 0.9385,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "audit_checks.audit_dt",
+                "bm25_score": 1.0,
+                "minilm_score": 0.8584,
+                "mpnet_score": 0.9702,
+                "final_score": 0.9385
+              },
+              {
+                "candidate": "event_log.event_dt",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 1.0,
+                "final_score": 0.75
+              },
+              {
+                "candidate": "staff.joining_date",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7334,
+                "mpnet_score": 0.9403,
+                "final_score": 0.6328
+              },
+              {
+                "candidate": "event_log.event_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.5818,
+                "mpnet_score": 0.9556,
+                "final_score": 0.5859
+              },
+              {
+                "candidate": "learning_records.course_dt",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8207,
+                "mpnet_score": 0.0,
+                "final_score": 0.2873
+              }
+            ]
+          },
+          {
+            "source": "incidents.incident_type",
+            "best_match": "event_log.event_category",
+            "confidence": 0.7268,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "event_log.event_category",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.9419,
+                "final_score": 0.7268
+              },
+              {
+                "candidate": "event_log.risk_level",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8167,
+                "mpnet_score": 1.0,
+                "final_score": 0.6858
+              },
+              {
+                "candidate": "learning_records.course_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7914,
+                "mpnet_score": 0.8919,
+                "final_score": 0.6338
+              },
+              {
+                "candidate": "audit_checks.auditor",
+                "bm25_score": 1.0,
+                "minilm_score": 0.7845,
+                "mpnet_score": 0.0,
+                "final_score": 0.5246
+              },
+              {
+                "candidate": "event_log.event_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.9803,
+                "final_score": 0.3921
+              },
+              {
+                "candidate": "event_log.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7607,
+                "mpnet_score": 0.0,
+                "final_score": 0.2663
+              }
+            ]
+          },
+          {
+            "source": "incidents.severity",
+            "best_match": "event_log.risk_level",
+            "confidence": 0.7252,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "event_log.risk_level",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.938,
+                "final_score": 0.7252
+              },
+              {
+                "candidate": "event_log.event_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8146,
+                "mpnet_score": 1.0,
+                "final_score": 0.6851
+              },
+              {
+                "candidate": "event_log.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7829,
+                "mpnet_score": 0.8851,
+                "final_score": 0.6281
+              },
+              {
+                "candidate": "event_log.event_category",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.9403,
+                "final_score": 0.3761
+              },
+              {
+                "candidate": "audit_checks.audit_score",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7969,
+                "mpnet_score": 0.0,
+                "final_score": 0.2789
+              },
+              {
+                "candidate": "audit_checks.audit_pk",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              },
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6352,
+                "mpnet_score": 0.0,
+                "final_score": 0.2223
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "source_table": "employees",
+        "best_match_table": "staff",
+        "confidence": 0.7411,
+        "column_match_count": 5,
+        "column_matches": [
+          {
+            "source": "employees.emp_id",
+            "best_match": "staff.staff_pk",
+            "confidence": 0.7187,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "staff.staff_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9104,
+                "mpnet_score": 1.0,
+                "final_score": 0.7187
+              },
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.9138,
+                "final_score": 0.7155
+              },
+              {
+                "candidate": "staff.unit_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9651,
+                "mpnet_score": 0.8767,
+                "final_score": 0.6884
+              },
+              {
+                "candidate": "event_log.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8623,
+                "mpnet_score": 0.9618,
+                "final_score": 0.6865
+              },
+              {
+                "candidate": "event_log.event_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.8745,
+                "final_score": 0.3498
+              },
+              {
+                "candidate": "audit_checks.audit_score",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7464,
+                "mpnet_score": 0.0,
+                "final_score": 0.2612
+              },
+              {
+                "candidate": "audit_checks.audit_pk",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              }
+            ]
+          },
+          {
+            "source": "employees.emp_name",
+            "best_match": "staff.role_name",
+            "confidence": 0.7398,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "staff.role_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9709,
+                "mpnet_score": 1.0,
+                "final_score": 0.7398
+              },
+              {
+                "candidate": "staff.staff_fullname",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.8632,
+                "final_score": 0.6953
+              },
+              {
+                "candidate": "learning_records.course_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7895,
+                "mpnet_score": 0.9599,
+                "final_score": 0.6603
+              },
+              {
+                "candidate": "staff.staff_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6686,
+                "mpnet_score": 0.8818,
+                "final_score": 0.5867
+              },
+              {
+                "candidate": "audit_checks.auditor",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              },
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6715,
+                "mpnet_score": 0.0,
+                "final_score": 0.235
+              }
+            ]
+          },
+          {
+            "source": "employees.dept_id",
+            "best_match": "learning_records.staff_fk",
+            "confidence": 0.75,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 1.0,
+                "final_score": 0.75
+              },
+              {
+                "candidate": "staff.unit_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9549,
+                "mpnet_score": 0.989,
+                "final_score": 0.7298
+              },
+              {
+                "candidate": "staff.staff_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.799,
+                "mpnet_score": 0.9727,
+                "final_score": 0.6687
+              },
+              {
+                "candidate": "event_log.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7705,
+                "mpnet_score": 0.9479,
+                "final_score": 0.6489
+              },
+              {
+                "candidate": "org_units.site_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7793,
+                "mpnet_score": 0.887,
+                "final_score": 0.6276
+              },
+              {
+                "candidate": "audit_checks.audit_pk",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              }
+            ]
+          },
+          {
+            "source": "employees.job_title",
+            "best_match": "staff.role_name",
+            "confidence": 0.747,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "staff.role_name",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.9926,
+                "final_score": 0.747
+              },
+              {
+                "candidate": "staff.staff_fullname",
+                "bm25_score": 0.0,
+                "minilm_score": 0.9761,
+                "mpnet_score": 1.0,
+                "final_score": 0.7416
+              },
+              {
+                "candidate": "org_units.unit_title",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7638,
+                "mpnet_score": 0.836,
+                "final_score": 0.6018
+              },
+              {
+                "candidate": "staff.staff_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6585,
+                "mpnet_score": 0.7782,
+                "final_score": 0.5418
+              },
+              {
+                "candidate": "site_master.site_title",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.7817,
+                "final_score": 0.3127
+              },
+              {
+                "candidate": "audit_checks.auditor",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              },
+              {
+                "candidate": "learning_records.course_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6658,
+                "mpnet_score": 0.0,
+                "final_score": 0.233
+              }
+            ]
+          },
+          {
+            "source": "employees.hire_date",
+            "best_match": "staff.joining_date",
+            "confidence": 0.75,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "staff.joining_date",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 1.0,
+                "final_score": 0.75
+              },
+              {
+                "candidate": "event_log.event_dt",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6024,
+                "mpnet_score": 0.9655,
+                "final_score": 0.597
+              },
+              {
+                "candidate": "audit_checks.audit_dt",
+                "bm25_score": 1.0,
+                "minilm_score": 0.772,
+                "mpnet_score": 0.0,
+                "final_score": 0.5202
+              },
+              {
+                "candidate": "org_units.created_on",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.9996,
+                "final_score": 0.3998
+              },
+              {
+                "candidate": "event_log.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.9655,
+                "final_score": 0.3862
+              },
+              {
+                "candidate": "learning_records.course_dt",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6708,
+                "mpnet_score": 0.0,
+                "final_score": 0.2348
+              },
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.5284,
+                "mpnet_score": 0.0,
+                "final_score": 0.1849
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "source_table": "trainings",
+        "best_match_table": "learning_records",
+        "confidence": 0.7226,
+        "column_match_count": 5,
+        "column_matches": [
+          {
+            "source": "trainings.training_id",
+            "best_match": "learning_records.staff_fk",
+            "confidence": 0.7222,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.9304,
+                "final_score": 0.7222
+              },
+              {
+                "candidate": "learning_records.learning_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8964,
+                "mpnet_score": 1.0,
+                "final_score": 0.7138
+              },
+              {
+                "candidate": "staff.staff_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7008,
+                "mpnet_score": 0.8133,
+                "final_score": 0.5706
+              },
+              {
+                "candidate": "learning_records.course_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.8719,
+                "final_score": 0.3488
+              },
+              {
+                "candidate": "event_log.event_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.7752,
+                "final_score": 0.3101
+              },
+              {
+                "candidate": "staff.unit_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7842,
+                "mpnet_score": 0.0,
+                "final_score": 0.2745
+              },
+              {
+                "candidate": "audit_checks.audit_pk",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              },
+              {
+                "candidate": "event_log.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.702,
+                "mpnet_score": 0.0,
+                "final_score": 0.2457
+              }
+            ]
+          },
+          {
+            "source": "trainings.emp_id",
+            "best_match": "learning_records.staff_fk",
+            "confidence": 0.75,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 1.0,
+                "final_score": 0.75
+              },
+              {
+                "candidate": "learning_records.learning_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.8494,
+                "mpnet_score": 0.9934,
+                "final_score": 0.6946
+              },
+              {
+                "candidate": "event_log.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6943,
+                "mpnet_score": 0.8711,
+                "final_score": 0.5914
+              },
+              {
+                "candidate": "staff.staff_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6808,
+                "mpnet_score": 0.854,
+                "final_score": 0.5799
+              },
+              {
+                "candidate": "learning_records.course_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.8659,
+                "final_score": 0.3463
+              },
+              {
+                "candidate": "staff.unit_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7909,
+                "mpnet_score": 0.0,
+                "final_score": 0.2768
+              },
+              {
+                "candidate": "audit_checks.audit_pk",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              }
+            ]
+          },
+          {
+            "source": "trainings.training_name",
+            "best_match": "learning_records.course_name",
+            "confidence": 0.7125,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "learning_records.course_name",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.9062,
+                "final_score": 0.7125
+              },
+              {
+                "candidate": "staff.staff_fullname",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7219,
+                "mpnet_score": 0.9907,
+                "final_score": 0.649
+              },
+              {
+                "candidate": "learning_records.completion_status",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6239,
+                "mpnet_score": 1.0,
+                "final_score": 0.6184
+              },
+              {
+                "candidate": "learning_records.learning_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.933,
+                "final_score": 0.3732
+              },
+              {
+                "candidate": "staff.role_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7202,
+                "mpnet_score": 0.0,
+                "final_score": 0.2521
+              },
+              {
+                "candidate": "audit_checks.auditor",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              },
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6644,
+                "mpnet_score": 0.0,
+                "final_score": 0.2326
+              }
+            ]
+          },
+          {
+            "source": "trainings.training_date",
+            "best_match": "learning_records.course_dt",
+            "confidence": 0.75,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "learning_records.course_dt",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 1.0,
+                "final_score": 0.75
+              },
+              {
+                "candidate": "staff.joining_date",
+                "bm25_score": 0.0,
+                "minilm_score": 0.7885,
+                "mpnet_score": 0.8555,
+                "final_score": 0.6182
+              },
+              {
+                "candidate": "event_log.event_dt",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6381,
+                "mpnet_score": 0.8459,
+                "final_score": 0.5617
+              },
+              {
+                "candidate": "audit_checks.audit_dt",
+                "bm25_score": 1.0,
+                "minilm_score": 0.6578,
+                "mpnet_score": 0.0,
+                "final_score": 0.4802
+              },
+              {
+                "candidate": "learning_records.course_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.7951,
+                "final_score": 0.318
+              },
+              {
+                "candidate": "learning_records.completion_status",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.7777,
+                "final_score": 0.3111
+              },
+              {
+                "candidate": "learning_records.learning_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.5209,
+                "mpnet_score": 0.0,
+                "final_score": 0.1823
+              }
+            ]
+          },
+          {
+            "source": "trainings.status",
+            "best_match": "learning_records.completion_status",
+            "confidence": 0.6785,
+            "match_source": "ensemble",
+            "candidates": [
+              {
+                "candidate": "learning_records.completion_status",
+                "bm25_score": 0.0,
+                "minilm_score": 1.0,
+                "mpnet_score": 0.8211,
+                "final_score": 0.6785
+              },
+              {
+                "candidate": "learning_records.course_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.732,
+                "mpnet_score": 1.0,
+                "final_score": 0.6562
+              },
+              {
+                "candidate": "staff.staff_fullname",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.8329,
+                "final_score": 0.3331
+              },
+              {
+                "candidate": "site_master.nation",
+                "bm25_score": 0.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.8065,
+                "final_score": 0.3226
+              },
+              {
+                "candidate": "audit_checks.auditor",
+                "bm25_score": 1.0,
+                "minilm_score": 0.0,
+                "mpnet_score": 0.0,
+                "final_score": 0.25
+              },
+              {
+                "candidate": "learning_records.staff_fk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.6192,
+                "mpnet_score": 0.0,
+                "final_score": 0.2167
+              },
+              {
+                "candidate": "learning_records.learning_pk",
+                "bm25_score": 0.0,
+                "minilm_score": 0.5953,
+                "mpnet_score": 0.0,
+                "final_score": 0.2084
+              },
+              {
+                "candidate": "staff.role_name",
+                "bm25_score": 0.0,
+                "minilm_score": 0.5835,
+                "mpnet_score": 0.0,
+                "final_score": 0.2042
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+client_id: c1ehs_oilgas
+database:
+  driver: "postgresql+psycopg2"
+  host: "localhost"
+  port: 5433
+  user_env: "C1_DB_USER"
+  password_env: "C1_DB_PASSWORD"
+  name: "c1ehs_oilgas"
+
+artifacts_root: "artifacts"

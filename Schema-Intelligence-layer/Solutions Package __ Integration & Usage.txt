@@ -1,0 +1,922 @@
+﻿01.Schema-metadata-generator
+Semantic Meta-data generator// Solutions.
+Ashween Raj Mahalakshmi Senthilkumar Thakshana Thiruvenkadam | Jan 15, 2026
+The Semantic Metadata Generator produces a complete metadata output for your database, including schema structure, profiling statistics, and detected relationships.It also generates clear LLM-based descriptions for every table and column to make the schema human-readable.
+________________
+
+
+Installation
+Get the toolkit running immediately via pip.
+ Command: 
+pip install git+https://github.com/acies-ashweenraj/schema-mapper-toolkit.git
+	Quick Verify: Run this one-liner to confirm success:
+python -c "import schema_matching_toolkit; print('Toolkit Installed Successfully')"
+	  
+
+________________
+Prerequisites
+Before you begin, ensure these four pillars are in place: 
+
+
+1. Python Environment: 
+Version 3.9+ is recommended. 
+2. Database Connectivity: 
+Install the driver matching your source DB (e.g., psycopg2-binary for Postgres, pyodbc for MSSQL) 
+3. AI Access: 
+A Groq API Key is required if you plan to use the LLM description module
+
+
+
+
+
+
+________________
+
+
+Inputs:
+To keep your code clean, we use standardized configuration objects. define these once and pass them everywhere. 
+* DBConfig: Your universal connection string (Host, Port, User, DB).
+* GroqConfig: Your gateway to the LLM (API Key)
+DBConfig :
+Used for schema extraction, profiling, etc. from schema_matching_toolkit import DBConfig
+
+
+
+
+cfg = DBConfig(
+   db_type="postgres",
+   host="localhost",
+   port=5432,
+   database="employee",
+   username="postgres",
+   password="password",
+   schema_name="public",
+)
+	
+
+GroqConfig (Input)
+Used for Groq schema description.
+from schema_matching_toolkit import GroqConfig
+
+
+groq_cfg = GroqConfig(api_key="your_groq_key")
+	
+
+Model is fixed internally as:
+* Llama-3.3-70b-versatile
+Output_format (optional):
+It Supports csv,xlsx and json and by default it will be csv.
+
+________________
+
+
+Output:
+1) database
+* db_type: Database engine type (example: postgres, mysql).
+* host: Server address where the database is running.
+* port: Network port used to connect to the database.
+* database: Database name to connect and extract schema from.
+* schema_name: Logical schema/namespace inside the database to scan.
+________________
+
+
+2) summary
+* table_count: Total number of tables extracted from the schema.
+* column_count: Total number of columns across all extracted tables.
+* relationship_count: Total number of detected relationships between tables.
+________________
+
+
+3) tables[] (per table)
+* table_name: Name of the table in the database schema.
+* description: LLM-generated business meaning of what the table represents.
+* row_count: Total number of rows present in the table.
+* column_count: Total number of columns present in the table.
+* columns[]: List of all column-level metadata for the table.
+* edges[]: List of detected relationships originating from this table.
+________________
+
+
+4) tables[].columns[] (per column)
+* column_name: Name of the column in the table.
+* data_type: Database data type of the column (example: integer, text).
+* kind: Normalized data category used for profiling and matching logic.
+* description: LLM-generated meaning and business usage of the column.
+* profiling: Computed statistics and quality metrics for the column values.
+
+________________
+
+
+5) tables[].columns[].profiling (full profiling object)
+5.1 Common Profiling Fields
+   * row_count: Total rows scanned for profiling this column.
+   * not_null_count: Number of rows where the column value is not null.
+   * null_count: Number of rows where the column value is null.
+   * null_percent: Percentage of null values in the column.
+   * distinct_count: Number of unique values present in the column.
+   * distinct_percent: Percentage of unique values compared to total rows.
+   * duplicate_count: Number of values that repeat beyond uniqueness.
+   * entropy: Measure of value randomness/diversity in the column distribution.
+   * top_values[]: Most frequently occurring values in the column.
+   * value: The actual value observed in the column.
+   * count: Frequency of that value in the scanned rows.
+   * sample_values[]: Example values captured from the column for reference.
+5.2 Numeric Profiling Fields (only when kind = numeric)
+   * numeric_stats: Aggregated numeric statistics computed for the column.
+   * min: Smallest numeric value found in the column.
+   * max: Largest numeric value found in the column.
+   * avg: Mean (average) numeric value of the column.
+   * sum: Total sum of all numeric values in the column.
+   * stddev: Standard deviation showing numeric spread/variation.
+   * p25: 25th percentile value of the numeric distribution.
+   * median: 50th percentile (middle) value of the numeric distribution.
+   * p75: 75th percentile value of the numeric distribution.
+   * iqr: Interquartile range calculated as p75 minus p25.
+   * range: Difference between max and min values.
+   * zero_count: Number of rows where the value is exactly zero.
+   * negative_count: Number of rows where the value is negative.
+
+5.3 Text Profiling Fields (only when kind = text)
+      * text_stats: Aggregated text statistics computed for the column.
+      * min_length: Minimum string length observed in the column.
+      * max_length: Maximum string length observed in the column.
+      * avg_length: Average string length observed in the column.
+      * empty_string_count: Number of rows containing empty string values.
+      * digit_only_count: Number of rows containing only numeric characters.
+      * alpha_only_count: Number of rows containing only alphabetic characters.
+      * alnum_only_count: Number of rows containing only alphanumeric characters.
+      * email_like_count: Number of rows that match an email-like pattern.
+
+5.4 Date/Time Profiling Fields (only when kind = datetime)
+         * date_stats: Aggregated date/time statistics computed for the column.
+         * min_date: Earliest date/time value found in the column.
+         * max_date: Latest date/time value found in the column.
+         * range_days: Total day span between max_date and min_date.
+         * weekday_distribution: Count breakdown of values across weekdays.
+         * most_common_weekday: Weekday that appears most frequently in the column.
+         * month_distribution: Count breakdown of values across months.
+         * most_common_month: Month that appears most frequently in the column.
+         * weekend_count: Number of values that fall on Saturday or Sunday.
+5.5 Boolean Profiling Fields (only when kind = boolean)
+         * boolean_stats: Aggregated boolean statistics computed for the column.
+         * true_count: Number of rows where the value is true.
+         * false_count: Number of rows where the value is false.
+________________
+
+
+6) tables[].edges[] (relationships for that table)
+         * fk_table: Table containing the foreign key column.
+         * fk_column: Column acting as the foreign key reference.
+         * pk_table: Table containing the referenced primary key column.
+         * pk_column: Column acting as the primary/unique key reference.
+         * confidence: Confidence score of the relationship detection (0 to 1).
+         * method: Detection approach used to infer the relationship.
+________________
+
+
+7) relationships
+         * relationship_count: Total number of relationships detected in the schema.
+         * relationship_method: Primary method used for relationship detection overall.
+         * items[]: Flat list of all detected relationships across all tables.
+         * fk_table: Table containing the foreign key column.
+         * fk_column: Column acting as the foreign key reference.
+         * pk_table: Table containing the referenced primary key column.
+         * pk_column: Column acting as the primary/unique key reference.
+         * confidence: Confidence score of the relationship detection (0 to 1).
+
+
+Usage Guide:
+
+
+
+
+Name
+	semantic-metadata-generator
+	One-line Description
+	Generates full semantic metadata for a database
+	Use Case
+	Quickly create a rich JSON metadata file for documentation, schema understanding, and downstream mapping.
+	How to Import
+	from schema_matching_toolkit import DBConfig, GroqConfig
+
+
+From schema_matching_toolkit.schema_metadata_generator 
+import generate_schema_metadata
+
+
+
+
+	Input
+	         * db_cfg: DBConfig
+         * groq_cfg: GroqConfig (required for descriptions)
+
+
+
+
+	Input Eg
+	db_cfg = DBConfig(
+    db_type="postgres",
+    host="localhost",
+    port=5432,
+    database="db_name",
+    username="postgres",
+    password="password",
+    schema_name="public",
+)
+
+
+groq_cfg = GroqConfig(api_key="YOUR_LLM_KEY")
+
+
+
+
+	Output
+	{
+  "database": { "db_type": "postgres", "database": "GPC", "schema_name": "public", "...": "..." },
+  "summary": { "table_count": 1, "column_count": 26, "relationship_count": 1 },
+  "tables": [
+    {
+      "table_name": "inventory_weekly",
+      "description": "2-3 sentence table description...",
+      "row_count": 10000,
+      "column_count": 26,
+      "columns": [
+        {
+          "column_name": "store_id",
+          "data_type": "text",
+          "kind": "text",
+          "description": "2-3 sentence column description...",
+          "profiling": { "null_percent": 0.1, "distinct_count": 120, "top_values": ["..."], "sample_values": ["..."] }
+        },
+        "..."
+      ],
+      "edges": [
+        { "fk_table": "inventory_weekly", "fk_column": "store_id", "pk_table": "store_master", "pk_column": "store_id", "confidence": 0.75, "method": "heuristic" },
+        "..."
+      ]
+    },
+    "..."
+  ],
+  "relationships": {
+    "relationship_count": 1,
+    "relationship_method": "heuristic",
+    "items": [
+      { "fk_table": "inventory_weekly", "fk_column": "store_id", "pk_table": "store_master", "pk_column": "store_id", "confidence": 0.75, "method": "heuristic" },
+    ]
+  }
+}
+
+
+
+
+	Code Eg
+	import json
+from schema_matching_toolkit import DBConfig, GroqConfig
+from schema_matching_toolkit.schema_metadata_generator import generate_schema_metadata
+
+
+db_cfg = DBConfig(
+    db_type="postgres",
+    host="localhost",
+    port=5432,
+    database="GPC",
+    username="postgres",
+    password="password",
+    schema_name="public",
+)
+
+
+groq_cfg = GroqConfig(api_key="YOUR_LLM_KEY")
+
+
+metadata = generate_schema_metadata(
+    db_cfg=db_cfg,
+    groq_cfg=groq_cfg,
+    output_format=json #optional
+)
+
+
+with open("schema_metadata_output.json", "w", encoding="utf-8") as f:
+    json.dump(metadata, f, indent=2)
+
+
+print("Saved schema metadata to schema_metadata_output.json")
+
+
+
+
+	
+
+
+
+
+
+
+
+02. Schema Matching
+Schema Matching// Solutions.
+Ashween Raj Mahalakshmi Senthilkumar Thakshana Thiruvenkadam | Jan 15, 2026
+Schema Matching module automatically maps source → target tables and columns using a hybrid of keyword + semantic similarity.It returns the best matches with confidence scores.This helps you quickly build accurate schema mappings for migration, integration, and data harmonization.
+________________
+
+
+Installation
+Get the toolkit running immediately via pip.
+ Command: 
+pip install git+https://github.com/acies-ashweenraj/schema-mapper-toolkit.git
+	Quick Verify: Run this one-liner to confirm success:
+python -c "import schema_matching_toolkit; print('Toolkit Installed Successfully')"
+	  
+
+________________
+
+
+Prerequisites
+Before you begin, ensure these four pillars are in place: 
+
+
+1. Python Environment: 
+Version 3.9+ is recommended. 
+2. Database Connectivity: 
+Install the driver matching your source DB (e.g., psycopg2-binary for Postgres, pyodbc for MSSQL) 
+3. Vector Engine (Mandatory for Dense Matching): 
+You need a running Qdrant instance. 
+The fastest method is Docker: docker run -p 6333:6333 qdrant/qdrant:latest . 
+4. AI Access: 
+A Groq API Key is required if you plan to use the LLM description module
+
+
+3. Qdrant:
+Recommended (Docker):
+docker run -p 6333:6333 -p 6334:6334 qdrant/qdrant:latest
+
+
+Qdrant should now be available at:
+         * REST: http://localhost:6333
+
+4. Groq API Key 
+Set environment variable:
+PowerShell:
+$env:GROQ_API_KEY="your_key"
+
+
+
+
+________________
+
+
+Common Inputs:
+To keep your code clean, we use standardized configuration objects. define these once and pass them everywhere. 
+* DBConfig: Your universal connection string (Host, Port, User, DB). 
+* QdrantConfig: Settings for your vector store (Host, Collection Name, Vector Size). 
+* GroqConfig: Your gateway to the LLM (API Key)
+DBConfig :
+Used for schema extraction, profiling, etc. from schema_matching_toolkit import DBConfig
+
+
+
+
+cfg = DBConfig(
+   db_type="postgres",
+   host="localhost",
+   port=5432,
+   database="employee",
+   username="postgres",
+   password="password",
+   schema_name="public",
+)
+	
+
+QdrantConfig :
+Used for MiniLM / MPNet dense matchers.
+from schema_matching_toolkit import QdrantConfig
+
+
+qdrant_cfg = QdrantConfig(
+   host="localhost",
+   port=6333,
+   collection_name="minilm_columns",
+   vector_name="dense_vector",
+   vector_size=384,
+)
+	
+
+GroqConfig (Input)
+Used for Groq schema description.
+from schema_matching_toolkit import GroqConfig
+
+
+groq_cfg = GroqConfig(api_key="your_groq_key")
+	
+
+Model is fixed internally as:
+            * llama-3.3-70b-versatile
+
+________________
+
+
+Usage Guide:
+
+
+
+
+Name
+	semantic-metadata-generator
+	One-line Description
+	Maps source schema tables/columns to target schema using hybrid sparse + dense matching and returns ranked matches with confidence.
+	Use Case
+	Maps source schema tables/columns to target schema using hybrid sparse + dense matching and returns ranked matches with confidence.
+	How to Import
+	from schema_matching_toolkit import DBConfig, QdrantConfig, GroqConfig
+
+
+from schema_matching_toolkit.hybrid_ensemble_matcher import run_hybrid_mapping
+
+
+
+
+	Input
+	               * src_cfg: DBConfig
+               * tgt_cfg: DBConfig
+               * qdrant_cfg_minilm: QdrantConfig
+               * qdrant_cfg_mpnet: QdrantConfig
+               * groq_cfg: GroqConfig (required)
+               * top_k_dense: int (optional)
+               * weights: dict (optional)
+
+
+	Sample Input 
+	src_cfg = DBConfig(db_type="postgres", host="localhost", port=5432, database="employee", username="postgres", password="pwd", schema_name="public")
+
+
+tgt_cfg = DBConfig(db_type="postgres", host="localhost", port=5432,database="GPC", username="postgres", password="pwd", schema_name="public")
+
+
+qdrant_cfg_minilm = QdrantConfig(host="localhost", port=6333,
+collection_name="minilm_columns", vector_name="dense_vector", vector_size=384)
+
+
+qdrant_cfg_mpnet = QdrantConfig(host="localhost", port=6333, collection_name="mpnet_columns", vector_name="dense_vector", vector_size=768)
+groq_cfg = GroqConfig(api_key="YOUR_LLM_KEY")
+
+
+
+
+
+
+
+
+	Output
+	{
+  "table_match_count": 2,
+  "column_match_count": 1,   
+  "tables": [
+    {
+      "source_table": "tbl_emp_core_dtls",
+      "best_match_table": "employee_master",
+      "confidence": 0.94,
+      "column_match_count": 5,
+      "column_matches": [
+        {
+          "source": "tbl_emp_core_dtls.emp_unq_ref",
+          "best_match": "employee_master.emp_id",
+          "confidence": 0.91
+        }
+      ]
+    }
+  ]
+}
+
+
+
+
+
+
+
+
+	Code Eg
+	from schema_matching_toolkit import DBConfig, GroqConfig
+from schema_matching_toolkit.hybrid_ensemble_matcher import run_hybrid_mapping
+
+
+
+
+def main():
+    result = run_hybrid_mapping(
+        src_cfg=DBConfig(
+            db_type="postgres",
+            host="localhost",
+            port=5432,
+            database="employee",
+            username="postgres",
+            password="",
+            schema_name="public",
+        ),
+        tgt_cfg=DBConfig(
+            db_type="postgres",
+            host="localhost",
+            port=5432,
+            database="GPC",
+            username="postgres",
+            password="",
+            schema_name="public",
+        ),
+        qdrant_host="localhost",
+        qdrant_port=6333,
+        groq_cfg=GroqConfig(api_key=""), 
+        output_format="csv",              # json / csv / xlsx
+        top_k_dense=5,
+    )
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+03. KG_Schema_Loader
+Knowledge Graph (KG) |   Semantic Data Solutions.
+KG_Schema_Loader Package -User Guide.
+
+
+Thakshana Thiruvenkadam Mahalakshmi Senthilkumar Ashween Raj | Jan 15, 2026
+
+
+This document explains how to install, configure, and run the KG_Schema_Loader from scratch. KG_Schema_Loader is a utility package that converts schema metadata and semantic information from a JSON file into a structured Knowledge Graph in Neo4j.
+
+
+1. Introduction        1
+2. Prerequisites        1
+3. Step-by-Step Process        2
+Step 1: Install the KG_Schema_Loader Package        2
+Step 2: Verify the Installation        3
+Step 3: Create a Runner File and an .env File        3
+Step 4: Set Up Neo4j        3
+Step 5: Configure Neo4j Connection Details in the .env File        5
+Step 6: Update the Runner File with Schema Loader Execution Logic        6
+Step 7: Execute the KG Schema Loader        6
+
+
+________________
+
+
+1. Introduction
+ By the end of this guide, the user should be able to:
+               * Set up all required prerequisites, including Python and Neo4j.
+               * Install the Schema Loader package using a pip command.
+               * Configure Neo4j connection details using environment variables.
+               * Execute the Schema Loader using a schema JSON input file.
+               * Verify that tables, columns, and relationships are successfully loaded into Neo4j.
+________________
+
+
+2. Prerequisites
+Before using the KG Schema Loader, make sure the following are available on your system:
+2.1 System Requirements
+               * Python 3.9 or higher is installed.
+               * pip is available in your terminal or command prompt.
+               * Neo4j Database (local or remote)
+  
+  
+
+2.2 Package Requirements
+Before executing the KG Schema Loader, ensure the following module-specific requirements are met:
+               * An input JSON file with schema must be available.
+               * The input JSON may optionally include semantic information, depending on the intended use case.
+               * The input JSON should contain: 
+               * Table metadata, 
+               * Column metadata,  
+               * Relationships (primary keys and foreign keys), 
+               * Pre-generated semantic descriptions for tables and columns
+               * This JSON file can also be generated by an upstream packages such as the “Metadata Extractor”
+and “Semantic Enricher”.
+  3. Step-by-Step Process 
+to use the KG_Schema_Loader Package
+
+
+Step 1: Install the KG_Schema_Loader Package
+
+
+The Schema Loader Package is distributed as a Python package and is installed using pip.
+Open a terminal and run:
+
+
+pip install git+https://github.com/acies-Thakshana/kg_schema_loader.git
+	
+
+Once installed, the package will be available globally in your Python environment. You do not need to build the package or run any additional setup commands.
+  
+  
+
+Step 2: Verify the Installation
+Verification confirms that the package has been installed correctly and is accessible from the Python environment.
+Open a Python shell or create a temporary Python file and run the following import statement.
+
+
+import kg_schema_loader
+	Expected Output: No error is shown, the installation is successful.
+  
+
+Step 3: Create a Runner File and an .env File 
+The runner file is required to trigger the schema loading process, and the .env file is used to securely store Neo4j connection details.
+                  * Create a Python file (for example, run_loader.py) to invoke the loader.
+                  * Create an .env file to store Neo4j URI, username, and password.
+                  * Ensure the schema JSON input file path is correctly configured.
+  
+  
+
+Step 4: Set Up Neo4j 
+The KG Schema Loader loads the schema into a Neo4j database. A running Neo4j instance is required to accept node and relationship creation.
+                  1. Open Neo4j Desktop.
+                  2. Create a new instance in Neo4j.
+  
+  
+
+  
+
+              Name the instance, define a password to it, and select create to create a new instance.
+              A new Neo4j instance is created and appears in the list with status STOPPED.  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  3. Click the Start button on the instance card. Wait until the status changes to RUNNING. The Neo4j instance is now active and ready to accept connections.
+  
+
+                  4. Click Connect on the running instance. Choose Query or Explore. Enter the username (neo4j) and password. Click Connect.    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                     5. You now have a clean, empty Neo4j database ready for schema loading.
+  
+
+
+
+Step 5: Configure Neo4j Connection Details in the .env File
+The KG Schema Loader needs Neo4j connection details to establish a programmatic connection to the running Neo4j instance created in Step 4. These details are provided through environment variables to avoid hardcoding credentials.
+                     * Open the existing .env file created in Step 3.
+                     * Add the Neo4j connection details captured during Step 4
+  
+
+
+
+Step 6: Update the Runner File with Schema Loader Execution Logic
+The runner file acts as the entry point for executing the KG Schema Loader. Without this file, the schema loading process cannot be triggered.
+                     * Open the existing run_loader.py file.
+                     * Import the KG Schema Loader execution function.
+                     * Provide the path to the input JSON file containing schema and semantic information.
+
+
+import os
+from dotenv import load_dotenv
+from kg_schema_loader import (GraphClient,GraphSchemaGenerator,GraphOrchestrator)
+
+
+load_dotenv()
+
+
+NEO4J_URI = os.getenv("NEO4J_URI")
+NEO4J_USER = os.getenv("NEO4J_USER")
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD")
+NEO4J_DATABASE = os.getenv("NEO4J_DATABASE", "neo4j")
+
+
+SEMANTIC_CATALOG_PATH = "Input/semantic_catalog.json"
+
+
+client = GraphClient(
+    uri=NEO4J_URI,
+    user=NEO4J_USER,
+    password=NEO4J_PASSWORD,
+    database=NEO4J_DATABASE
+)
+generator = GraphSchemaGenerator(client) 
+orchestrator = GraphOrchestrator(generator) 
+orchestrator.run(SEMANTIC_CATALOG_PATH) 
+client.close() 
+print("Knowledge Graph loaded successfully")
+	Step 7: Execute the KG Schema Loader
+This step triggers the actual schema-to-graph loading process.
+                     * Open a terminal in the directory containing run_loader.py.
+                     * Run the following command:
+
+
+python run_loader.py
+	 
+                     * The Schema Loader connects to Neo4j using the credentials from .env.
+                     * Schema nodes (tables, columns) and relationships are created in the Neo4j database.
+
+  
+
+                        * Tables, columns, and relationships are visible in the Neo4j graph view.
+                        * The Knowledge Graph is successfully created from the input schema JSON.
+                        * The Knowledge Graph is ready for downstream semantic querying and analysis
+
+
+  
+
+04. Text to SQL
+Semantic Data Solutions.
+NL-to-SQL Package - User Guide.
+
+
+Thakshana Thiruvenkadam Mahalakshmi Senthilkumar Ashween Raj | Jan 15, 2026
+
+
+This document explains how to install, configure, and run the NL-to-SQL package from scratch. The NL-to-SQL package enables users to query data using natural language by translating user questions into executable SQL queries using a pre-aligned schema and semantic context.
+1. Introduction
+Natural Language to SQL (NL-to-SQL) allows users to interact with structured databases using natural language instead of writing SQL manually. By the end of this guide, the user should be able to:
+                           * Set up all required prerequisites for running NL-to-SQL.
+                           * Configure the package using environment variables.
+                           * Execute natural language queries against a database.
+                           * View the generated SQL and query results.
+2. Prerequisites
+Before using the NL2SQL package, ensure the following are available on your system.
+2.1 System Requirements
+                           * Python 3.9 or higher is installed.
+                           * pip is available in your terminal or command prompt.
+                           * A supported relational database (PostgreSQL / MySQL / SQL Server).
+                           * Neo4j Knowledge Graph (used for schema and semantic context).
+  
+  
+
+2.2 Package Requirements
+Before executing the NL2SQL package, ensure the following requirements are met:
+                           * A Knowledge Graph containing schema metadata semantic information must already exist.
+                           * The KG is typically generated using:
+                           * Metadata Extractor
+                           * Semantic Enricher
+                           * KG_Schema_Loader
+                           * Database connection details must be available.
+3. Step-by-Step Process 
+to Use the NL2SQL Package
+Step 1: Install the Required Packages
+The NL2SQL package is distributed as a Python package and installed using pip.
+Open a terminal and run:
+pip install git+https://github.com/acies-Thakshana/kg_schema_loader.git
+pip install git+https://github.com/acies-mahalakshmi/nl-to-sql.git
+	
+
+Once installed, the package will be available globally in your Python environment. You do not need to build the package or run any additional setup commands.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+Step 2: Verify the Installation
+Verification confirms that the package has been installed correctly and is accessible from the Python environment.
+Open a Python shell or create a temporary Python file and run the following import statement.
+
+
+import NL_to_SQL
+	Expected Output: No error is shown, the installation is successful.
+  
+
+
+
+Step 3: Create a Runner File and an .env File 
+The runner file is required to trigger the schema loading process, and the .env file is used to securely store Neo4j connection details.
+                           * Create a Python file (for example, run_NL2SQL) to invoke the loader.
+                           * Create an .env file to store Neo4j URI, username, and password.
+Step 3: Configure Environment Variables
+The NL2SQL package uses environment variables to securely store database, Neo4j, and LLM configuration details.
+Create a .env file and configure:
+  
+Step 4: Update the Runner File
+The runner file is the execution entry point. It loads environment variables, initializes the NL→SQL agent, and provides a simple interface (interactive prompt) to ask questions and get SQL + results + explanation.
+
+
+import os
+from dotenv import load_dotenv
+
+
+from NL_to_SQL.orchestrator.analytics_agent import AnalyticsAgent
+from kg_schema_loader import GraphClient
+
+
+# Load environment variables
+load_dotenv()
+
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+DB_CONN = os.getenv("DB_CONN")
+SEMANTIC_CATALOG_PATH = os.getenv("SEMANTIC_CATALOG_PATH")
+
+
+NEO4J_URI = os.getenv("NEO4J_URI")
+NEO4J_USER = os.getenv("NEO4J_USER")
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD")
+NEO4J_DATABASE = os.getenv("NEO4J_DATABASE", "neo4j")
+
+
+graph_client = GraphClient(
+    uri=NEO4J_URI,
+    user=NEO4J_USER,
+    password=NEO4J_PASSWORD,
+    database=NEO4J_DATABASE
+)
+
+
+agent = AnalyticsAgent(
+    api_key=OPENAI_API_KEY,
+    conn=DB_CONN,
+    catalog_path=SEMANTIC_CATALOG_PATH,
+    graph_client=graph_client
+)
+
+
+print("NL -> SQL interactive mode (Neo4j enabled). Type 'exit' to quit.\n")
+
+
+while True:
+    question = input("Question> ").strip()
+    if question.lower() in {"exit", "quit"}:
+        break
+
+
+    output = agent.answer(question)
+
+
+    print("\nGenerated SQL:\n", output.get("sql", ""))
+    print("\nResult (first 5 rows):\n", (output.get("data") or [])[:5])
+    print("\nExplanation:\n", output.get("explanation", ""))
+    print("\n" + "-" * 60 + "\n")
+
+
+graph_client.close()
+print("Session closed.")
+	Step 5: Execute the NL→SQL Runner
+This triggers the NL→SQL pipeline: question → intent extraction → SQL generation → PostgreSQL execution → explanation.
+                           * Open a terminal in the directory containing run_NL2SQL.py.
+                           * Run the following command:
+
+
+python run_nl2sql.py
+	                           * The system successfully interprets the question.
+                           * A valid SQL query is generated and executed against PostgreSQL.
+                           * Results and explanations are displayed without errors.
