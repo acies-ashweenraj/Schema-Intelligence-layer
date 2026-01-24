@@ -1,41 +1,19 @@
-export default function ChatBubble({ role, text, time }) {
+export default function ChatBubble({ role, text }) {
   const isUser = role === "user";
 
+  // Base classes for all bubbles
+  const baseClasses = "max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm";
+
+  // Role-specific classes
+  const userClasses = "bg-indigo-600 text-white rounded-br-lg";
+  const botClasses = "bg-white text-gray-800 border border-gray-100 rounded-bl-lg";
+
   return (
-    <div style={{ display: "flex", justifyContent: isUser ? "flex-end" : "flex-start" }}>
-      <div style={{ ...styles.bubble, ...(isUser ? styles.user : styles.bot) }}>
-        <div style={styles.text}>{text}</div>
-        <div style={styles.time}>{time}</div>
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+      <div className={`${baseClasses} ${isUser ? userClasses : botClasses}`}>
+        {/* Use pre-wrap to respect newlines in the text from the LLM */}
+        <p className="whitespace-pre-wrap">{text}</p>
       </div>
     </div>
   );
 }
-
-const styles = {
-  bubble: {
-    maxWidth: "72%",
-    padding: "12px 14px",
-    borderRadius: 16,
-    fontSize: 14,
-    lineHeight: 1.45,
-    boxShadow: "0 10px 22px rgba(0,0,0,0.06)",
-  },
-  user: {
-    background: "linear-gradient(135deg,#2563eb,#1d4ed8)",
-    color: "white",
-    borderBottomRightRadius: 6,
-  },
-  bot: {
-    background: "white",
-    border: "1px solid #e5e7eb",
-    color: "#111827",
-    borderBottomLeftRadius: 6,
-  },
-  text: { whiteSpace: "pre-wrap" },
-  time: {
-    marginTop: 6,
-    fontSize: 11,
-    opacity: 0.7,
-    textAlign: "right",
-  },
-};

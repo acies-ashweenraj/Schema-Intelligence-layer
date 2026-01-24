@@ -33,3 +33,12 @@ export function getMappingDownloadUrl(path) {
     path
   )}`;
 }
+
+/* ===============================
+   NL2SQL / CHAT
+================================ */
+
+export async function askQuestion(payload) {
+  const res = await api.post("/nl2sql/chat", payload);
+  return res.data;
+}
