@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 class DBRequestConfig(BaseModel):
     db_type: str = Field(default="postgres", example="postgres")
     host: str = Field(..., example="localhost")
-    port: int = Field(default=5432, example=5432)
+    port: int = Field(default=5433, example=5433)
     database: str = Field(..., example="employee")
     username: str = Field(..., example="postgres")
     password: str = Field(..., example="your_password")

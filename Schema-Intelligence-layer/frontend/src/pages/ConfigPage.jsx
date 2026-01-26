@@ -5,7 +5,7 @@ export default function ConfigPage({ onConnected }) {
   const [form, setForm] = useState({
     db_type: "postgres",
     host: "localhost",
-    port: 5432,
+    port: 5433,
     database: "",
     username: "postgres",
     password: "",
@@ -206,7 +206,7 @@ export default function ConfigPage({ onConnected }) {
                     type="number"
                     value={form.port}
                     onChange={handleChange}
-                    placeholder="5432"
+                    placeholder="5433"
                   />
 
                   <div className="md:col-span-2">

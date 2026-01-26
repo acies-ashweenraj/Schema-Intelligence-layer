@@ -42,3 +42,8 @@ export async function askQuestion(payload) {
   const res = await api.post("/nl2sql/chat", payload);
   return res.data;
 }
+
+export async function getMetrics() {
+  const res = await api.get("/nl2sql/metrics");
+  return res.data;
+}

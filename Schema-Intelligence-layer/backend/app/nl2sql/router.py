@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from typing import List
 import os
 
-from .models import ChatRequest, ChatResponse, ConfigOptions
+from .models import ChatRequest, ChatResponse, ConfigOptions, MetricsSummary
 from . import services
 from app.core.paths import CONFIG_DIR
 
@@ -29,10 +29,10 @@ def get_config_options():
 
     model_names = [
         os.getenv("GROQ_MODEL", "meta-llama/llama-4-maverick-17b-128e-instruct"),
-        "meta-llama/llama-3-70b-instruct",
-        "meta-llama/llama-3-8b-instruct",
-        "mixtral-8x7b-32768",
-        "gemma-7b-it"
+        "llama-3.3-70b-versatile",
+        "meta-llama/llama-4-scout-17b-16e-instruct",
+        "qwen/qwen3-32b",
+        "openai/gpt-oss-120b"
     ]
 
     # remove duplicates & sort
@@ -47,6 +47,20 @@ def get_config_options():
         ],
         model_names=model_names
     )
+
+# -------------------------------------------------
+# GET /nl2sql/metrics
+# -------------------------------------------------
+@router.get("/metrics", response_model=MetricsSummary)
+def get_metrics():
+    """
+    Provides a summary of query metrics from the tracker.
+    """
+    try:
+        summary = services.get_query_metrics()
+        return summary
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # -------------------------------------------------

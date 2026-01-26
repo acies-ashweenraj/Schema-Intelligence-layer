@@ -5,6 +5,102 @@ import {
   runHybridMapping,
 } from "../api/client";
 
+// ============================
+// UI COMPONENTS (MOVED OUTSIDE)
+// ============================
+function Chip({ children, tone = "gray" }) {
+  const tones = {
+    gray: "bg-slate-50 border-slate-200 text-slate-700",
+    green: "bg-emerald-50 border-emerald-200 text-emerald-700",
+    blue: "bg-sky-50 border-sky-200 text-sky-700",
+    indigo: "bg-indigo-50 border-indigo-200 text-indigo-700",
+    red: "bg-red-50 border-red-200 text-red-700",
+    violet: "bg-violet-50 border-violet-200 text-violet-700",
+  };
+
+  return (
+    <span
+      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${tones[tone]}`}
+    >
+      {children}
+    </span>
+  );
+}
+
+function SectionCard({ title, desc, rightSlot, children }) {
+  return (
+    <section className="rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+      <div className="px-6 py-5 border-b border-slate-200 bg-gradient-to-r from-indigo-50 via-violet-50 to-fuchsia-50">
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <h2 className="text-lg font-extrabold text-slate-900">{title}</h2>
+            <p className="text-slate-600 mt-1 text-sm">{desc}</p>
+          </div>
+          {rightSlot}
+        </div>
+      </div>
+      <div className="p-6">{children}</div>
+    </section>
+  );
+}
+
+function GradientButton({ children, className = "", ...props }) {
+  return (
+    <button
+      {...props}
+      className={`inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 font-semibold text-white
+        bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600
+        shadow-md shadow-indigo-500/20 hover:shadow-lg hover:shadow-fuchsia-500/20
+        transition disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function PreviewBox({ data }) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-slate-950 overflow-hidden shadow-sm">
+      <div className="px-4 py-2 border-b border-white/10 bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600">
+        <p className="text-xs font-semibold text-white/90">Preview Output</p>
+      </div>
+
+      <pre className="text-xs p-4 text-slate-100 max-h-[340px] overflow-auto leading-relaxed">
+        {data ? JSON.stringify(data, null, 2) : "Preview will appear here..."}
+      </pre>
+    </div>
+  );
+}
+
+function StatCard({ title, value, sub }) {
+  return (
+    <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+      <p className="text-sm font-semibold text-slate-500">{title}</p>
+      <p className="text-2xl font-extrabold text-slate-900 mt-1">{value}</p>
+      <p className="text-xs text-slate-400 mt-1">{sub}</p>
+    </div>
+  );
+}
+
+function InputField({ label, name, value, onChange, type = "text", placeholder }) {
+  return (
+    <div>
+      <label className="text-xs font-bold text-slate-600">{label}</label>
+      <input
+        name={name}
+        value={value}
+        onChange={onChange}
+        type={type}
+        placeholder={placeholder}
+        autoComplete="off"
+        spellCheck={false}
+        className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400
+                   shadow-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition"
+      />
+    </div>
+  );
+}
+
 export default function WorkspacePage({ dbConfig, onExit, onGoChat }) {
   // ✅ Always start at top when Workspace opens
   useEffect(() => {
@@ -39,7 +135,7 @@ export default function WorkspacePage({ dbConfig, onExit, onGoChat }) {
       const payload = {
         db_type: dbConfig?.db_type || "postgres",
         host: dbConfig?.host,
-        port: Number(dbConfig?.port || 5432),
+        port: Number(dbConfig?.port || 5433),
         database: dbConfig?.database,
         username: dbConfig?.username,
         password: dbConfig?.password,
@@ -68,7 +164,7 @@ export default function WorkspacePage({ dbConfig, onExit, onGoChat }) {
   const [targetCfg, setTargetCfg] = useState({
     db_type: "postgres",
     host: "localhost",
-    port: "5432",
+    port: "5433",
     database: "",
     username: "postgres",
     password: "",
@@ -92,7 +188,7 @@ export default function WorkspacePage({ dbConfig, onExit, onGoChat }) {
         src_cfg: {
           db_type: dbConfig?.db_type || "postgres",
           host: dbConfig?.host,
-          port: Number(dbConfig?.port || 5432),
+          port: Number(dbConfig?.port || 5433),
           database: dbConfig?.database,
           username: dbConfig?.username,
           password: dbConfig?.password,
@@ -101,7 +197,7 @@ export default function WorkspacePage({ dbConfig, onExit, onGoChat }) {
         tgt_cfg: {
           db_type: targetCfg.db_type,
           host: targetCfg.host,
-          port: Number(targetCfg.port || 5432),
+          port: Number(targetCfg.port || 5433),
           database: targetCfg.database,
           username: targetCfg.username,
           password: targetCfg.password,
@@ -121,102 +217,6 @@ export default function WorkspacePage({ dbConfig, onExit, onGoChat }) {
     } finally {
       setMappingLoading(false);
     }
-  }
-
-  // ============================
-  // UI COMPONENTS
-  // ============================
-  function Chip({ children, tone = "gray" }) {
-    const tones = {
-      gray: "bg-slate-50 border-slate-200 text-slate-700",
-      green: "bg-emerald-50 border-emerald-200 text-emerald-700",
-      blue: "bg-sky-50 border-sky-200 text-sky-700",
-      indigo: "bg-indigo-50 border-indigo-200 text-indigo-700",
-      red: "bg-red-50 border-red-200 text-red-700",
-      violet: "bg-violet-50 border-violet-200 text-violet-700",
-    };
-
-    return (
-      <span
-        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${tones[tone]}`}
-      >
-        {children}
-      </span>
-    );
-  }
-
-  function SectionCard({ title, desc, rightSlot, children }) {
-    return (
-      <section className="rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-        <div className="px-6 py-5 border-b border-slate-200 bg-gradient-to-r from-indigo-50 via-violet-50 to-fuchsia-50">
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div>
-              <h2 className="text-lg font-extrabold text-slate-900">{title}</h2>
-              <p className="text-slate-600 mt-1 text-sm">{desc}</p>
-            </div>
-            {rightSlot}
-          </div>
-        </div>
-        <div className="p-6">{children}</div>
-      </section>
-    );
-  }
-
-  function GradientButton({ children, className = "", ...props }) {
-    return (
-      <button
-        {...props}
-        className={`inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 font-semibold text-white
-          bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600
-          shadow-md shadow-indigo-500/20 hover:shadow-lg hover:shadow-fuchsia-500/20
-          transition disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
-      >
-        {children}
-      </button>
-    );
-  }
-
-  function PreviewBox({ data }) {
-    return (
-      <div className="rounded-2xl border border-slate-200 bg-slate-950 overflow-hidden shadow-sm">
-        <div className="px-4 py-2 border-b border-white/10 bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600">
-          <p className="text-xs font-semibold text-white/90">Preview Output</p>
-        </div>
-
-        <pre className="text-xs p-4 text-slate-100 max-h-[340px] overflow-auto leading-relaxed">
-          {data ? JSON.stringify(data, null, 2) : "Preview will appear here..."}
-        </pre>
-      </div>
-    );
-  }
-
-  function StatCard({ title, value, sub }) {
-    return (
-      <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-        <p className="text-sm font-semibold text-slate-500">{title}</p>
-        <p className="text-2xl font-extrabold text-slate-900 mt-1">{value}</p>
-        <p className="text-xs text-slate-400 mt-1">{sub}</p>
-      </div>
-    );
-  }
-
-  function InputField({ label, name, value, onChange, type = "text", placeholder }) {
-    return (
-      <div>
-        <label className="text-xs font-bold text-slate-600">{label}</label>
-        <input
-          name={name}
-          value={value}
-          onChange={onChange}
-          type={type}
-          placeholder={placeholder}
-          autoComplete="off"
-          spellCheck={false}
-          className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400
-                     shadow-sm outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition"
-        />
-      </div>
-    );
   }
 
   // ============================
@@ -336,7 +336,7 @@ export default function WorkspacePage({ dbConfig, onExit, onGoChat }) {
             <div className="flex gap-2 flex-wrap">
               <Chip tone="indigo">{dbConfig?.db_type || "postgres"}</Chip>
               <Chip tone="blue">{dbConfig?.host || "localhost"}</Chip>
-              <Chip tone="gray">Port: {dbConfig?.port || 5432}</Chip>
+              <Chip tone="gray">Port: {dbConfig?.port || 5433}</Chip>
               <Chip tone="violet">Schema: {dbConfig?.schema_name || "public"}</Chip>
             </div>
           }
@@ -389,7 +389,7 @@ export default function WorkspacePage({ dbConfig, onExit, onGoChat }) {
                   type="text"
                   value={targetCfg.port}
                   onChange={handleTargetChange}
-                  placeholder="5432"
+                  placeholder="5433"
                 />
 
                 <div className="md:col-span-2">

@@ -12,7 +12,7 @@ export default function ChatBubble({ role, text }) {
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div className={`${baseClasses} ${isUser ? userClasses : botClasses}`}>
         {/* Use pre-wrap to respect newlines in the text from the LLM */}
-        <p className="whitespace-pre-wrap">{text}</p>
+        <p className="whitespace-pre-wrap break-words">{text}</p>
       </div>
     </div>
   );

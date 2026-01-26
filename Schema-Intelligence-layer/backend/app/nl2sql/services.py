@@ -14,6 +14,7 @@ from app.nl2sql.agents.graph_store_neo4j import (
 from app.nl2sql.agents.nl2sql_chat_agent import NL2SQLChatAgent
 # from src.nl2sql.nl2sql_from_neo4j import NL2SQLFromNeo4jRunner
 from app.nl2sql.agents.nl2sql_engine import NL2SQLRunner
+from app.core.tracker import QueryMetricsTracker
 
 # Import Pydantic models for API communication
 from .models import ChatRequest, ChatResponse, ChatMessage
@@ -162,10 +163,27 @@ async def process_chat_message(request: ChatRequest) -> ChatResponse:
             dataframe=dataframe_data,
             error=error_message
         )
-
     except Exception as e:
         return ChatResponse(
             mode="summary_only",
             summary=f"An unexpected error occurred during processing: {e}",
             error=str(e)
         )
+    
+    
+    def get_query_metrics() -> Dict[str, Any]:
+        """
+        Loads query metrics from the log file and returns a summary.
+        """
+        try:
+            tracker = QueryMetricsTracker()
+            tracker.load_existing_queries()
+            return tracker.get_summary()
+        except Exception as e:
+            # Log the error and return a friendly message
+            # In a real app, you'd use a proper logger
+            print(f"Error loading metrics: {e}")
+            return {
+                "error": "Could not load metrics data.",
+                "details": str(e)
+            }    
