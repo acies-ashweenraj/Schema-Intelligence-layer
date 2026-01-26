@@ -33,3 +33,12 @@ export function getMappingDownloadUrl(path) {
     path
   )}`;
 }
+
+/* ===============================
+   CHATBOT
+================================ */
+
+export async function askQuestion(payload) {
+  const res = await api.post("/nlp-rag/ask", payload);
+  return res.data;
+}

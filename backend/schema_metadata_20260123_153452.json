@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-01-22T18:04:37.097570Z",
+  "generated_at": "2026-01-23T10:04:52.627076Z",
   "database": {
     "db_type": "postgres",
     "host": "localhost",
@@ -15,7 +15,7 @@
   "tables": [
     {
       "table_name": "audit_checks",
-      "description": "The audit_checks table represents a record of regular checks performed on various sites to ensure compliance and adherence to standards. It stores information about the site being audited, the date and time of the audit, the auditor's name, and the audit score obtained. This table is crucial in analytics and business workflows as it helps identify areas of improvement and tracks the progress of sites over time.",
+      "description": "The audit_checks table represents a record of regular audits performed across various sites. It stores information about the audit date, auditor, and audit score, which are crucial for monitoring compliance and identifying areas for improvement. This table is typically used in analytics and business workflows to track audit history and trends over time.",
       "row_count": 1000,
       "column_count": 5,
       "columns": [
@@ -23,7 +23,7 @@
           "column_name": "audit_pk",
           "data_type": "integer",
           "kind": "numeric",
-          "description": "The audit_pk column represents a unique identifier for each audit record, which is essential in analytics and business workflows to track audit history and identify trends.",
+          "description": "The audit_pk column represents a unique identifier for each audit record, allowing for efficient tracking and retrieval of audit data. It stores integer values, which are used to establish a primary key relationship with other tables. This column is essential for data integrity and analytics purposes.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -89,7 +89,7 @@
           "column_name": "site_fk",
           "data_type": "integer",
           "kind": "numeric",
-          "description": "The site_fk column represents the site being audited, which is critical in analytics and business workflows to understand site-specific compliance and adherence to standards.",
+          "description": "The site_fk column represents the foreign key relationship between the audit_checks table and the site_master table, linking each audit record to its corresponding site. It stores integer values, which are used to establish a many-to-one relationship between tables. This column is vital for site-level data analysis and reporting.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -155,7 +155,7 @@
           "column_name": "audit_dt",
           "data_type": "date",
           "kind": "datetime",
-          "description": "The audit_dt column represents the date and time of the audit, which is essential in analytics and business workflows to track audit frequency and identify areas of improvement.",
+          "description": "The audit_dt column represents the date of each audit record, providing a timestamp for when the audit was performed. It stores date values, which are used to track audit history and trends over time. This column is essential for analytics and business intelligence purposes.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -238,7 +238,7 @@
           "column_name": "auditor",
           "data_type": "character varying",
           "kind": "text",
-          "description": "The auditor column represents the name of the auditor who performed the audit, which is critical in analytics and business workflows to understand audit quality and identify areas for improvement.",
+          "description": "The auditor column represents the person responsible for conducting each audit, providing valuable insights into audit quality and compliance. It stores character varying values, which are used to store text data. This column is vital for audit tracking and reporting.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -300,7 +300,7 @@
           "column_name": "audit_score",
           "data_type": "integer",
           "kind": "numeric",
-          "description": "The audit_score column represents the score obtained during the audit, which is essential in analytics and business workflows to track compliance and identify areas of improvement.",
+          "description": "The audit_score column represents the result of each audit, indicating the level of compliance or risk identified. It stores integer values, which are used to track audit outcomes and trends. This column is essential for analytics and business intelligence purposes.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -375,7 +375,7 @@
     },
     {
       "table_name": "event_log",
-      "description": "The event_log table stores a record of events that occur within the organization, including staff activities, system updates, and other notable incidents. It contains information about the event category, risk level, and the staff member involved. This table is vital in analytics and business workflows as it provides insights into staff behavior, system performance, and potential security threats.",
+      "description": "The event_log table captures significant events that occur within the organization, including staff activities and system changes. It stores information about the event category, risk level, and the staff member involved, providing valuable insights into operational activities and potential risks. This table is essential for auditing, compliance, and business intelligence purposes.",
       "row_count": 1000,
       "column_count": 5,
       "columns": [
@@ -383,7 +383,7 @@
           "column_name": "event_pk",
           "data_type": "integer",
           "kind": "numeric",
-          "description": "The event_pk column represents a unique identifier for each event record, which is essential in analytics and business workflows to track event history and identify trends.",
+          "description": "The event_pk column represents a unique identifier for each event record, allowing for efficient tracking and retrieval of event data. It stores integer values, which are used to establish a primary key relationship with other tables. This column is essential for data integrity and analytics purposes.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -449,7 +449,7 @@
           "column_name": "staff_fk",
           "data_type": "integer",
           "kind": "numeric",
-          "description": "The staff_fk column represents the staff member involved in the event, which is critical in analytics and business workflows to understand staff behavior and identify potential security threats.",
+          "description": "The staff_fk column represents the foreign key relationship between the event_log table and the staff table, linking each event record to its corresponding staff member. It stores integer values, which are used to establish a many-to-one relationship between tables. This column is vital for staff-level data analysis and reporting.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -515,7 +515,7 @@
           "column_name": "event_dt",
           "data_type": "date",
           "kind": "datetime",
-          "description": "The event_dt column represents the date and time of the event, which is essential in analytics and business workflows to track event frequency and identify areas of improvement.",
+          "description": "The event_dt column represents the date of each event record, providing a timestamp for when the event occurred. It stores date values, which are used to track event history and trends over time. This column is essential for analytics and business intelligence purposes.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -598,7 +598,7 @@
           "column_name": "event_category",
           "data_type": "character varying",
           "kind": "text",
-          "description": "The event_category column represents the category of the event, which is critical in analytics and business workflows to understand event types and identify potential security threats.",
+          "description": "The event_category column represents the type of event that occurred, providing valuable insights into operational activities and potential risks. It stores character varying values, which are used to store text data. This column is vital for event tracking and reporting.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -660,7 +660,7 @@
           "column_name": "risk_level",
           "data_type": "integer",
           "kind": "numeric",
-          "description": "The risk_level column represents the risk level associated with the event, which is essential in analytics and business workflows to track event severity and identify areas of improvement.",
+          "description": "The risk_level column represents the level of risk associated with each event, indicating the potential impact on the organization. It stores integer values, which are used to track event outcomes and trends. This column is essential for analytics and business intelligence purposes.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -735,7 +735,7 @@
     },
     {
       "table_name": "learning_records",
-      "description": "The learning_records table represents a record of courses completed by staff members, including the course name, completion date, and status. It stores information about the staff member's learning history, which is essential in analytics and business workflows to identify training needs, track staff development, and measure the effectiveness of training programs.",
+      "description": "The learning_records table stores information about staff training and development activities, including course completion status and dates. It represents a record of staff learning and professional growth, which is vital for talent development and organizational performance. This table is used in analytics and business workflows to track staff skills and knowledge gaps.",
       "row_count": 1000,
       "column_count": 5,
       "columns": [
@@ -743,7 +743,7 @@
           "column_name": "learning_pk",
           "data_type": "integer",
           "kind": "numeric",
-          "description": "The learning_pk column represents a unique identifier for each learning record, which is essential in analytics and business workflows to track staff learning history and identify training needs.",
+          "description": "The learning_pk column represents a unique identifier for each learning record, allowing for efficient tracking and retrieval of learning data. It stores integer values, which are used to establish a primary key relationship with other tables. This column is essential for data integrity and analytics purposes.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -809,7 +809,7 @@
           "column_name": "staff_fk",
           "data_type": "integer",
           "kind": "numeric",
-          "description": "The staff_fk column represents the staff member who completed the course, which is critical in analytics and business workflows to understand staff learning history and identify training needs.",
+          "description": "The staff_fk column represents the foreign key relationship between the learning_records table and the staff table, linking each learning record to its corresponding staff member. It stores integer values, which are used to establish a many-to-one relationship between tables. This column is vital for staff-level data analysis and reporting.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -875,7 +875,7 @@
           "column_name": "course_name",
           "data_type": "character varying",
           "kind": "text",
-          "description": "The course_name column represents the name of the course completed by the staff member, which is essential in analytics and business workflows to track staff learning history and identify training needs.",
+          "description": "The course_name column represents the name of the course completed by each staff member, providing valuable insights into staff skills and knowledge gaps. It stores character varying values, which are used to store text data. This column is vital for learning and development tracking.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -937,7 +937,7 @@
           "column_name": "course_dt",
           "data_type": "date",
           "kind": "datetime",
-          "description": "The course_dt column represents the date the course was completed, which is critical in analytics and business workflows to track staff learning history and identify training needs.",
+          "description": "The course_dt column represents the date of each course completion, providing a timestamp for when the course was completed. It stores date values, which are used to track learning history and trends over time. This column is essential for analytics and business intelligence purposes.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -1020,7 +1020,7 @@
           "column_name": "completion_status",
           "data_type": "character varying",
           "kind": "text",
-          "description": "The completion_status column represents the status of the course completion, which is essential in analytics and business workflows to track staff learning history and identify training needs.",
+          "description": "The completion_status column represents the outcome of each course completion, indicating whether the staff member completed the course successfully. It stores character varying values, which are used to store text data. This column is vital for learning and development tracking.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -1087,7 +1087,7 @@
     },
     {
       "table_name": "org_units",
-      "description": "The org_units table represents a hierarchical structure of organizational units within the organization, including their titles, site affiliations, and heads. It stores information about the organizational structure, which is critical in analytics and business workflows to understand the relationships between units, identify areas of overlap, and optimize resource allocation.",
+      "description": "The org_units table represents the organizational structure of the company, including units, their titles, and site affiliations. It stores information about unit heads, creation dates, and other relevant details, providing a comprehensive view of the organization's hierarchy and operations. This table is essential for business intelligence, reporting, and decision-making purposes.",
       "row_count": 1000,
       "column_count": 5,
       "columns": [
@@ -1095,7 +1095,7 @@
           "column_name": "unit_pk",
           "data_type": "integer",
           "kind": "numeric",
-          "description": "The unit_pk column represents a unique identifier for each organizational unit, which is essential in analytics and business workflows to track unit history and identify areas of overlap.",
+          "description": "The unit_pk column represents a unique identifier for each organizational unit, allowing for efficient tracking and retrieval of unit data. It stores integer values, which are used to establish a primary key relationship with other tables. This column is essential for data integrity and analytics purposes.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -1161,7 +1161,7 @@
           "column_name": "unit_title",
           "data_type": "character varying",
           "kind": "text",
-          "description": "The unit_title column represents the title of the organizational unit, which is critical in analytics and business workflows to understand unit structure and identify areas of overlap.",
+          "description": "The unit_title column represents the title of each organizational unit, providing valuable insights into the organization's hierarchy and operations. It stores character varying values, which are used to store text data. This column is vital for business intelligence and reporting.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -1223,7 +1223,7 @@
           "column_name": "site_fk",
           "data_type": "integer",
           "kind": "numeric",
-          "description": "The site_fk column represents the site affiliated with the organizational unit, which is essential in analytics and business workflows to understand site-unit relationships and identify areas of overlap.",
+          "description": "The site_fk column represents the foreign key relationship between the org_units table and the site_master table, linking each unit to its corresponding site. It stores integer values, which are used to establish a many-to-one relationship between tables. This column is vital for site-level data analysis and reporting.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -1289,7 +1289,7 @@
           "column_name": "unit_head",
           "data_type": "character varying",
           "kind": "text",
-          "description": "The unit_head column represents the head of the organizational unit, which is critical in analytics and business workflows to understand unit leadership and identify areas of overlap.",
+          "description": "The unit_head column represents the person responsible for each organizational unit, providing valuable insights into unit leadership and operations. It stores character varying values, which are used to store text data. This column is vital for business intelligence and reporting.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -1351,7 +1351,7 @@
           "column_name": "created_on",
           "data_type": "timestamp without time zone",
           "kind": "datetime",
-          "description": "The created_on column represents the date the organizational unit was created, which is essential in analytics and business workflows to track unit history and identify areas of overlap.",
+          "description": "The created_on column represents the date when each organizational unit was created, providing a timestamp for when the unit was established. It stores timestamp values, which are used to track unit history and trends over time. This column is essential for analytics and business intelligence purposes.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -1443,7 +1443,7 @@
     },
     {
       "table_name": "site_master",
-      "description": "The site_master table represents a list of sites operated by the organization, including their titles, locations, and creation dates. It stores information about the organization's geographical presence, which is essential in analytics and business workflows to understand the distribution of resources, identify areas of growth, and optimize site management.",
+      "description": "The site_master table stores information about company sites, including their titles, locations, and creation dates. It represents a record of the company's physical presence and operational footprint, which is vital for business planning, reporting, and compliance purposes. This table is used in analytics and business workflows to track site-level data and trends.",
       "row_count": 1000,
       "column_count": 5,
       "columns": [
@@ -1451,7 +1451,7 @@
           "column_name": "site_pk",
           "data_type": "integer",
           "kind": "numeric",
-          "description": "The site_pk column represents a unique identifier for each site, which is essential in analytics and business workflows to track site history and identify areas of growth.",
+          "description": "The site_pk column represents a unique identifier for each site, allowing for efficient tracking and retrieval of site data. It stores integer values, which are used to establish a primary key relationship with other tables. This column is essential for data integrity and analytics purposes.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -1517,7 +1517,7 @@
           "column_name": "site_title",
           "data_type": "character varying",
           "kind": "text",
-          "description": "The site_title column represents the title of the site, which is critical in analytics and business workflows to understand site structure and identify areas of growth.",
+          "description": "The site_title column represents the title of each site, providing valuable insights into the organization's physical presence and operational footprint. It stores character varying values, which are used to store text data. This column is vital for business intelligence and reporting.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -1579,7 +1579,7 @@
           "column_name": "nation",
           "data_type": "character varying",
           "kind": "text",
-          "description": "The nation column represents the nation where the site is located, which is essential in analytics and business workflows to understand site geography and identify areas of growth.",
+          "description": "The nation column represents the country where each site is located, providing valuable insights into the organization's global presence and operations. It stores character varying values, which are used to store text data. This column is vital for business intelligence and reporting.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -1633,7 +1633,7 @@
           "column_name": "region",
           "data_type": "character varying",
           "kind": "text",
-          "description": "The region column represents the region where the site is located, which is critical in analytics and business workflows to understand site geography and identify areas of growth.",
+          "description": "The region column represents the geographic region where each site is located, providing valuable insights into the organization's operational footprint and market presence. It stores character varying values, which are used to store text data. This column is vital for business intelligence and reporting.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -1695,7 +1695,7 @@
           "column_name": "created_on",
           "data_type": "timestamp without time zone",
           "kind": "datetime",
-          "description": "The created_on column represents the date the site was created, which is essential in analytics and business workflows to track site history and identify areas of growth.",
+          "description": "The created_on column represents the date when each site was created, providing a timestamp for when the site was established. It stores timestamp values, which are used to track site history and trends over time. This column is essential for analytics and business intelligence purposes.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -1779,7 +1779,7 @@
     },
     {
       "table_name": "staff",
-      "description": "The staff table represents a list of staff members, including their full names, unit affiliations, roles, and joining dates. It stores information about the organization's human resources, which is critical in analytics and business workflows to understand staff demographics, identify training needs, and optimize staffing levels.",
+      "description": "The staff table represents the company's workforce, including staff members, their roles, and unit affiliations. It stores information about staff joining dates, full names, and other relevant details, providing a comprehensive view of the organization's human resources. This table is essential for HR management, talent development, and business intelligence purposes.",
       "row_count": 1000,
       "column_count": 5,
       "columns": [
@@ -1787,7 +1787,7 @@
           "column_name": "staff_pk",
           "data_type": "integer",
           "kind": "numeric",
-          "description": "The staff_pk column represents a unique identifier for each staff member, which is essential in analytics and business workflows to track staff history and identify training needs.",
+          "description": "The staff_pk column represents a unique identifier for each staff member, allowing for efficient tracking and retrieval of staff data. It stores integer values, which are used to establish a primary key relationship with other tables. This column is essential for data integrity and analytics purposes.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -1853,7 +1853,7 @@
           "column_name": "staff_fullname",
           "data_type": "character varying",
           "kind": "text",
-          "description": "The staff_fullname column represents the full name of the staff member, which is critical in analytics and business workflows to understand staff demographics and identify training needs.",
+          "description": "The staff_fullname column represents the full name of each staff member, providing valuable insights into staff demographics and personnel data. It stores character varying values, which are used to store text data. This column is vital for HR management and reporting.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -1915,7 +1915,7 @@
           "column_name": "unit_fk",
           "data_type": "integer",
           "kind": "numeric",
-          "description": "The unit_fk column represents the organizational unit affiliated with the staff member, which is essential in analytics and business workflows to understand staff-unit relationships and identify training needs.",
+          "description": "The unit_fk column represents the foreign key relationship between the staff table and the org_units table, linking each staff member to their corresponding unit. It stores integer values, which are used to establish a many-to-one relationship between tables. This column is vital for staff-level data analysis and reporting.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -1981,7 +1981,7 @@
           "column_name": "role_name",
           "data_type": "character varying",
           "kind": "text",
-          "description": "The role_name column represents the role of the staff member, which is critical in analytics and business workflows to understand staff responsibilities and identify training needs.",
+          "description": "The role_name column represents the job role or position held by each staff member, providing valuable insights into staff skills and responsibilities. It stores character varying values, which are used to store text data. This column is vital for HR management and reporting.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
@@ -2043,7 +2043,7 @@
           "column_name": "joining_date",
           "data_type": "date",
           "kind": "datetime",
-          "description": "The joining_date column represents the date the staff member joined the organization, which is essential in analytics and business workflows to track staff history and identify training needs.",
+          "description": "The joining_date column represents the date when each staff member joined the organization, providing a timestamp for when the staff member was hired. It stores date values, which are used to track staff history and trends over time. This column is essential for analytics and business intelligence purposes.",
           "profiling": {
             "row_count": 1000,
             "not_null_count": 1000,
