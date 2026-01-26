@@ -132,7 +132,7 @@ Example 2: User asks "show me the total number of incidents"
             logger.info("Trimmed current history to manage token budget.")
 
     def get_llm_response(self, new_message: Optional[Dict] = None) -> str:
-        """Central method to call the LLM and get a raw response."""
+        """Central method to call the LLM, get a raw response, and log metrics."""
         if new_message:
             self.current_history.append(new_message)
             self.full_history.append(new_message)
@@ -141,6 +141,12 @@ Example 2: User asks "show me the total number of incidents"
 
         logger.info("⚡ Calling LLM...")
         start_time = time.time()
+        
+        # Variables for tracking
+        response = None
+        error_message = None
+        nl_query = new_message.get("content", "") if new_message else ""
+
         try:
             response = self.groq_client.chat.completions.create(
                 model=self.model,
@@ -158,8 +164,10 @@ Example 2: User asks "show me the total number of incidents"
             elapsed = (time.time() - start_time) * 1000
             logger.info(f"✅ AI response received ({elapsed:.2f}ms)")
             return ai_response_content
+
         except Exception as e:
             logger.error(f"❌ LLM API error: {e}")
+            error_message = str(e)
             error_summary = f"Sorry, I encountered an error trying to process that request: {e}"
             error_content = json.dumps({
                 "mode": "summary_only",
@@ -170,6 +178,33 @@ Example 2: User asks "show me the total number of incidents"
             self.current_history.append({"role": "assistant", "content": error_content})
             self.full_history.append({"role": "assistant", "content": error_content})
             return error_content
+        
+        finally:
+            # --- THIS IS THE NEW TRACKING LOGIC ---
+            end_time = time.time()
+            latency_ms = (end_time - start_time) * 1000
+            
+            # Safely extract details from response
+            sql_query = ""
+            if response and response.choices:
+                try:
+                    # Parse the JSON content to get the SQL
+                    content_dict = json.loads(response.choices[0].message.content)
+                    sql_query = content_dict.get("sql", "")
+                except (json.JSONDecodeError, AttributeError):
+                    sql_query = "" # Could not parse SQL from response
+
+            self.query_tracker.log_query(
+                nl_query=nl_query,
+                sql_query=sql_query or "",
+                success=error_message is None,
+                input_tokens=response.usage.prompt_tokens if response else 0,
+                output_tokens=response.usage.completion_tokens if response else 0,
+                latency_ms=latency_ms,
+                error=error_message
+            )
+            # --- END OF NEW TRACKING LOGIC ---
+
 
     def generate_final_summary(self, question: str, initial_summary: str, db_data: pd.DataFrame) -> str:
         # Same as before

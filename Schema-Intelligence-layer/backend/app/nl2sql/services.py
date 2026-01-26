@@ -95,7 +95,7 @@ async def process_chat_message(request: ChatRequest) -> ChatResponse:
             
             # 2. Reconstruct the history for this specific request.
             # Start with the system prompt, then add the history from the client.
-            request_history = [msg.dict() for msg in request.history]
+            request_history = [m.dict() for m in request.history] # Changed 'msg' to 'm'
             agent.current_history = [system_prompt_message] + request_history
             agent.full_history = [system_prompt_message] + request_history
 
@@ -145,41 +145,33 @@ async def process_chat_message(request: ChatRequest) -> ChatResponse:
                     error_message = db_result
                     summary = f"SQL generated but failed to execute: {error_message}"
                     sql_query = None
-
+            # For non-conversational agents, full_history might only contain the system prompt or be empty
+            # if agent fails to initialize before this point.
             return ChatResponse(
                 mode=mode,
                 summary=summary,
                 sql=sql_query,
                 dataframe=dataframe_data,
                 error=error_message,
-                full_history=[ChatMessage(**m) for m in agent.full_history] # Add full_history here
+                full_history=[ChatMessage(**m) for m in agent.full_history] if agent else [] # Ensure full_history
             )
         else:
             raise ValueError(f"Unknown agent: {request.agent_name}")
 
-                    return ChatResponse(
-                        mode=mode,
-                        summary=summary,
-                        sql=sql,
-                        dataframe=dataframe_data,
-                        error=error_message,
-                        full_history=[ChatMessage(**m) for m in agent.full_history] # Add full_history here
-                    )    except Exception as e:
+        return ChatResponse(
+            mode=mode,
+            summary=summary,
+            sql=sql,
+            dataframe=dataframe_data,
+            error=error_message,
+            full_history=[ChatMessage(**m) for m in agent.full_history] # Ensure full_history
+        )
+    except Exception as e:
         # full_history is always agent.full_history, so we include it even in error responses
         return ChatResponse(
             mode="summary_only",
             summary=f"An unexpected error occurred during processing: {e}",
             error=str(e),
-            full_history=[ChatMessage(**m) for m in agent.full_history] if agent else [] # Add full_history here
+            full_history=[ChatMessage(**m) for m in agent.full_history] if agent else [] # Ensure full_history
         )
-    
-    
-    def get_query_metrics() -> Dict[str, Any]:
-        """
-        Loads query metrics from the log file and returns a summary.
-        """
-        # Exceptions will be caught by the router, which will return a proper 500 error.
-        tracker = QueryMetricsTracker()
-        tracker.load_existing_queries()
-        return tracker.get_summary()
     

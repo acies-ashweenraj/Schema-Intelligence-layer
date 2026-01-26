@@ -1,8 +1,10 @@
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import FileResponse # Import FileResponse
 from typing import List
 import os
+from pathlib import Path # Import Path
 
-from .models import ChatRequest, ChatResponse, ConfigOptions, MetricsSummary
+from .models import ChatRequest, ChatResponse, ConfigOptions
 from . import services
 from app.core.paths import CONFIG_DIR
 
@@ -49,16 +51,26 @@ def get_config_options():
     )
 
 # -------------------------------------------------
-# GET /nl2sql/metrics
+# GET /nl2sql/download-metrics
 # -------------------------------------------------
-@router.get("/metrics", response_model=MetricsSummary)
-def get_metrics():
+@router.get("/download-metrics")
+def download_metrics_file(): # Renamed to avoid confusion with the old /metrics
     """
-    Provides a summary of query metrics from the tracker.
+    Provides the query metrics summary file for download.
     """
     try:
-        summary = services.get_query_metrics()
-        return summary
+        # Define the path to the metrics file relative to the backend's root
+        metrics_file_path = Path("artifacts/query_logs/query_summary.json")
+
+        if not metrics_file_path.exists():
+            # If the file doesn't exist, it means no queries have been logged.
+            raise HTTPException(status_code=404, detail="Metrics summary file not found. Please run a query first.")
+
+        return FileResponse(
+            path=metrics_file_path,
+            filename="query_metrics_summary.json",
+            media_type="application/json"
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

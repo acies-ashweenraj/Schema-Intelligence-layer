@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Literal
+from typing import Literal, Optional
 
 
 class MetadataRequest(BaseModel):
@@ -12,3 +12,4 @@ class MetadataRequest(BaseModel):
     schema_name: str = Field("public", examples=["public"])
 
     output_format: Literal["csv", "json", "xlsx"] = "csv"
+    output_dir: Optional[str] = None

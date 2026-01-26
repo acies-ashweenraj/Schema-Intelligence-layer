@@ -1,33 +1,18 @@
-# env files
+logs
 .env
-.env.*
-Schema-Intelligence-layer\backend\.env
-
-# python cache
-__pycache__/
-*.pyc
-
-# venv
 venv/
-.venv/
+__pycache__/
+artifacts/
 
-# logs
-*.log
+# Node.js
+node_modules/
+dist/
 
-# OS
-.DS_Store
-Thumbs.db
+# IDE settings
+.vscode/
 
-node_modules
-dist
-.env
-.DS_Store
-Schema-Intelligence-layer/backend/schema_metadata_20260126_143932.csv
-Schema-Intelligence-layer/backend/schema_metadata_20260126_143911.json
-Schema-Intelligence-layer/backend/schema_metadata_20260126_133111.csv
-Schema-Intelligence-layer/backend/schema_metadata_20260126_133058.json
-Schema-Intelligence-layer/backend/schema_metadata_20260126_132156.csv
-Schema-Intelligence-layer/backend/schema_metadata_20260126_132145.json
-Schema-Intelligence-layer/backend/hybrid_mapping_output_20260126_144011.csv
-Schema-Intelligence-layer/backend/hybrid_mapping_output_20260126_133350.csv
-Schema-Intelligence-layer/backend/schema_metadata_20260126_152459.json
+# Local databases
+*.sqlite3
+
+# Temporary files
+plan.txt

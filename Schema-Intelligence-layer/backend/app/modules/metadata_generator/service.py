@@ -1,14 +1,20 @@
 import os
+from pathlib import Path # Add this import
+from typing import Optional # Add this import
 from schema_matching_toolkit import DBConfig, GroqConfig
 from schema_matching_toolkit.schema_metadata_generator import generate_schema_metadata
 
 
-def run_metadata_generation(payload):
+def run_metadata_generation(payload, output_dir: Optional[str] = None):
     groq_key = os.getenv("GROQ_API_KEY")
     if not groq_key:
         raise ValueError("GROQ_API_KEY not found in environment (.env)")
 
-    # Build DBConfig
+    # Define default output directory
+    BASE_DIR = Path(__file__).resolve().parent.parent.parent # Schema-Intelligence-layer/backend
+    DEFAULT_LOGS_DIR = BASE_DIR / "logs"
+    final_output_dir = output_dir if output_dir else str(DEFAULT_LOGS_DIR)
+
     db_cfg = DBConfig(
         db_type=payload.db_type,
         host=payload.host,
@@ -19,12 +25,20 @@ def run_metadata_generation(payload):
         schema_name=payload.schema_name,
     )
 
-    # Generate metadata (heavy response)
-    result = generate_schema_metadata(
-        db_cfg=db_cfg,
-        groq_cfg=GroqConfig(api_key=groq_key),
-        output_format=payload.output_format,
-    )
+    original_cwd = os.getcwd()
+    try:
+        os.makedirs(final_output_dir, exist_ok=True)
+        os.chdir(final_output_dir)
+
+        # Generate metadata (heavy response)
+        result = generate_schema_metadata(
+            db_cfg=db_cfg,
+            groq_cfg=GroqConfig(api_key=groq_key),
+            output_format=payload.output_format,
+        )
+    finally:
+        # Always change back to the original directory
+        os.chdir(original_cwd)
 
     # ----------------------------
     # ✅ Build LIGHT UI PREVIEW
@@ -51,13 +65,17 @@ def run_metadata_generation(payload):
                 }
             )
 
+    # Reconstruct the full path for the saved file
     saved_file = result.get("saved_file")
+    full_saved_path = None
+    if saved_file:
+        full_saved_path = os.path.join(final_output_dir, saved_file)
 
     # Download URL (frontend uses this)
     download_url = None
-    if saved_file:
+    if full_saved_path:
         app_base_url = os.getenv("APP_BASE_URL", "http://localhost:8000")
-        download_url = f"{app_base_url}/metadata/download?path={saved_file}"
+        download_url = f"{app_base_url}/metadata/download?path={full_saved_path}"
 
     # ----------------------------
     # ✅ Return CLEAN response
@@ -68,6 +86,6 @@ def run_metadata_generation(payload):
         "summary": result.get("summary"),
         "tables_preview": tables_preview,
         "columns_preview": columns_preview,
-        "saved_file": saved_file,
+        "saved_file": full_saved_path, # Return the full path
         "download_url": download_url,
     }

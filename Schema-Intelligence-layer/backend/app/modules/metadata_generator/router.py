@@ -10,7 +10,7 @@ router = APIRouter(prefix="/metadata", tags=["Metadata"])
 
 @router.post("/generate")
 def generate_metadata(payload: MetadataRequest):
-    return run_metadata_generation(payload)
+    return run_metadata_generation(payload, output_dir=payload.output_dir)
 
 
 @router.get("/download")

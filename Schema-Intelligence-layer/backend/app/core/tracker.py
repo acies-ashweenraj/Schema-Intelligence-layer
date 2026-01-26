@@ -605,7 +605,8 @@ class QueryMetricsTracker:
                 "avg_latency_ms": 0,
                 "avg_confidence": 0,
                 "queries_needing_retry": 0,
-                "avg_retries": 0
+                "avg_retries": 0,
+                "last_updated": datetime.now().isoformat()
             }
         
         successful = sum(1 for q in self.queries if q["success"])

@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from typing import Optional # Add this import
 
 
 class DBRequestConfig(BaseModel):
@@ -19,3 +20,4 @@ class HybridMappingRequest(BaseModel):
     qdrant_port: int = Field(default=6333, example=6333)
 
     top_k_dense: int = Field(default=5, example=5)
+    output_dir: Optional[str] = None

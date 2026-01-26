@@ -5,6 +5,7 @@ import { CodeBlock } from "../components/CodeBlock";
 import { Button } from "../components/Button";
 import { Loader } from "../components/Loader";
 import { api } from "../api/client"; // To get config
+import logo from "../assets/logo.png";
 
 // Main Chat Page Component
 export default function ChatPage({ onExit }) {
@@ -67,7 +68,7 @@ export default function ChatPage({ onExit }) {
     if (!config.client_ids.length) return; // Don't create chat if config is not loaded
 
     const id = `chat-${Date.now()}`;
-    const initialMessage = `Hi! I'm your AI assistant, ready to answer questions about the **${
+    const initialMessage = `Hi! I'm your AI assistant, ready to answer questions about the **${ 
       chatSettings.client_id || config.client_ids[0]
     }** database. What can I help you with?`;
 
@@ -196,7 +197,7 @@ export default function ChatPage({ onExit }) {
             >
               Download Query Metrics
             </a>
-            {/* Placeholder for future download history button */}
+            {/* Download History Button */}
             <Button onClick={handleDownloadHistory} variant="soft" className="w-full text-xs" disabled={fullHistoryData.length === 0}>
               Download History
             </Button>
@@ -263,30 +264,45 @@ export default function ChatPage({ onExit }) {
           </Button>
         </aside>
 
-        {/* --- CHAT PANEL --- */}
-        <main className="flex flex-col h-screen bg-slate-100">
-          <div className="p-4 border-b bg-white/70 backdrop-blur-lg">
-            <h3 className="text-lg font-bold text-slate-800">
-              {activeChat?.title || "Chat"}
-            </h3>
-            <p className="text-sm text-slate-500">
-              Ask questions to get summaries and data from the Knowledge Graph.
-            </p>
-          </div>
-
-          {/* MESSAGES */}
-          <div className="flex-1 p-6 overflow-y-auto space-y-6">
-            {activeChat?.messages?.map((m, idx) => (
-              <Message key={idx} message={m} />
-            ))}
-            {loading && (
-              <div className="flex justify-start">
-                <div className="bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
-                  <TypingDots />
-                </div>
-              </div>
-            )}
-            <div ref={bottomRef} />
+                      {/* --- CHAT PANEL --- */}
+                      <main className="flex flex-col h-screen bg-slate-100 overflow-x-hidden min-w-0">
+                        <div className="p-4 border-b bg-white/80 backdrop-blur-lg flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="rounded-xl bg-slate-900 px-3 py-2 shadow-sm">
+                              <img
+                                src={logo}
+                                alt="Schema Intelligence"
+                                className="h-7 w-auto object-contain"
+                              />
+                            </div>
+        
+                            <div>
+                              <h3 className="text-lg font-bold text-slate-800">
+                                {activeChat?.title || "KG Assistant"}
+                              </h3>
+                              <p className="text-xs text-slate-500">
+                                Conversational NL2SQL
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        {/* MESSAGES */}
+                        <div className="flex-1 p-6 overflow-y-auto overflow-x-hidden space-y-6 min-w-0">
+                          {activeChat?.messages?.map((m, idx) => (
+                            <Message key={idx} message={m} />
+                          ))}
+                          {activeChat?.messages?.length === 0 && (
+                            <p className="text-sm text-slate-400 text-center mt-10">
+                              Start a conversation to query your data 🚀
+                            </p>
+                          )}
+                          {loading && (
+                            <div className="flex justify-start">
+                              <div className="bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-sm">
+                                <TypingDots />
+                              </div>
+                            </div>
+                          )}            <div ref={bottomRef} />
           </div>
 
           {/* INPUT AREA */}
@@ -329,16 +345,181 @@ function Message({ message }) {
   // Handle bot messages, which can have summary, sql, dataframe, or error
   return (
     <div className="space-y-4">
-      {message.summary && <ChatBubble role="assistant" text={message.summary} />}
+      {message.summary && (<ChatBubble role="assistant" text={message.summary} />)}
       {message.sql && (
         <div className="max-w-[80%] min-w-0">
           <CodeBlock value={message.sql} />
         </div>
       )}
       {message.dataframe && message.dataframe.length > 0 && (
-        <div className="max-w-[80%] min-w-0 space-y-3">
+        <div className="w-full min-w-0 overflow-x-auto space-y-3">
           <DataTable data={message.dataframe} />
           {chartSuggestion && (
             <div className="rounded-2xl bg-indigo-50 border border-indigo-200 text-indigo-800 p-3 text-sm font-medium">
               <p>
-                💡 **Suggestion:** You could visualize this data as a{
+                💡 <strong>Suggestion:</strong> You could visualize this data as{" "}
+                <strong>{chartSuggestion}</strong>.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+      {message.error && (
+        <div className="max-w-[80%] min-w-0 rounded-2xl bg-red-50 border border-red-200 text-red-800 p-3 text-sm font-medium">
+          <p>
+            <strong>Error:</strong> {message.error}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Chart suggestion utility
+function getChartSuggestion(data) {
+  if (!data || data.length === 0) return null;
+
+  const firstRow = data[0];
+  const headers = Object.keys(firstRow);
+  if (headers.length < 2) return null;
+
+  const types = headers.map((h) => {
+    const value = firstRow[h];
+    if (typeof value === "number") return "number";
+    if (typeof value === "string") {
+      // Simple date check
+      if (/\d{4}-\d{2}-\d{2}/.test(value)) return "date";
+      return "string";
+    }
+    return "other";
+  });
+
+  const stringCount = types.filter((t) => t === "string").length;
+  const numberCount = types.filter((t) => t === "number").length;
+  const dateCount = types.filter((t) => t === "date").length;
+
+  if (stringCount === 1 && numberCount >= 1) {
+    return "Bar Chart";
+  }
+  if (dateCount === 1 && numberCount >= 1) {
+    return "Line Chart";
+  }
+  if (numberCount >= 2) {
+    return "Scatter Plot";
+  }
+
+  return null;
+}
+
+// Sub-component for the data table
+function DataTable({ data }) {
+  const headers = Object.keys(data[0]);
+
+  function convertToCSV(jsonData) {
+    const headers = Object.keys(jsonData[0]);
+    const csvRows = [];
+    // Add header row
+    csvRows.push(headers.join(","));
+
+    // Add data rows
+    for (const row of jsonData) {
+      const values = headers.map((header) => {
+        const escaped = ("" + row[header]).replace(/"/g, '""'); // Escape double quotes
+        return `"${escaped}"`;
+      });
+      csvRows.push(values.join(","));
+    }
+    return csvRows.join("\n");
+  }
+
+  function downloadCSV() {
+    const csvString = convertToCSV(data);
+    const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `query_result_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  return (
+    <div className="bg-white border border-slate-200 rounded-2xl shadow-sm">
+      <div className="p-3 border-b border-slate-200 flex justify-between items-center">
+        <p className="text-xs font-bold text-slate-600">
+          Query Result ({data.length} rows)
+        </p>
+        <Button
+          onClick={downloadCSV}
+          variant="soft"
+          className="px-3 py-1.5 text-xs"
+        >
+          Download as CSV
+        </Button>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-left">
+          <thead className="bg-slate-50 border-b border-slate-200 text-xs text-slate-600 uppercase">
+            <tr>
+              {headers.map((h) => (
+                <th key={h} className="px-4 py-2 font-semibold">
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100">
+            {data.map((row, i) => (
+              <tr key={i} className="hover:bg-slate-50">
+                {headers.map((h) => (
+                  <td
+                    key={h}
+                    className="px-4 py-2 text-slate-700 truncate max-w-xs"
+                  >
+                    {String(row[h])}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// Sub-component for settings dropdown
+function SettingSelect({ label, value, onChange, options }) {
+  return (
+    <div>
+      <label className="text-xs font-bold text-slate-600">{label}</label>
+      <select
+        value={value}
+        onChange={onChange}
+        className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-400"
+      >
+        {options.map((opt) => (
+          <option key={opt} value={opt}>
+            {opt}
+          </option>
+        ))}
+        {options.length === 0 && <option disabled>Loading...</option>}
+      </select>
+    </div>
+  );
+}
+
+// Sub-component for typing indicator
+function TypingDots() {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-sm text-slate-600">Thinking</span>
+      <span className="flex items-center gap-1.5">
+        <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-bounce [animation-delay:-0.3s]"></span>
+        <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-bounce [animation-delay:-0.15s]"></span>
+        <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-bounce"></span>
+      </span>
+    </div>
+  );
+}

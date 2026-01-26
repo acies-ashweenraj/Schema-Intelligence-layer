@@ -1,1 +1,14 @@
 timestamp,nl_query,sql_query,success,execution_time_ms,input_tokens,output_tokens,total_tokens,cost_usd,confidence,retry_attempt,error,table_count,complexity
+2026-01-26T18:19:24.402982,"write the 5 incidents","",True,778.4171104431152,1311,148,1459,0.000088,0,1,"",0,medium
+2026-01-26T18:19:34.846335,"get 5 incidents","SELECT * FROM og_incidents LIMIT 5;",True,291.6383743286133,1452,56,1508,0.000081,0,1,"",0,medium
+2026-01-26T18:27:45.408684,"give me the 5 incidents","SELECT * FROM og_incidents LIMIT 5;",True,517.4450874328613,1224,59,1283,0.000070,0,1,"",0,medium
+2026-01-26T18:39:00.707071,"tell me the count f incidents","SELECT COUNT(*) FROM og_incidents;",True,339.34545516967773,1224,58,1282,0.000070,0,1,"",0,medium
+2026-01-26T22:51:53.440250,"what are incidents","",True,806.7107200622559,1217,86,1303,0.000074,0,1,"",0,medium
+2026-01-26T22:53:44.497448,"what are incidents","",True,954.5242786407471,1221,99,1320,0.000076,0,1,"",0,medium
+2026-01-26T22:54:28.593522,"what can be the suggestion of graph for the incidents","",True,1780.303716659546,1319,93,1412,0.000080,0,1,"",0,medium
+2026-01-26T22:54:50.333490,"give me 5 incidents","SELECT * FROM og_incidents LIMIT 5;",True,379.7140121459961,1406,56,1462,0.000079,0,1,"",0,medium
+2026-01-26T23:03:25.033485,"give me 5 incidents","SELECT * FROM og_incidents LIMIT 5;",True,317.5632953643799,1223,42,1265,0.000067,0,1,"",0,medium
+2026-01-26T23:09:43.623868,"give me 5 incidents","SELECT * FROM og_incidents LIMIT 5;",True,399.4905948638916,1223,42,1265,0.000067,0,1,"",0,medium
+2026-01-26T23:16:44.409288,"give me 10 records","SELECT * FROM og_incidents LIMIT 10;",True,297.3589897155762,1250,42,1292,0.000069,0,1,"",0,medium
+2026-01-26T23:17:52.530996,"give me 5 records","SELECT * FROM og_incidents LIMIT 5;",True,275.6915092468262,1277,42,1319,0.000070,0,1,"",0,medium
+2026-01-26T23:18:23.578269,"give me 7 records","SELECT * FROM og_incidents LIMIT 7;",True,306.29754066467285,1304,42,1346,0.000072,0,1,"",0,medium

@@ -10,7 +10,7 @@ router = APIRouter(prefix="/mapping", tags=["Mapping Layer"])
 @router.post("/hybrid")
 def hybrid_mapping(req: HybridMappingRequest):
     try:
-        result = run_hybrid_mapping_service(req)
+        result = run_hybrid_mapping_service(req, output_dir=req.output_dir)
         return {
             "status": "success",
             "generated_at": result.get("generated_at"),

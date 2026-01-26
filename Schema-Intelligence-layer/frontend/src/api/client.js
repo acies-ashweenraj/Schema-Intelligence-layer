@@ -8,8 +8,8 @@ export const api = axios.create({
    METADATA
 ================================ */
 
-export async function generateMetadata(payload) {
-  const res = await api.post("/metadata/generate", payload);
+export async function generateMetadata(payload, output_dir = "logs") {
+  const res = await api.post("/metadata/generate", { ...payload, output_dir });
   return res.data;
 }
 
@@ -23,8 +23,8 @@ export function getMetadataDownloadUrl(path) {
    MAPPING
 ================================ */
 
-export async function runHybridMapping(payload) {
-  const res = await api.post("/mapping/hybrid", payload);
+export async function runHybridMapping(payload, output_dir = "logs") {
+  const res = await api.post("/mapping/hybrid", { ...payload, output_dir });
   return res.data;
 }
 
@@ -40,10 +40,5 @@ export function getMappingDownloadUrl(path) {
 
 export async function askQuestion(payload) {
   const res = await api.post("/nl2sql/chat", payload);
-  return res.data;
-}
-
-export async function getMetrics() {
-  const res = await api.get("/nl2sql/metrics");
   return res.data;
 }

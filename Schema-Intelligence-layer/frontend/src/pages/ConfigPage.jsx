@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { generateMetadata } from "../api/client";
+import { PanelLeft } from "lucide-react"; // Import the icon
+import logo from "../assets/logo.png";
 
 export default function ConfigPage({ onConnected }) {
   const [form, setForm] = useState({
@@ -14,6 +16,7 @@ export default function ConfigPage({ onConnected }) {
 
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // New state for sidebar visibility
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -50,14 +53,14 @@ export default function ConfigPage({ onConnected }) {
       {/* TOP BAR */}
       <div className="sticky top-0 z-30 border-b border-slate-200 bg-white/85 backdrop-blur">
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-indigo-600 to-fuchsia-600 blur-md opacity-40" />
-              <div className="relative h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-600 via-violet-600 to-fuchsia-600 text-white flex items-center justify-center font-extrabold shadow-md">
-                SI
-              </div>
-            </div>
-
+                      <div className="flex items-center gap-3">
+                        <div className="rounded-xl bg-slate-900 px-3 py-2 shadow-sm">
+                          <img
+                            src={logo}
+                            alt="Schema Intelligence"
+                            className="h-7 w-auto object-contain"
+                          />
+                        </div>
             <div className="leading-tight">
               <div className="text-sm font-semibold text-slate-900">
                 Schema Intelligence Layer{" "}
@@ -80,92 +83,106 @@ export default function ConfigPage({ onConnected }) {
       <div className="mx-auto max-w-7xl px-4 py-7">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* SIDEBAR */}
-          <div className="lg:col-span-3">
-            <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-              <div className="px-4 py-4 border-b border-slate-200 bg-gradient-to-r from-indigo-50 via-violet-50 to-fuchsia-50">
-                <div className="text-xs text-slate-600 font-bold uppercase tracking-wide">
-                  Modules
+          {isSidebarOpen && (
+            <div className="lg:col-span-3">
+              <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                <div className="px-4 py-4 border-b border-slate-200 bg-gradient-to-r from-indigo-50 via-violet-50 to-fuchsia-50">
+                  <div className="text-xs text-slate-600 font-bold uppercase tracking-wide">
+                    Modules
+                  </div>
+                  <div className="text-sm font-semibold text-slate-900 mt-1">
+                    Workspace Tools
+                  </div>
                 </div>
-                <div className="text-sm font-semibold text-slate-900 mt-1">
-                  Workspace Tools
-                </div>
-              </div>
 
-              <div className="p-3 space-y-2">
-                <SideItem
-                  active
-                  title="Connect"
-                  subtitle="Database configuration"
-                  icon="🔌"
-                />
-                <SideItem
-                  title="Metadata"
-                  subtitle="Schema + table details"
-                  icon="📊"
-                />
-                <SideItem
-                  title="Mapping"
-                  subtitle="Compare / map schemas"
-                  icon="🧩"
-                />
-                <SideItem
-                  title="Chatbot"
-                  subtitle="Ask questions in NLP"
-                  icon="✨"
-                />
-              </div>
-              {/* QUICK SNAPSHOT */}
-            <div className="mt-6 rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-              <div className="px-4 py-4 border-b border-slate-200 bg-white">
-                <div className="text-sm font-semibold text-slate-900">
-                  Connection Snapshot
+                <div className="p-3 space-y-2">
+                  <SideItem
+                    active
+                    title="Connect"
+                    subtitle="Database configuration"
+                    icon="🔌"
+                  />
+                  <SideItem
+                    title="Metadata"
+                    subtitle="Schema + table details"
+                    icon="📊"
+                    disabled={true}
+                    tooltip="Please connect to a database first."
+                  />
+                  <SideItem
+                    title="Mapping"
+                    subtitle="Compare / map schemas"
+                    icon="🧩"
+                    disabled={true}
+                    tooltip="Please connect to a database first."
+                  />
+                  <SideItem
+                    title="Chatbot"
+                    subtitle="Ask questions in NLP"
+                    icon="✨"
+                    disabled={true}
+                    tooltip="Please connect to a database first."
+                  />
                 </div>
-                <div className="text-xs text-slate-500 mt-1">
-                  Current input values
-                </div>
-              </div>
+                {/* QUICK SNAPSHOT */}
+                <div className="mt-6 rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+                  <div className="px-4 py-4 border-b border-slate-200 bg-white">
+                    <div className="text-sm font-semibold text-slate-900">
+                      Connection Snapshot
+                    </div>
+                    <div className="text-xs text-slate-500 mt-1">
+                      Current input values
+                    </div>
+                  </div>
 
-              <div className="p-4 grid grid-cols-2 gap-3">
-                <InfoTile label="Host" value={form.host || "-"} />
-                <InfoTile label="Port" value={String(form.port || "-")} />
-                <InfoTile label="Database" value={form.database || "-"} />
-                <InfoTile label="Schema" value={form.schema_name || "-"} />
+                  <div className="p-4 grid grid-cols-2 gap-3">
+                    <InfoTile label="Host" value={form.host || "-"} />
+                    <InfoTile label="Port" value={String(form.port || "-")} />
+                    <InfoTile label="Database" value={form.database || "-"} />
+                    <InfoTile label="Schema" value={form.schema_name || "-"} />
+                  </div>
+                </div>
+                <div className="p-4 border-t border-slate-200 bg-slate-50">
+                  <div className="text-sm font-semibold text-slate-900">
+                    Live Status
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <StatusChip
+                      color={loading ? "amber" : "indigo"}
+                      text={loading ? "Connecting..." : "Ready"}
+                    />
+                    <StatusChip
+                      color={form.database ? "emerald" : "slate"}
+                      text={form.database ? "DB Selected" : "DB Missing"}
+                    />
+                    <StatusChip color="violet" text="Secure" />
+                  </div>
+
+                  <div className="mt-4 text-xs text-slate-500 leading-relaxed">
+                    🔒 Credentials are used only for workspace setup. Nothing is
+                    stored in UI.
+                  </div>
+
+                  <div className="mt-3 text-[11px] font-semibold text-slate-400">
+                    Powered by <span className="text-slate-600">ACIES Global</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-
-              <div className="p-4 border-t border-slate-200 bg-slate-50">
-                <div className="text-sm font-semibold text-slate-900">
-                  Live Status
-                </div>
-
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <StatusChip
-                    color={loading ? "amber" : "indigo"}
-                    text={loading ? "Connecting..." : "Ready"}
-                  />
-                  <StatusChip
-                    color={form.database ? "emerald" : "slate"}
-                    text={form.database ? "DB Selected" : "DB Missing"}
-                  />
-                  <StatusChip color="violet" text="Secure" />
-                </div>
-
-                <div className="mt-4 text-xs text-slate-500 leading-relaxed">
-                  🔒 Credentials are used only for workspace setup. Nothing is
-                  stored in UI.
-                </div>
-
-                <div className="mt-3 text-[11px] font-semibold text-slate-400">
-                  Powered by <span className="text-slate-600">ACIES Global</span>
-                </div>
-              </div>
-            </div>
-
-            
+          )}
 
           {/* MAIN */}
-          <div className="lg:col-span-9">
+          <div className={`${isSidebarOpen ? 'lg:col-span-9' : 'lg:col-span-12'}`}>
+            <div className="mb-4 flex justify-end"> {/* Toggle button added here */}
+              <button
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="rounded-full bg-white p-2 shadow-sm border border-slate-200 text-slate-600 hover:bg-slate-50"
+                title={isSidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+              >
+                <PanelLeft size={18} />
+              </button>
+            </div>
             {/* MAIN PANEL */}
             <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
               {/* Header */}
@@ -332,14 +349,17 @@ function TopPill({ text }) {
   );
 }
 
-function SideItem({ title, subtitle, active, icon }) {
+function SideItem({ title, subtitle, active, icon, disabled = false, onClick, tooltip = "" }) {
   return (
-    <div
-      className={`group flex items-start gap-3 rounded-xl border px-3 py-3 transition ${
-        active
-          ? "border-indigo-200 bg-gradient-to-r from-indigo-50 via-violet-50 to-fuchsia-50 shadow-sm"
-          : "border-slate-200 bg-white hover:bg-slate-50"
-      }`}
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      title={tooltip}
+      className={`group flex w-full items-start gap-3 rounded-xl border px-3 py-3 transition
+        ${active ?
+          "border-indigo-200 bg-gradient-to-r from-indigo-50 via-violet-50 to-fuchsia-50 shadow-sm"
+          : "border-slate-200 bg-white hover:bg-slate-50"}
+        ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
     >
       <div
         className={`mt-0.5 h-9 w-9 rounded-xl flex items-center justify-center text-sm font-bold shadow-sm ${
@@ -357,7 +377,7 @@ function SideItem({ title, subtitle, active, icon }) {
           {subtitle}
         </div>
       </div>
-    </div>
+    </button>
   );
 }
 
