@@ -151,23 +151,26 @@ async def process_chat_message(request: ChatRequest) -> ChatResponse:
                 summary=summary,
                 sql=sql_query,
                 dataframe=dataframe_data,
-                error=error_message
+                error=error_message,
+                full_history=[ChatMessage(**m) for m in agent.full_history] # Add full_history here
             )
         else:
             raise ValueError(f"Unknown agent: {request.agent_name}")
 
-        return ChatResponse(
-            mode=mode,
-            summary=summary,
-            sql=sql,
-            dataframe=dataframe_data,
-            error=error_message
-        )
-    except Exception as e:
+                    return ChatResponse(
+                        mode=mode,
+                        summary=summary,
+                        sql=sql,
+                        dataframe=dataframe_data,
+                        error=error_message,
+                        full_history=[ChatMessage(**m) for m in agent.full_history] # Add full_history here
+                    )    except Exception as e:
+        # full_history is always agent.full_history, so we include it even in error responses
         return ChatResponse(
             mode="summary_only",
             summary=f"An unexpected error occurred during processing: {e}",
-            error=str(e)
+            error=str(e),
+            full_history=[ChatMessage(**m) for m in agent.full_history] if agent else [] # Add full_history here
         )
     
     
@@ -175,15 +178,8 @@ async def process_chat_message(request: ChatRequest) -> ChatResponse:
         """
         Loads query metrics from the log file and returns a summary.
         """
-        try:
-            tracker = QueryMetricsTracker()
-            tracker.load_existing_queries()
-            return tracker.get_summary()
-        except Exception as e:
-            # Log the error and return a friendly message
-            # In a real app, you'd use a proper logger
-            print(f"Error loading metrics: {e}")
-            return {
-                "error": "Could not load metrics data.",
-                "details": str(e)
-            }    
+        # Exceptions will be caught by the router, which will return a proper 500 error.
+        tracker = QueryMetricsTracker()
+        tracker.load_existing_queries()
+        return tracker.get_summary()
+    

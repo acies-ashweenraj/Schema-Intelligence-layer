@@ -21,28 +21,10 @@ class ChatResponse(BaseModel):
     sql: Optional[str] = None
     dataframe: Optional[List[Dict[str, Any]]] = None
     error: Optional[str] = None
+    full_history: Optional[List[ChatMessage]] = None
 
 class ConfigOptions(BaseModel):
     """Response model for the /config endpoint."""
     client_ids: List[str]
     agent_types: List[str]
     model_names: List[str]
-
-class TotalTokens(BaseModel):
-    """Represents the total input and output tokens."""
-    input: int
-    output: int
-
-class MetricsSummary(BaseModel):
-    """Response model for the /metrics endpoint."""
-    total_queries: int
-    successful: int
-    failed: int
-    success_rate: float
-    total_tokens: TotalTokens
-    total_cost_usd: float
-    avg_latency_ms: float
-    avg_confidence: float
-    queries_needing_retry: int
-    avg_retries: float
-    last_updated: str
