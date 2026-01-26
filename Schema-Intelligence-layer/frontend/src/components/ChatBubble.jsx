@@ -2,7 +2,7 @@ export default function ChatBubble({ role, text }) {
   const isUser = role === "user";
 
   // Base classes for all bubbles
-  const baseClasses = "max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm";
+  const baseClasses = "max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm min-w-0";
 
   // Role-specific classes
   const userClasses = "bg-indigo-600 text-white rounded-br-lg";
