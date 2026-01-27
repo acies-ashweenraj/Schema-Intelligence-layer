@@ -235,6 +235,50 @@ Please provide a concise, natural language summary of this data that directly an
         except Exception as e:
             return f"❌ Database error: {str(e)[:200]}"
 
+    def _get_chart_suggestion(self, df: pd.DataFrame) -> Optional[str]:
+        """
+        Suggests a chart type based on the DataFrame's columns and data types.
+        This is a rule-based approach for initial implementation.
+        """
+        if df.empty:
+            return None
+
+        headers = df.columns.tolist()
+        if len(headers) < 2:
+            return None # Need at least two columns for most charts
+
+        # Analyze data types of the first row to infer column types
+        column_types = {}
+        for col in headers:
+            # Check if column contains numeric data
+            if pd.api.types.is_numeric_dtype(df[col]):
+                column_types[col] = 'number'
+            # Check if column contains datetime data
+            elif pd.api.types.is_datetime64_any_dtype(df[col]) or pd.api.types.is_period_dtype(df[col]):
+                column_types[col] = 'datetime'
+            else:
+                column_types[col] = 'string'
+        
+        string_cols = [col for col, typ in column_types.items() if typ == 'string']
+        number_cols = [col for col, typ in column_types.items() if typ == 'number']
+        datetime_cols = [col for col, typ in column_types.items() if typ == 'datetime']
+
+        # Rule 1: One string (category) and one or more numbers -> Bar Chart
+        if len(string_cols) >= 1 and len(number_cols) >= 1:
+            return "bar"
+        # Rule 2: One datetime (time series) and one or more numbers -> Line Chart
+        if len(datetime_cols) >= 1 and len(number_cols) >= 1:
+            return "line"
+        # Rule 3: Two or more numbers -> Scatter Plot
+        if len(number_cols) >= 2:
+            return "scatter"
+        # Rule 4: One string (category) and one number -> Pie Chart (if data is suitable, e.g., for proportions)
+        if len(string_cols) == 1 and len(number_cols) == 1 and df[number_cols[0]].sum() > 0:
+             return "pie"
+
+        return None # No suitable chart found based on rules
+
+
 
 def run_interactive_session(client_id: str):
     """Main function to run the new, structured interactive session."""

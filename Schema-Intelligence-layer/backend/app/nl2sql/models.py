@@ -19,6 +19,7 @@ class ChatResponse(BaseModel):
     mode: str
     summary: Optional[str] = None
     sql: Optional[str] = None
+    chart_suggestion: Optional[str] = None  # e.g., "bar", "line", "pie", "scatter"
     dataframe: Optional[List[Dict[str, Any]]] = None
     error: Optional[str] = None
     full_history: Optional[List[ChatMessage]] = None

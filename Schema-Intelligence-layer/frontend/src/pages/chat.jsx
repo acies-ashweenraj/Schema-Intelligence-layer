@@ -6,6 +6,7 @@ import { Button } from "../components/Button";
 import { Loader } from "../components/Loader";
 import { api } from "../api/client"; // To get config
 import logo from "../assets/logo.png";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 // Main Chat Page Component
 export default function ChatPage({ onExit }) {
@@ -29,6 +30,7 @@ export default function ChatPage({ onExit }) {
 
   // FULL HISTORY DATA for download
   const [fullHistoryData, setFullHistoryData] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const activeChat = chats.find((c) => c.id === activeChatId);
   const bottomRef = useRef(null);
@@ -169,99 +171,128 @@ export default function ChatPage({ onExit }) {
 
   return (
     <>
-      <div className="h-screen w-full bg-slate-50 grid grid-cols-1 lg:grid-cols-[340px_1fr]">
+      <div
+        className={`h-screen w-full bg-slate-50 grid transition-all duration-300 ${
+          isSidebarOpen
+            ? "grid-cols-1 lg:grid-cols-[340px_1fr]"
+            : "grid-cols-1 lg:grid-cols-[80px_1fr]"
+        }`}
+      >
         {/* --- SIDEBAR --- */}
-        <aside className="bg-white border-r border-slate-200 p-4 flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-bold text-slate-800">KG Assistant</h2>
-              <p className="text-xs text-slate-500">Conversational NL2SQL</p>
-            </div>
-            <span className="text-xs px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-semibold">
-              Connected
-            </span>
-          </div>
+        <aside className="bg-white border-r border-slate-200 flex flex-col transition-all duration-300">
+          <div className={`${isSidebarOpen ? "p-4" : "p-2"} flex flex-col gap-4 h-full`}>
 
-          <Button onClick={() => newChat()} variant="primary" className="w-full">
-            + New Chat
-          </Button>
-
-          <div className="flex gap-2">
-            {/* Download Metrics as a direct link */}
-            <a
-              href="http://localhost:8000/nl2sql/download-metrics"
-              target="_blank" // Open in new tab
-              rel="noopener noreferrer" // Security best practice
-              className="w-full text-xs inline-flex items-center justify-center rounded-2xl px-3 py-2 font-semibold transition
-                         bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100"
-            >
-              Download Query Metrics
-            </a>
-            {/* Download History Button */}
-            <Button onClick={handleDownloadHistory} variant="soft" className="w-full text-xs" disabled={fullHistoryData.length === 0}>
-              Download History
-            </Button>
-          </div>
-
-          {/* CHAT HISTORY */}
-          <div className="flex-1 space-y-2 overflow-y-auto pr-1 -mr-1">
-            <p className="text-xs font-semibold text-slate-500 px-2 uppercase">
-              Chat History
-            </p>
-            {chats.map((c) => (
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              {isSidebarOpen && (
+                <div>
+                  <h2 className="text-lg font-bold text-slate-800">KG Assistant</h2>
+                  <p className="text-xs text-slate-500">Conversational NL2SQL</p>
+                </div>
+              )}
               <button
-                key={c.id}
-                onClick={() => setActiveChatId(c.id)}
-                className={`w-full text-left px-3 py-2.5 rounded-xl border transition ${ 
-                  c.id === activeChatId
-                    ? "bg-indigo-50 border-indigo-200"
-                    : "bg-white hover:bg-slate-50 border-slate-200"
-                }`}
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="ml-auto rounded-lg border border-slate-200 px-2 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-100"
               >
-                <p className="text-sm font-semibold text-slate-800 truncate">
-                  {c.title}
-                </p>
-                <p className="text-xs text-slate-500 truncate mt-1">
-                  {c.messages?.[c.messages.length - 1]?.summary}
-                </p>
+                {isSidebarOpen ? "⟨⟨" : "⟩⟩"}
               </button>
-            ))}
-          </div>
+            </div>
 
-          {/* SETTINGS */}
-          <div className="border-t border-slate-200 pt-4 space-y-3">
-            <p className="text-xs font-semibold text-slate-500 px-2 uppercase">
-              Settings
-            </p>
-            <SettingSelect
-              label="Client ID"
-              value={chatSettings.client_id}
-              onChange={(e) =>
-                setChatSettings((p) => ({ ...p, client_id: e.target.value }))
-              }
-              options={configOptions.client_ids}
-            />
-            <SettingSelect
-              label="Agent Type"
-              value={chatSettings.agent_name}
-              onChange={(e) =>
-                setChatSettings((p) => ({ ...p, agent_name: e.target.value }))
-              }
-              options={configOptions.agent_types}
-            />
-            <SettingSelect
-              label="Model Name"
-              value={chatSettings.model_name}
-              onChange={(e) =>
-                setChatSettings((p) => ({ ...p, model_name: e.target.value }))
-              }
-              options={configOptions.model_names}
-            />
-          </div>
+            {/* New Chat */}
+            <Button onClick={() => newChat()} variant="primary" className="w-full">
+              {isSidebarOpen ? "+ New Chat" : "+"}
+            </Button>
 
-          <Button onClick={onExit} variant="danger" className="w-full">
-            Exit Workspace
-          </Button>
+            {/* Download buttons */}
+            {isSidebarOpen && (
+              <div className="flex gap-2">
+                <a
+                  href="http://localhost:8000/nl2sql/download-metrics"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full text-xs inline-flex items-center justify-center rounded-2xl px-3 py-2 font-semibold transition
+                             bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100"
+                >
+                  Download Query Metrics
+                </a>
+
+                <Button
+                  onClick={handleDownloadHistory}
+                  variant="soft"
+                  className="w-full text-xs"
+                  disabled={fullHistoryData.length === 0}
+                >
+                  Download History
+                </Button>
+              </div>
+            )}
+
+            {/* Chat history */}
+            {isSidebarOpen && (
+              <div className="flex-1 space-y-2 overflow-y-auto pr-1 -mr-1">
+                <p className="text-xs font-semibold text-slate-500 px-2 uppercase">
+                  Chat History
+                </p>
+
+                {chats.map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => setActiveChatId(c.id)}
+                    className={`w-full text-left px-3 py-2.5 rounded-xl border transition ${
+                      c.id === activeChatId
+                        ? "bg-indigo-50 border-indigo-200"
+                        : "bg-white hover:bg-slate-50 border-slate-200"
+                    }`}
+                  >
+                    <p className="text-sm font-semibold text-slate-800 truncate">
+                      {c.title}
+                    </p>
+                    <p className="text-xs text-slate-500 truncate mt-1">
+                      {c.messages?.[c.messages.length - 1]?.summary}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Settings */}
+            {isSidebarOpen && (
+              <div className="border-t border-slate-200 pt-4 space-y-3">
+                <SettingSelect
+                  label="Client ID"
+                  value={chatSettings.client_id}
+                  onChange={(e) =>
+                    setChatSettings((p) => ({ ...p, client_id: e.target.value }))
+                  }
+                  options={configOptions.client_ids}
+                />
+
+                <SettingSelect
+                  label="Agent Type"
+                  value={chatSettings.agent_name}
+                  onChange={(e) =>
+                    setChatSettings((p) => ({ ...p, agent_name: e.target.value }))
+                  }
+                  options={configOptions.agent_types}
+                />
+
+                <SettingSelect
+                  label="Model Name"
+                  value={chatSettings.model_name}
+                  onChange={(e) =>
+                    setChatSettings((p) => ({ ...p, model_name: e.target.value }))
+                  }
+                  options={configOptions.model_names}
+                />
+              </div>
+            )}
+
+            {/* Exit */}
+            <Button onClick={onExit} variant="danger" className="w-full">
+              {isSidebarOpen ? "Exit Workspace" : "Exit"}
+            </Button>
+
+          </div>
         </aside>
 
                       {/* --- CHAT PANEL --- */}
@@ -336,12 +367,8 @@ function Message({ message }) {
     return <ChatBubble role="user" text={message.summary} />;
   }
 
-  // Determine chart suggestion based on data
-  const chartSuggestion =
-    message.dataframe && message.dataframe.length > 0
-      ? getChartSuggestion(message.dataframe)
-      : null;
-
+        // Determine chart suggestion based on data from backend
+        const chartSuggestion = message.chart_suggestion ?? null;
   // Handle bot messages, which can have summary, sql, dataframe, or error
   return (
     <div className="space-y-4">
@@ -375,41 +402,7 @@ function Message({ message }) {
   );
 }
 
-// Chart suggestion utility
-function getChartSuggestion(data) {
-  if (!data || data.length === 0) return null;
 
-  const firstRow = data[0];
-  const headers = Object.keys(firstRow);
-  if (headers.length < 2) return null;
-
-  const types = headers.map((h) => {
-    const value = firstRow[h];
-    if (typeof value === "number") return "number";
-    if (typeof value === "string") {
-      // Simple date check
-      if (/\d{4}-\d{2}-\d{2}/.test(value)) return "date";
-      return "string";
-    }
-    return "other";
-  });
-
-  const stringCount = types.filter((t) => t === "string").length;
-  const numberCount = types.filter((t) => t === "number").length;
-  const dateCount = types.filter((t) => t === "date").length;
-
-  if (stringCount === 1 && numberCount >= 1) {
-    return "Bar Chart";
-  }
-  if (dateCount === 1 && numberCount >= 1) {
-    return "Line Chart";
-  }
-  if (numberCount >= 2) {
-    return "Scatter Plot";
-  }
-
-  return null;
-}
 
 // Sub-component for the data table
 function DataTable({ data }) {

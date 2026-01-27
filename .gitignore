@@ -16,3 +16,4 @@ dist/
 
 # Temporary files
 plan.txt
+Schema-Intelligence-layer/backend/artifacts/query_logs/query_performance.csv
