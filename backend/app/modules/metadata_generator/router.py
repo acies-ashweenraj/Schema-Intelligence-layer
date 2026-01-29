@@ -1,6 +1,7 @@
 import os
 from fastapi import APIRouter, Query, HTTPException
 from fastapi.responses import FileResponse
+import mimetypes
 
 from .schemas import MetadataRequest
 from .service import run_metadata_generation
@@ -14,12 +15,7 @@ def generate_metadata(payload: MetadataRequest):
 
 
 @router.get("/download")
-def download_metadata(path: str = Query(...)):
+def download_metadata(path: str):
     if not os.path.exists(path):
         raise HTTPException(status_code=404, detail="File not found")
-
-    return FileResponse(
-        path,
-        filename=os.path.basename(path),
-        media_type="application/octet-stream",
-    )
+    return FileResponse(path, filename=os.path.basename(path))

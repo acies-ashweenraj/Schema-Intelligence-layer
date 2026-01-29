@@ -1,21 +1,24 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from typing import Optional
 
 
-class DBRequestConfig(BaseModel):
-    db_type: str = Field(default="postgres", example="postgres")
-    host: str = Field(..., example="localhost")
-    port: int = Field(default=5432, example=5432)
-    database: str = Field(..., example="employee")
-    username: str = Field(..., example="postgres")
-    password: str = Field(..., example="your_password")
-    schema_name: str = Field(default="public", example="public")
+class DBConfigRequest(BaseModel):
+    db_type: str
+    host: str
+    port: int
+    database: str
+    username: str
+    password: str
+    schema_name: str
 
 
 class HybridMappingRequest(BaseModel):
-    src_cfg: DBRequestConfig
-    tgt_cfg: DBRequestConfig
+    src_cfg: DBConfigRequest
+    tgt_cfg: DBConfigRequest
 
-    qdrant_host: str = Field(default="localhost", example="localhost")
-    qdrant_port: int = Field(default=6333, example=6333)
+    qdrant_host: str = "localhost"
+    qdrant_port: int = 6333
+    top_k_dense: int = 5
 
-    top_k_dense: int = Field(default=5, example=5)
+    # ✅ ADD THIS
+    output_format: str = "csv"  # csv | json | xlsx

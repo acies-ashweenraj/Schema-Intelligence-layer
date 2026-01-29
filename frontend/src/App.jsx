@@ -23,16 +23,21 @@ export default function App() {
   return (
     <>
       {page === "config" && <ConfigPage onConnected={handleConnected} />}
+
       {page === "workspace" && (
         <WorkspacePage
           dbConfig={dbConfig}
           metadata={metadata}
           onExit={handleExit}
-          onGoChat={() => setPage("chat")} // ✅ WORKS
+          onGoChat={() => setPage("chat")}
         />
       )}
+
       {page === "chat" && (
-        <ChatPage onExit={() => setPage("workspace")} /> // back button
+        <ChatPage
+          dbConfig={dbConfig}     // ✅ REQUIRED
+          onExit={() => setPage("workspace")}
+        />
       )}
     </>
   );

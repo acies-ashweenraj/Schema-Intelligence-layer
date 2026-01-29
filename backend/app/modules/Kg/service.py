@@ -1,4 +1,6 @@
 import os
+from decimal import Decimal
+
 import psycopg2
 from neo4j import GraphDatabase, basic_auth
 
@@ -9,13 +11,26 @@ from app.modules.Kg.semantic_router import (
     set_llm_usage
 )
 
-
-# ✅ internal defaults (user will NOT send these)
+# -----------------------------
+# Defaults
+# -----------------------------
 RESET_GRAPH_DEFAULT = True
-ROW_LIMIT_DEFAULT = None   # None = load all rows
+ROW_LIMIT_DEFAULT = None
 USE_LLM_DEFAULT = True
 
 
+# -----------------------------
+# Neo4j-safe conversion
+# -----------------------------
+def neo4j_safe(value):
+    if isinstance(value, Decimal):
+        return float(value)  # use str(value) if precision matters
+    return value
+
+
+# -----------------------------
+# Extract schema + FKs
+# -----------------------------
 def extract_schema_from_postgres(cur, schema: str):
     cur.execute("""
         SELECT table_name
@@ -28,14 +43,19 @@ def extract_schema_from_postgres(cur, schema: str):
     schema_data = []
 
     for t in tables:
+        # columns
         cur.execute("""
             SELECT column_name, data_type
             FROM information_schema.columns
             WHERE table_schema=%s AND table_name=%s
             ORDER BY ordinal_position
         """, (schema, t))
-        cols = [{"name": r[0], "datatype": r[1], "description": r[0]} for r in cur.fetchall()]
+        cols = [
+            {"name": r[0], "datatype": r[1], "description": r[0]}
+            for r in cur.fetchall()
+        ]
 
+        # foreign keys
         cur.execute("""
             SELECT
                 kcu.column_name,
@@ -52,23 +72,48 @@ def extract_schema_from_postgres(cur, schema: str):
               AND tc.table_schema=%s
               AND tc.table_name=%s
         """, (schema, t))
-        edges = [{"column_name": r[0], "parent_table": r[1], "parent_column": r[2]} for r in cur.fetchall()]
+        edges = [
+            {
+                "column_name": r[0],
+                "parent_table": r[1],
+                "parent_column": r[2],
+            }
+            for r in cur.fetchall()
+        ]
 
         schema_data.append({
             "table": t,
             "short_description": t,
             "columns": cols,
-            "edges": edges
+            "edges": edges,
         })
 
     return schema_data
 
 
+# -----------------------------
+# Primary key detection (CRITICAL)
+# -----------------------------
+def get_primary_key(cur, schema: str, table: str):
+    cur.execute("""
+        SELECT a.attname
+        FROM pg_index i
+        JOIN pg_attribute a
+          ON a.attrelid = i.indrelid
+         AND a.attnum = ANY(i.indkey)
+        WHERE i.indrelid = %s::regclass
+          AND i.indisprimary
+    """, (f"{schema}.{table}",))
+    row = cur.fetchone()
+    if not row:
+        raise ValueError(f"No primary key found for {schema}.{table}")
+    return row[0].lower()
+
+
+# -----------------------------
+# Neo4j DB handling
+# -----------------------------
 def ensure_neo4j_database(driver, db_name: str):
-    """
-    Try to create DB if Enterprise.
-    If Community -> fallback to neo4j.
-    """
     try:
         with driver.session(database="system") as session:
             session.run(f"CREATE DATABASE {db_name} IF NOT EXISTS")
@@ -77,19 +122,20 @@ def ensure_neo4j_database(driver, db_name: str):
         return "neo4j"
 
 
+# -----------------------------
+# MAIN LOADER
+# -----------------------------
 def load_kg(payload):
-    # internal defaults
     reset_graph = RESET_GRAPH_DEFAULT
     row_limit = ROW_LIMIT_DEFAULT
     use_llm = USE_LLM_DEFAULT
 
-    # set LLM usage in semantic router
     set_llm_usage(use_llm)
 
     if use_llm and not os.getenv("GROQ_API_KEY"):
-        raise ValueError("GROQ_API_KEY missing in .env (required for LLM naming)")
+        raise ValueError("GROQ_API_KEY missing in .env")
 
-    # connect postgres
+    # PostgreSQL
     pg = psycopg2.connect(
         host=payload.pg.host,
         port=payload.pg.port,
@@ -100,21 +146,20 @@ def load_kg(payload):
     cur = pg.cursor()
     schema = payload.pg.schema_name
 
-    # connect neo4j
+    # Neo4j
     driver = GraphDatabase.driver(
         payload.neo4j.uri,
         auth=basic_auth(payload.neo4j.user, payload.neo4j.password),
         encrypted=False
     )
 
-    # create db name automatically
-    kg_db_name = f"kg_{payload.pg.database}"
-    kg_db = ensure_neo4j_database(driver, kg_db_name)
+    kg_db = ensure_neo4j_database(
+        driver, f"kg_{payload.pg.database}"
+    )
 
-    # extract schema
     schema_data = extract_schema_from_postgres(cur, schema)
 
-    # reset graph
+    # Reset graph
     if reset_graph:
         with driver.session(database=kg_db) as session:
             session.run("MATCH (n) DETACH DELETE n")
@@ -122,10 +167,15 @@ def load_kg(payload):
     loaded_rows = 0
     created_relationships = 0
 
+    # -----------------------------
+    # Load nodes
+    # -----------------------------
     for table in schema_data:
         table_name = table["table"]
         table_desc = table["short_description"]
         label = get_node_label(table_name, table_desc)
+
+        pk_col = get_primary_key(cur, schema, table_name)
 
         sql = f'SELECT * FROM "{schema}"."{table_name}"'
         if row_limit:
@@ -133,21 +183,25 @@ def load_kg(payload):
 
         cur.execute(sql)
         colnames = [d[0].lower() for d in cur.description]
-        pk_col = colnames[0]
-
-        column_desc_map = {c["name"].lower(): c["description"] for c in table["columns"]}
-
         rows = cur.fetchall()
+
+        column_desc_map = {
+            c["name"].lower(): c["description"]
+            for c in table["columns"]
+        }
+
+        pk_prop = get_property_name(
+            pk_col, column_desc_map.get(pk_col, "")
+        )
 
         for r in rows:
             row_dict = dict(zip(colnames, r))
 
             props = {
-                get_property_name(c, column_desc_map.get(c, "")): row_dict[c]
+                get_property_name(c, column_desc_map.get(c, "")):
+                neo4j_safe(row_dict[c])
                 for c in colnames
             }
-
-            pk_prop = get_property_name(pk_col, column_desc_map.get(pk_col, ""))
 
             with driver.session(database=kg_db) as session:
                 session.run(
@@ -155,22 +209,57 @@ def load_kg(payload):
                     MERGE (n:{label} {{ {pk_prop}: $pk }})
                     SET n += $props
                     """,
-                    {"pk": row_dict[pk_col], "props": props},
+                    {
+                        "pk": neo4j_safe(row_dict[pk_col]),
+                        "props": props,
+                    }
                 )
 
             loaded_rows += 1
 
-            # relationships
+    # -----------------------------
+    # Load relationships (CORRECT)
+    # -----------------------------
+    for table in schema_data:
+        table_name = table["table"]
+        table_desc = table["short_description"]
+        label = get_node_label(table_name, table_desc)
+
+        pk_col = get_primary_key(cur, schema, table_name)
+        pk_prop = get_property_name(pk_col, pk_col)
+
+        sql = f'SELECT * FROM "{schema}"."{table_name}"'
+        cur.execute(sql)
+
+        colnames = [d[0].lower() for d in cur.description]
+        rows = cur.fetchall()
+
+        for r in rows:
+            row_dict = dict(zip(colnames, r))
+            child_pk_val = neo4j_safe(row_dict[pk_col])
+
             for edge in table["edges"]:
                 fk_col = edge["column_name"].lower()
                 fk_val = row_dict.get(fk_col)
+
                 if fk_val is None:
                     continue
 
                 parent_table = edge["parent_table"]
-                parent_schema = next(t for t in schema_data if t["table"] == parent_table)
+                parent_schema = next(
+                    t for t in schema_data if t["table"] == parent_table
+                )
 
-                parent_label = get_node_label(parent_table, parent_schema["short_description"])
+                parent_label = get_node_label(
+                    parent_table,
+                    parent_schema["short_description"]
+                )
+
+                parent_pk_prop = get_property_name(
+                    edge["parent_column"].lower(),
+                    edge["parent_column"]
+                )
+
                 rel_type = get_relationship_name(
                     table_name,
                     parent_table,
@@ -178,18 +267,17 @@ def load_kg(payload):
                     parent_schema["short_description"],
                 )
 
-                fk_prop = get_property_name(fk_col, column_desc_map.get(fk_col, ""))
-                parent_pk_col = edge["parent_column"].lower()
-                parent_pk_prop = get_property_name(parent_pk_col, parent_pk_col)
-
                 with driver.session(database=kg_db) as session:
                     session.run(
                         f"""
-                        MATCH (c:{label} {{ {fk_prop}: $v }})
-                        MATCH (p:{parent_label} {{ {parent_pk_prop}: $v }})
+                        MATCH (c:{label} {{ {pk_prop}: $child_pk }})
+                        MATCH (p:{parent_label} {{ {parent_pk_prop}: $parent_pk }})
                         MERGE (c)-[:{rel_type}]->(p)
                         """,
-                        {"v": fk_val},
+                        {
+                            "child_pk": child_pk_val,
+                            "parent_pk": neo4j_safe(fk_val),
+                        }
                     )
 
                 created_relationships += 1
