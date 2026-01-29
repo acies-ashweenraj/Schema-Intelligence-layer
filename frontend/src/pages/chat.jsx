@@ -3,13 +3,17 @@ import { loadKG, initRAG, askQuestion } from "../api/client";
 import { v4 as uuidv4 } from "uuid";
 import logo from "../assets/logo.png";
 
+/* =========================================================
+   MAIN PAGE
+========================================================= */
+
 export default function ChatPage({ onExit, dbConfig }) {
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
+  const [ragReady, setRagReady] = useState(false);
 
   /* ---------------- SESSION ---------------- */
   const [sessionId] = useState(() => uuidv4());
-  const [ragReady, setRagReady] = useState(false);
 
   /* ---------------- NEO4J CONFIG ---------------- */
   const [neo4j, setNeo4j] = useState({
@@ -36,10 +40,12 @@ export default function ChatPage({ onExit, dbConfig }) {
   const activeChat = chats.find((c) => c.id === activeChatId);
   const bottomRef = useRef(null);
 
+  /* ---------------- AUTO SCROLL ---------------- */
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [activeChat?.messages, loading]);
 
+  /* ---------------- HELPERS ---------------- */
   function push(role, text) {
     setChats((prev) =>
       prev.map((c) =>
@@ -56,10 +62,7 @@ export default function ChatPage({ onExit, dbConfig }) {
       setLoading(true);
       push("bot", "Initializing knowledge graph...");
 
-      await loadKG({
-        pg: dbConfig,
-        neo4j,
-      });
+      await loadKG({ pg: dbConfig, neo4j });
 
       await initRAG({
         session_id: sessionId,
@@ -104,7 +107,6 @@ export default function ChatPage({ onExit, dbConfig }) {
         session_id: sessionId,
         question: q,
       });
-
       push("bot", res.result || "No answer found.");
     } catch (err) {
       console.error(err);
@@ -121,12 +123,7 @@ export default function ChatPage({ onExit, dbConfig }) {
       {
         id,
         title: "New Chat",
-        messages: [
-          {
-            role: "bot",
-            text: "New chat started. Ask your question after initialization.",
-          },
-        ],
+        messages: [{ role: "bot", text: "New chat started." }],
       },
       ...prev,
     ]);
@@ -139,71 +136,83 @@ export default function ChatPage({ onExit, dbConfig }) {
     "focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 " +
     "disabled:bg-slate-100 disabled:text-slate-400";
 
+  /* =========================================================
+     RENDER
+  ========================================================= */
+
   return (
-    <div className="min-h-screen w-full bg-slate-50">
-      {/* TOP BAR */}
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur">
-        <div className="mx-auto max-w-7xl px-4 py-3 flex justify-between items-center">
+    <div className="min-h-screen bg-slate-50">
+      {/* ================= TOP BAR ================= */}
+      <header className="sticky top-0 z-30 border-b bg-white/80 backdrop-blur">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="rounded-xl bg-slate-900 px-3 py-2 shadow-sm">
+            <div className="bg-slate-900 rounded-xl px-3 py-2">
               <img src={logo} alt="Logo" className="h-7" />
             </div>
             <div>
-              <div className="text-sm font-extrabold text-slate-900">
-                Schema Intelligence
-              </div>
-              <div className="text-xs text-slate-500">
-                Workspace • Chatbot
-              </div>
+              <p className="text-sm font-extrabold">Schema Intelligence</p>
+              <p className="text-xs text-slate-500">Workspace • Chatbot</p>
             </div>
           </div>
 
           <button
             onClick={onExit}
-            className="rounded-xl px-4 py-2 bg-red-50 border border-red-200 text-red-700 font-semibold hover:bg-red-100"
+            className="px-4 py-2 rounded-xl bg-red-50 border border-red-200 text-red-700 font-semibold"
           >
             Exit
           </button>
         </div>
       </header>
 
-      {/* BODY */}
-      <div className="mx-auto max-w-7xl px-4 py-7">
+      {/* ================= BODY ================= */}
+      <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-6">
-          {/* LEFT SIDEBAR */}
-          <aside className="rounded-2xl border border-slate-200 bg-white shadow-sm flex flex-col">
+
+          {/* ================= SIDEBAR ================= */}
+          <aside className="bg-white rounded-2xl border shadow-sm flex flex-col">
             <div className="p-4 border-b bg-gradient-to-r from-indigo-50 via-violet-50 to-fuchsia-50">
-              <div className="text-sm font-bold uppercase tracking-wide text-slate-900">
+              <p className="text-sm font-bold uppercase tracking-wide">
                 Neo4j Connection
-              </div>
+              </p>
               <p className="text-xs text-slate-500 mt-1">
                 Secure database connection settings
               </p>
 
               <div className="mt-4 space-y-4">
-                <Input label="Neo4j URI" disabled={loading || ragReady} onChange={(v) => setNeo4j({ ...neo4j, uri: v })} />
-                <Input label="Username" disabled={loading || ragReady} onChange={(v) => setNeo4j({ ...neo4j, user: v })} />
-                <Input label="Password" type="password" disabled={loading || ragReady} onChange={(v) => setNeo4j({ ...neo4j, password: v })} />
+                <FormInput
+                  label="Neo4j URI"
+                  disabled={loading || ragReady}
+                  onChange={(v) => setNeo4j({ ...neo4j, uri: v })}
+                />
+                <FormInput
+                  label="Username"
+                  disabled={loading || ragReady}
+                  onChange={(v) => setNeo4j({ ...neo4j, user: v })}
+                />
+                <FormInput
+                  label="Password"
+                  type="password"
+                  disabled={loading || ragReady}
+                  onChange={(v) => setNeo4j({ ...neo4j, password: v })}
+                />
 
                 <button
                   onClick={initializeChat}
                   disabled={loading}
-                  className="w-full rounded-xl px-4 py-2 font-semibold text-white
-                             bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600
-                             shadow-md transition disabled:opacity-50"
+                  className="w-full py-2 rounded-xl bg-indigo-600 text-white font-semibold disabled:opacity-50"
                 >
                   Initialize Chat
                 </button>
               </div>
             </div>
 
-            <div className="p-3 space-y-2 flex-1 overflow-y-auto">
+            <div className="flex-1 p-3 space-y-2 overflow-y-auto">
               {chats.map((c) => (
-                <SideChatItem
+                <ChatListItem
                   key={c.id}
-                  active={c.id === activeChatId}
                   title={c.title}
-                  subtitle={c.messages.at(-1)?.text || ""}
+                  subtitle={c.messages.at(-1)?.text}
+                  active={c.id === activeChatId}
                   onClick={() => setActiveChatId(c.id)}
                 />
               ))}
@@ -212,26 +221,25 @@ export default function ChatPage({ onExit, dbConfig }) {
             <div className="p-4 border-t bg-slate-50">
               <button
                 onClick={newChat}
-                className="w-full rounded-xl px-4 py-2 border border-slate-200 bg-white text-sm font-semibold hover:bg-slate-50"
+                className="w-full py-2 rounded-xl border bg-white font-semibold"
               >
                 New Chat
               </button>
             </div>
           </aside>
 
-          {/* CHAT MAIN */}
-          <main className="rounded-2xl border border-slate-200 bg-white shadow-sm flex flex-col">
+          {/* ================= CHAT ================= */}
+          <main className="bg-white rounded-2xl border shadow-sm flex flex-col">
             <div className="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50">
               {activeChat?.messages.map((m, i) => (
-                <MessageBubble key={i} role={m.role} text={m.text} />
+                <ChatBubble key={i} role={m.role} text={m.text} />
               ))}
               {loading && ragReady && <Spinner />}
               <div ref={bottomRef} />
             </div>
 
-            {/* INPUT */}
             <div className="p-5 border-t">
-              <div className="flex gap-3 items-center">
+              <div className="flex gap-3">
                 <div className="relative flex-1">
                   <input
                     value={question}
@@ -241,14 +249,12 @@ export default function ChatPage({ onExit, dbConfig }) {
                     placeholder={
                       ragReady
                         ? "Type your question..."
-                        : "Initialize Neo4j connection to start chatting"
+                        : "Initialize Neo4j to start chatting"
                     }
-                    className={`${inputClass} pr-10 ${
-                      !ragReady ? "cursor-not-allowed" : ""
-                    }`}
+                    className={`${inputClass} pr-10`}
                   />
                   {!ragReady && (
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2">
                       🔒
                     </span>
                   )}
@@ -257,9 +263,7 @@ export default function ChatPage({ onExit, dbConfig }) {
                 <button
                   onClick={handleSend}
                   disabled={!ragReady || loading}
-                  className="rounded-xl px-6 py-3 font-semibold text-white
-                             bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600
-                             shadow-md transition disabled:opacity-50"
+                  className="px-6 rounded-xl bg-indigo-600 text-white font-semibold disabled:opacity-50"
                 >
                   Send
                 </button>
@@ -272,9 +276,11 @@ export default function ChatPage({ onExit, dbConfig }) {
   );
 }
 
-/* ---------------- HELPERS ---------------- */
+/* =========================================================
+   COMPONENTS
+========================================================= */
 
-function Input({ label, type = "text", disabled, onChange }) {
+function FormInput({ label, type = "text", disabled, onChange }) {
   return (
     <div>
       <label className="block text-xs font-semibold text-slate-600 mb-1">
@@ -283,12 +289,44 @@ function Input({ label, type = "text", disabled, onChange }) {
       <input
         type={type}
         disabled={disabled}
-        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm
-                   text-slate-900 placeholder:text-slate-400 shadow-sm
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm
                    focus:outline-none focus:ring-2 focus:ring-indigo-500/20
                    disabled:bg-slate-100"
-        onChange={(e) => onChange(e.target.value)}
       />
+    </div>
+  );
+}
+
+function ChatListItem({ title, subtitle, active, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full text-left rounded-xl px-3 py-3 border transition ${
+        active
+          ? "bg-indigo-50 border-indigo-300"
+          : "bg-white border-slate-200 hover:bg-slate-50"
+      }`}
+    >
+      <p className="text-sm font-bold truncate">{title}</p>
+      <p className="text-xs text-slate-500 truncate mt-1">{subtitle}</p>
+    </button>
+  );
+}
+
+function ChatBubble({ role, text }) {
+  const isUser = role === "user";
+  return (
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+      <div
+        className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm shadow-sm ${
+          isUser
+            ? "bg-indigo-600 text-white"
+            : "bg-white border border-slate-200"
+        }`}
+      >
+        {text}
+      </div>
     </div>
   );
 }
@@ -298,130 +336,5 @@ function Spinner() {
     <div className="flex justify-center py-2">
       <div className="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-indigo-600" />
     </div>
-  );
-}
-
-function SideChatItem({ title, subtitle, active, onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`w-full text-left rounded-xl border px-3 py-3 transition ${
-        active
-          ? "border-indigo-200 bg-indigo-50 shadow-sm"
-          : "border-slate-200 bg-white hover:bg-slate-50"
-      }`}
-    >
-      <div className="text-sm font-extrabold text-slate-900 truncate">
-        {title}
-      </div>
-      <div className="text-xs text-slate-500 truncate mt-1">{subtitle}</div>
-    </button>
-  );
-}
-
-function MessageBubble({ role, text }) {
-  const isUser = role === "user";
-  return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
-      <div
-        className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm ${
-          isUser
-            ? "bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 text-white"
-            : "bg-white border border-slate-200 text-slate-800"
-        }`}
-      >
-        {text}
-      </div>
-    </div>
-  );
-}
-
-/* ------------------ UI COMPONENTS ------------------ */
-
-function SideChatItem({ title, subtitle, active, onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`w-full text-left group flex flex-col rounded-xl border px-3 py-3 transition ${
-        active
-          ? "border-indigo-200 bg-gradient-to-r from-indigo-50 via-violet-50 to-fuchsia-50 shadow-sm"
-          : "border-slate-200 bg-white hover:bg-slate-50"
-      }`}
-    >
-      <div className="flex items-center justify-between gap-2">
-        <p className="text-sm font-extrabold text-slate-900 truncate">{title}</p>
-        {active && (
-          <span className="text-[10px] px-2 py-1 rounded-full bg-indigo-600 text-white font-bold">
-            ACTIVE
-          </span>
-        )}
-      </div>
-
-      <p className="text-xs text-slate-500 truncate mt-1">{subtitle}</p>
-    </button>
-  );
-}
-
-function MessageBubble({ role, text }) {
-  const isUser = role === "user";
-
-  return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
-      <div
-        className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${
-          isUser
-            ? "bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 text-white"
-            : "bg-white text-slate-800 border border-slate-200"
-        }`}
-      >
-        {text}
-      </div>
-    </div>
-  );
-}
-
-function TypingDots() {
-  return (
-    <div className="flex items-center gap-2">
-      <span className="text-slate-500 font-semibold">Thinking</span>
-      <span className="flex gap-1">
-        <span className="w-2 h-2 bg-slate-300 rounded-full animate-bounce"></span>
-        <span className="w-2 h-2 bg-slate-300 rounded-full animate-bounce [animation-delay:120ms]"></span>
-        <span className="w-2 h-2 bg-slate-300 rounded-full animate-bounce [animation-delay:240ms]"></span>
-      </span>
-    </div>
-  );
-}
-
-function StatusChip({ text, color = "indigo" }) {
-  const map = {
-    indigo: "bg-indigo-600 text-white",
-    emerald: "bg-emerald-600 text-white",
-    violet: "bg-violet-600 text-white",
-    amber: "bg-amber-500 text-white",
-    slate: "bg-slate-600 text-white",
-  };
-
-  return (
-    <span
-      className={`text-xs px-2.5 py-1 rounded-full font-semibold shadow-sm ${
-        map[color] || map.indigo
-      }`}
-    >
-      {text}
-    </span>
-  );
-}
-
-function QuickPrompt({ children, onClick }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200 bg-white
-                 text-slate-600 hover:bg-slate-50 transition"
-    >
-      {children}
-    </button>
   );
 }
