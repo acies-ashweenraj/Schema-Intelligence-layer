@@ -34,6 +34,7 @@ export function getMappingDownloadUrl(path) {
     path
   )}`;
 }
+<<<<<<< HEAD
 /* ---------- KG ---------- */
 export async function loadKG(payload) {
   const res = await api.post("/kg/load", payload);
@@ -45,8 +46,18 @@ export async function initRAG(payload) {
   const res = await api.post("/nlp-rag/init", payload);
   return res.data;
 }
+=======
+
+/* ===============================
+   CHATBOT
+================================ */
+>>>>>>> 984335d882a8204dde6c63a7e2f0d97384f6f226
 
 export async function askQuestion(payload) {
   const res = await api.post("/nlp-rag/ask", payload);
   return res.data;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 984335d882a8204dde6c63a7e2f0d97384f6f226
