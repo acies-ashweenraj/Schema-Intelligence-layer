@@ -1,24 +1,13 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
-
-load_dotenv()
+from fastapi import FastAPI, Request
 
 app = FastAPI(title="KG Backend", version="1.0.0")
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # change later if needed
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+@app.middleware("http")
+async def lazy_load_routers(request: Request, call_next):
+    from app.router_loader import load_routers
+    load_routers(app)
+    return await call_next(request)
 
 @app.get("/")
 def health():
     return {"status": "ok"}
-
-@app.on_event("startup")
-async def startup_event():
-    from app.bootstrap import include_routers
-    include_routers(app)
