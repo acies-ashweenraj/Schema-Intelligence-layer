@@ -1,836 +1,599 @@
-import { useMemo, useState } from "react";
+// // import { useEffect, useMemo, useRef, useState } from "react";
+// // import { v4 as uuidv4 } from "uuid";
+// // import logo from "../assets/logo.png";
+
+// // import {
+// //   generateMetadata,
+// //   getMetadataDownloadUrl,
+// //   runHybridMapping,
+// //   getMappingDownloadUrl,
+// //   loadKG,
+// //   initRAG,
+// //   askQuestion,
+// // } from "../api/client";
+
+// // /* ======================================================
+// //    WORKSPACE – FINAL ENTERPRISE FLOW
+// // ====================================================== */
+
+// // export default function WorkspacePage({ dbConfig, onExit }) {
+// //   const [activeTab, setActiveTab] = useState("metadata");
+
+// //   /* ================= METADATA ================= */
+// //   const [metaFormat, setMetaFormat] = useState("csv");
+// //   const [metaLoading, setMetaLoading] = useState(false);
+// //   const [metaResult, setMetaResult] = useState(null);
+
+// //   const metaDashboard = useMemo(() => {
+// //     const s = metaResult?.summary || {};
+// //     return [
+// //       ["Tables", s.table_count ?? "—"],
+// //       ["Columns", s.column_count ?? "—"],
+// //       ["Relationships", s.relationship_count ?? "—"],
+// //       [
+// //         "Generated",
+// //         metaResult?.generated_at
+// //           ? metaResult.generated_at.slice(0, 19).replace("T", " ")
+// //           : "—",
+// //       ],
+// //     ];
+// //   }, [metaResult]);
+
+// //   async function generateMeta() {
+// //     setMetaLoading(true);
+// //     setMetaResult(null);
+
+// //     const res = await generateMetadata({
+// //       ...dbConfig,
+// //       port: Number(dbConfig.port),
+// //       schema_name: dbConfig.schema_name || "public",
+// //       output_format: metaFormat,
+// //     });
+
+// //     setMetaResult(res);
+// //     setMetaLoading(false);
+// //   }
+
+// //   /* ================= MAPPING ================= */
+// //   const [mapFormat, setMapFormat] = useState("csv");
+// //   const [mappingLoading, setMappingLoading] = useState(false);
+// //   const [mappingResult, setMappingResult] = useState(null);
+// //   const [mappingRows, setMappingRows] = useState([]);
+
+// //   const [targetCfg, setTargetCfg] = useState({
+// //     db_type: "postgres",
+// //     host: "",
+// //     port: "5432",
+// //     database: "",
+// //     username: "",
+// //     password: "",
+// //     schema_name: "public",
+// //   });
+
+// //   const mappingDashboard = useMemo(() => {
+// //     const d = mappingResult?.details?.dashboard;
+// //     if (!d) return [];
+// //     return [
+// //       ["Source Tables", d.source_tables_used],
+// //       ["Target Tables", d.target_tables_used],
+// //       ["Matched Tables", d.matched_table_pairs],
+// //       ["Matched Columns", d.matched_columns],
+// //       [
+// //         "Avg Confidence",
+// //         typeof d.avg_confidence_score === "number"
+// //           ? d.avg_confidence_score.toFixed(3)
+// //           : "—",
+// //       ],
+// //     ];
+// //   }, [mappingResult]);
+
+// //   async function generateMapping() {
+// //     setMappingLoading(true);
+// //     setMappingResult(null);
+// //     setMappingRows([]);
+
+// //     const res = await runHybridMapping({
+// //       src_cfg: { ...dbConfig, port: Number(dbConfig.port) },
+// //       tgt_cfg: { ...targetCfg, port: Number(targetCfg.port) },
+// //       qdrant_host: "localhost",
+// //       qdrant_port: 6333,
+// //       top_k_dense: 5,
+// //       output_format: mapFormat,
+// //     });
+
+// //     setMappingResult(res);
+// //     setMappingRows(res.mappings || []);
+// //     setMappingLoading(false);
+// //   }
+
+// //   function updateMappingRow(i, key, value) {
+// //     setMappingRows((rows) =>
+// //       rows.map((r, idx) => (idx === i ? { ...r, [key]: value } : r))
+// //     );
+// //   }
+
+// //   /* ================= CHATBOT ================= */
+// //   const sessionId = useMemo(() => uuidv4(), []);
+// //   const [neo4j, setNeo4j] = useState({ uri: "", user: "", password: "" });
+// //   const [ragReady, setRagReady] = useState(false);
+// //   const [chatLoading, setChatLoading] = useState(false);
+// //   const [messages, setMessages] = useState([]);
+// //   const [question, setQuestion] = useState("");
+// //   const bottomRef = useRef(null);
+
+// //   useEffect(() => {
+// //     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+// //   }, [messages]);
+
+// //   async function initChat() {
+// //     setChatLoading(true);
+
+// //     await loadKG({ pg: dbConfig, neo4j });
+// //     await initRAG({
+// //       session_id: sessionId,
+// //       neo4j_uri: neo4j.uri,
+// //       neo4j_user: neo4j.user,
+// //       neo4j_password: neo4j.password,
+// //       neo4j_database: "neo4j",
+// //     });
+
+// //     setMessages([{ role: "bot", text: "Chat initialized." }]);
+// //     setRagReady(true);
+// //     setChatLoading(false);
+// //   }
+
+// //   async function sendQuestion() {
+// //     if (!question.trim()) return;
+// //     const q = question;
+// //     setQuestion("");
+// //     setMessages((m) => [...m, { role: "user", text: q }]);
+// //     const res = await askQuestion({ session_id: sessionId, question: q });
+// //     setMessages((m) => [...m, { role: "bot", text: res.result }]);
+// //   }
+
+// //   function newChat() {
+// //     setMessages([{ role: "bot", text: "New chat started." }]);
+// //   }
+
+// //   /* ======================================================
+// //      RENDER
+// //   ====================================================== */
+
+// //   return (
+// //     <div className="h-screen flex flex-col bg-slate-100">
+// //       {/* TOP BAR */}
+// //       <header className="h-14 bg-black flex items-center justify-between px-6">
+// //         <div className="flex items-center gap-3">
+// //           <img src={logo} className="h-6" />
+// //           <span className="text-white font-semibold">
+// //             Schema Intelligence
+// //           </span>
+// //         </div>
+// //         <button
+// //           onClick={onExit}
+// //           className="bg-red-600 text-white px-4 py-1.5 rounded"
+// //         >
+// //           Exit
+// //         </button>
+// //       </header>
+
+// //       <div className="flex flex-1 overflow-hidden">
+// //         {/* LEFT PANEL */}
+// //         <aside className="w-64 bg-slate-200 border-r p-4 space-y-2">
+// //           {["metadata", "mapping", "chatbot"].map((t) => (
+// //             <button
+// //               key={t}
+// //               onClick={() => setActiveTab(t)}
+// //               className={`w-full px-4 py-3 rounded-lg font-semibold text-left ${
+// //                 activeTab === t
+// //                   ? "bg-white shadow text-indigo-700"
+// //                   : "hover:bg-slate-300"
+// //               }`}
+// //             >
+// //               {t.toUpperCase()}
+// //             </button>
+// //           ))}
+// //         </aside>
+
+// //         {/* MAIN */}
+// //         <main className="flex-1 overflow-y-auto p-8 max-w-6xl mx-auto">
+// //           {/* ================= METADATA ================= */}
+// //           {activeTab === "metadata" && (
+// //             <Section title="Metadata Generator">
+// //               <FormRow>
+// //                 <Select
+// //                   label="Output Format"
+// //                   value={metaFormat}
+// //                   onChange={setMetaFormat}
+// //                   options={["csv", "json", "xlsx"]}
+// //                 />
+// //                 <PrimaryButton onClick={generateMeta}>
+// //                   {metaLoading ? "Generating…" : "Generate Metadata"}
+// //                 </PrimaryButton>
+// //               </FormRow>
+
+// //               {metaResult && (
+// //                 <>
+// //                   <Dashboard items={metaDashboard} />
+// //                   <DownloadButton
+// //                     href={getMetadataDownloadUrl(metaResult.saved_file)}
+// //                   />
+// //                 </>
+// //               )}
+// //             </Section>
+// //           )}
+
+// //           {/* ================= MAPPING ================= */}
+// //           {activeTab === "mapping" && (
+// //             <>
+// //               <Section title="Target Database Configuration">
+// //                 <FormGrid>
+// //                   {Object.keys(targetCfg).map((k) => (
+// //                     <Input
+// //                       key={k}
+// //                       label={k}
+// //                       type={k === "password" ? "password" : "text"}
+// //                       value={targetCfg[k]}
+// //                       onChange={(v) =>
+// //                         setTargetCfg({ ...targetCfg, [k]: v })
+// //                       }
+// //                     />
+// //                   ))}
+// //                 </FormGrid>
+
+// //                 <FormRow>
+// //                   <Select
+// //                     label="Output Format"
+// //                     value={mapFormat}
+// //                     onChange={setMapFormat}
+// //                     options={["csv", "json", "xlsx"]}
+// //                   />
+// //                   <PrimaryButton onClick={generateMapping}>
+// //                     {mappingLoading ? "Generating…" : "Generate Mapping"}
+// //                   </PrimaryButton>
+// //                 </FormRow>
+// //               </Section>
+
+// //               {mappingResult && (
+// //                 <>
+// //                   <Dashboard items={mappingDashboard} />
+
+// //                   <Section title="Editable Mapping">
+// //                     <div className="overflow-x-auto border rounded-lg bg-white">
+// //                       <table className="min-w-full text-sm">
+// //                         <thead className="bg-slate-100">
+// //                           <tr>
+// //                             {[
+// //                               "Source Table",
+// //                               "Source Column",
+// //                               "Target Table",
+// //                               "Target Column",
+// //                               "Confidence",
+// //                             ].map((h) => (
+// //                               <th key={h} className="px-3 py-2 text-left">
+// //                                 {h}
+// //                               </th>
+// //                             ))}
+// //                           </tr>
+// //                         </thead>
+// //                         <tbody>
+// //                           {mappingRows.map((r, i) => (
+// //                             <tr key={i} className="border-t">
+// //                               {[
+// //                                 "source_table",
+// //                                 "source_column",
+// //                                 "target_table",
+// //                                 "target_column",
+// //                                 "confidence",
+// //                               ].map((k) => (
+// //                                 <td key={k} className="px-3 py-2">
+// //                                   <input
+// //                                     value={r[k]}
+// //                                     onChange={(e) =>
+// //                                       updateMappingRow(i, k, e.target.value)
+// //                                     }
+// //                                     className="w-full border rounded px-2 py-1"
+// //                                   />
+// //                                 </td>
+// //                               ))}
+// //                             </tr>
+// //                           ))}
+// //                         </tbody>
+// //                       </table>
+// //                     </div>
+
+// //                     <DownloadButton
+// //                       href={getMappingDownloadUrl(mappingResult.saved_file)}
+// //                     />
+// //                   </Section>
+// //                 </>
+// //               )}
+// //             </>
+// //           )}
+
+// //           {/* ================= CHATBOT ================= */}
+// //           {activeTab === "chatbot" && (
+// //             <Section title="Chatbot">
+// //               {!ragReady && (
+// //                 <>
+// //                   {["uri", "user", "password"].map((f) => (
+// //                     <Input
+// //                       key={f}
+// //                       label={f}
+// //                       type={f === "password" ? "password" : "text"}
+// //                       onChange={(v) =>
+// //                         setNeo4j({ ...neo4j, [f]: v })
+// //                       }
+// //                     />
+// //                   ))}
+// //                   <PrimaryButton onClick={initChat}>
+// //                     {chatLoading ? "Initializing…" : "Initialize Chat"}
+// //                   </PrimaryButton>
+// //                 </>
+// //               )}
+
+// //               {ragReady && (
+// //                 <>
+// //                   <div className="flex justify-end mb-2">
+// //                     <button
+// //                       onClick={newChat}
+// //                       className="text-sm text-indigo-700 font-semibold"
+// //                     >
+// //                       + New Chat
+// //                     </button>
+// //                   </div>
+
+// //                   <div className="h-96 border rounded p-4 bg-white overflow-y-auto space-y-2">
+// //                     {messages.map((m, i) => (
+// //                       <div
+// //                         key={i}
+// //                         className={`p-3 rounded max-w-[80%] ${
+// //                           m.role === "user"
+// //                             ? "bg-indigo-600 text-white ml-auto"
+// //                             : "bg-slate-100"
+// //                         }`}
+// //                       >
+// //                         {m.text}
+// //                       </div>
+// //                     ))}
+// //                     <div ref={bottomRef} />
+// //                   </div>
+
+// //                   <div className="flex gap-3 mt-3">
+// //                     <input
+// //                       value={question}
+// //                       onChange={(e) => setQuestion(e.target.value)}
+// //                       onKeyDown={(e) => e.key === "Enter" && sendQuestion()}
+// //                       className="flex-1 border px-3 py-2 rounded"
+// //                       placeholder="Ask a question…"
+// //                     />
+// //                     <PrimaryButton onClick={sendQuestion}>
+// //                       Send
+// //                     </PrimaryButton>
+// //                   </div>
+// //                 </>
+// //               )}
+// //             </Section>
+// //           )}
+// //         </main>
+// //       </div>
+// //     </div>
+// //   );
+// // }
+
+// // /* ================= UI HELPERS ================= */
+
+// // function Section({ title, children }) {
+// //   return (
+// //     <div className="bg-white border rounded-xl p-6 mb-6 shadow-sm space-y-4">
+// //       <h2 className="text-lg font-bold">{title}</h2>
+// //       {children}
+// //     </div>
+// //   );
+// // }
+
+// // function Dashboard({ items }) {
+// //   return (
+// //     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+// //       {items.map(([k, v]) => (
+// //         <div key={k} className="bg-white border rounded-xl p-4 shadow-sm">
+// //           <div className="text-xs text-slate-500">{k}</div>
+// //           <div className="text-xl font-bold">{v}</div>
+// //         </div>
+// //       ))}
+// //     </div>
+// //   );
+// // }
+
+// // function FormRow({ children }) {
+// //   return <div className="flex gap-6 items-end flex-wrap">{children}</div>;
+// // }
+
+// // function FormGrid({ children }) {
+// //   return <div className="grid grid-cols-2 gap-6">{children}</div>;
+// // }
+
+// // function Input({ label, type = "text", value, onChange }) {
+// //   return (
+// //     <div>
+// //       <label className="block text-xs font-bold mb-1 capitalize">
+// //         {label}
+// //       </label>
+// //       <input
+// //         type={type}
+// //         value={value}
+// //         onChange={(e) => onChange(e.target.value)}
+// //         className="w-full border rounded px-3 py-2"
+// //       />
+// //     </div>
+// //   );
+// // }
+
+// // function Select({ label, value, onChange, options }) {
+// //   return (
+// //     <div>
+// //       <label className="block text-xs font-bold mb-1">{label}</label>
+// //       <select
+// //         value={value}
+// //         onChange={(e) => onChange(e.target.value)}
+// //         className="border rounded px-3 py-2"
+// //       >
+// //         {options.map((o) => (
+// //           <option key={o} value={o}>
+// //             {o.toUpperCase()}
+// //           </option>
+// //         ))}
+// //       </select>
+// //     </div>
+// //   );
+// // }
+
+// // function PrimaryButton({ children, onClick }) {
+// //   return (
+// //     <button
+// //       onClick={onClick}
+// //       className="bg-indigo-600 text-white px-5 py-2 rounded font-semibold"
+// //     >
+// //       {children}
+// //     </button>
+// //   );
+// // }
+
+// // function DownloadButton({ href }) {
+// //   return (
+// //     <a
+// //       href={href}
+// //       className="inline-block bg-emerald-600 text-white px-5 py-2 rounded font-semibold"
+// //     >
+// //       Download
+// //     </a>
+// //   );
+// // }
+// import { NavLink, Outlet } from "react-router-dom";
+// import logo from "../assets/logo.png";
+
+// export default function WorkspacePage({ onExit }) {
+//   return (
+//     <div className="h-screen flex flex-col bg-slate-100">
+//       {/* HEADER */}
+//       <header className="h-14 bg-black flex items-center justify-between px-6">
+//         <div className="flex items-center gap-3">
+//           <img src={logo} className="h-6" />
+//           <span className="text-white font-semibold">
+//             Schema Intelligence
+//           </span>
+//         </div>
+//         <button
+//           onClick={onExit}
+//           className="bg-red-600 text-white px-4 py-1.5 rounded"
+//         >
+//           Exit
+//         </button>
+//       </header>
+
+//       <div className="flex flex-1 overflow-hidden">
+//         {/* SIDEBAR */}
+//         <aside className="w-64 bg-slate-200 border-r p-4 space-y-2">
+//           {[
+//             { path: "metadata", label: "METADATA" },
+//             { path: "mapping", label: "MAPPING" },
+//             { path: "chatbot", label: "CHATBOT" },
+//           ].map((t) => (
+//             <NavLink
+//               key={t.path}
+//               to={t.path}
+//               className={({ isActive }) =>
+//                 `block px-4 py-3 rounded-lg font-semibold ${
+//                   isActive
+//                     ? "bg-white shadow text-indigo-700"
+//                     : "hover:bg-slate-300"
+//                 }`
+//               }
+//             >
+//               {t.label}
+//             </NavLink>
+//           ))}
+//         </aside>
+
+//         {/* PAGE CONTENT */}
+//         <main className="flex-1 overflow-y-auto p-8 max-w-6xl mx-auto">
+//           <Outlet />
+//         </main>
+//       </div>
+//     </div>
+//   );
+// }
+import { useState } from "react";
 import logo from "../assets/logo.png";
-import {
-  generateMetadata,
-  getMetadataDownloadUrl,
-  runHybridMapping,
-  getMappingDownloadUrl,
-} from "../api/client";
 
-export default function WorkspacePage({ dbConfig, onExit, onGoChat }) {
-  // ============================
-  // SIDEBAR TABS
-  // ============================
-  const [activeTab, setActiveTab] = useState("metadata"); // metadata | mapping | chatbot
+import MetadataPage from "./MetadataPage";
+import MappingPage from "./MappingPage";
+import ChatbotPage from "./ChatbotPage";
 
-  const steps = [
-    { key: "metadata", label: "Metadata" },
-    { key: "mapping", label: "Mapping" },
-    { key: "chatbot", label: "Chatbot" },
-  ];
+export default function WorkspacePage({
+  dbConfig,
+  metadata,
+  onExit,
+}) {
+  const [activePage, setActivePage] = useState("metadata");
 
-  const activeIndex = steps.findIndex((s) => s.key === activeTab);
-  const progressPercent =
-    activeIndex >= 0 ? Math.round(((activeIndex + 1) / steps.length) * 100) : 33;
-
-  // ============================
-  // METADATA STATE
-  // ============================
-  const [metaFormat, setMetaFormat] = useState("csv");
-  const [metaLoading, setMetaLoading] = useState(false);
-  const [metaError, setMetaError] = useState("");
-  const [metaResult, setMetaResult] = useState(null);
-
-  const metaDashboard = useMemo(() => {
-    const summary = metaResult?.summary || {};
-    return {
-      tables: summary?.table_count ?? "—",
-      columns: summary?.column_count ?? "—",
-      relationships: summary?.relationship_count ?? "—",
-      generatedAt: metaResult?.generated_at
-        ? metaResult.generated_at.slice(0, 19).replace("T", " ")
-        : "—",
-    };
-  }, [metaResult]);
-
-  async function handleGenerateMetadata() {
-    setMetaLoading(true);
-    setMetaError("");
-    setMetaResult(null);
-
-    try {
-      const payload = {
-        db_type: dbConfig?.db_type || "postgres",
-        host: dbConfig?.host,
-        port: Number(dbConfig?.port || 5432),
-        database: dbConfig?.database,
-        username: dbConfig?.username,
-        password: dbConfig?.password,
-        schema_name: dbConfig?.schema_name || "public",
-        output_format: metaFormat,
-      };
-
-      const res = await generateMetadata(payload);
-      setMetaResult(res);
-    } catch (err) {
-      console.log("Metadata error:", err?.response?.data || err);
-      setMetaError("❌ Metadata generation failed. Check DB / backend.");
-    } finally {
-      setMetaLoading(false);
-    }
-  }
-
-  // ============================
-  // MAPPING STATE
-  // ============================
-  const [mapFormat, setMapFormat] = useState("csv");
-  const [mappingLoading, setMappingLoading] = useState(false);
-  const [mappingError, setMappingError] = useState("");
-  const [mappingResult, setMappingResult] = useState(null);
-
-  const [targetCfg, setTargetCfg] = useState({
-    db_type: "postgres",
-    host: "localhost",
-    port: "5432",
-    database: "",
-    username: "postgres",
-    password: "",
-    schema_name: "public",
-  });
-
-  function handleTargetChange(e) {
-    const { name, value } = e.target;
-    setTargetCfg((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  }
-
-  async function handleRunMapping() {
-    setMappingLoading(true);
-    setMappingError("");
-    setMappingResult(null);
-
-    try {
-      const payload = {
-        src_cfg: {
-          db_type: dbConfig?.db_type || "postgres",
-          host: dbConfig?.host,
-          port: Number(dbConfig?.port || 5432),
-          database: dbConfig?.database,
-          username: dbConfig?.username,
-          password: dbConfig?.password,
-          schema_name: dbConfig?.schema_name || "public",
-        },
-        tgt_cfg: {
-          db_type: targetCfg.db_type,
-          host: targetCfg.host,
-          port: Number(targetCfg.port || 5432),
-          database: targetCfg.database,
-          username: targetCfg.username,
-          password: targetCfg.password,
-          schema_name: targetCfg.schema_name || "public",
-        },
-        qdrant_host: "localhost",
-        qdrant_port: 6333,
-        top_k_dense: 5,
-        output_format: mapFormat,
-      };
-
-      const res = await runHybridMapping(payload);
-      setMappingResult(res);
-    } catch (err) {
-      console.log("Mapping error:", err?.response?.data || err);
-      setMappingError("❌ Mapping failed. Check target DB & backend logs.");
-    } finally {
-      setMappingLoading(false);
-    }
-  }
-
-  // ============================
-  // ✅ MAPPING DASHBOARD (FIXED)
-  // ============================
- const mappingDashboard = useMemo(() => {
-  const dashboard = mappingResult?.details?.dashboard;
-
-  if (!dashboard) {
-    return {
-      sourceTablesUsed: "—",
-      targetTablesUsed: "—",
-      matchedTablePairs: "—",
-      matchedColumns: "—",
-      avgConfidence: "—",
-    };
-  }
-
-  return {
-    sourceTablesUsed: dashboard.source_tables_used ?? "—",
-    targetTablesUsed: dashboard.target_tables_used ?? "—",
-    matchedTablePairs: dashboard.matched_table_pairs ?? "—",
-    matchedColumns: dashboard.matched_columns ?? "—",
-    avgConfidence:
-      typeof dashboard.avg_confidence_score === "number"
-        ? dashboard.avg_confidence_score.toFixed(3)
-        : "—",
-  };
-}, [mappingResult]);
-
-  // ============================
-  // RENDER
-  // ============================
   return (
-    <div className="min-h-screen w-full bg-slate-50">
+    <div className="h-screen flex flex-col bg-slate-100">
       {/* TOP BAR */}
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur">
-        <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="rounded-xl bg-slate-900 px-3 py-2 shadow-sm">
-              <img src={logo} alt="ACIES Global" className="h-7 w-auto object-contain" />
-            </div>
-
-            <div className="leading-tight">
-              <div className="text-sm font-extrabold text-slate-900">
-                Schema Intelligence
-              </div>
-              <div className="text-xs text-slate-500">
-                Workspace • Metadata • Mapping • Chatbot
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {onGoChat && (
-              <button
-                onClick={onGoChat}
-                className="hidden sm:inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 font-semibold text-white
-                           bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600
-                           shadow-md shadow-indigo-500/20 hover:shadow-lg hover:shadow-fuchsia-500/20 transition"
-              >
-                💬 Chatbot
-              </button>
-            )}
-
-            <button
-              onClick={onExit}
-              className="rounded-xl px-4 py-2 bg-red-50 border border-red-200 text-red-700 font-semibold hover:bg-red-100 transition"
-            >
-              Exit
-            </button>
-          </div>
+      <header className="h-14 bg-black flex items-center justify-between px-6">
+        <div className="flex items-center gap-3">
+          <img src={logo} className="h-6" />
+          <span className="text-white font-semibold">
+            Schema Intelligence
+          </span>
         </div>
+        <button
+          onClick={onExit}
+          className="bg-red-600 text-white px-4 py-1.5 rounded"
+        >
+          Exit
+        </button>
       </header>
 
-      {/* BODY */}
-      <div className="mx-auto max-w-7xl px-4 py-7">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* SIDEBAR */}
-          <aside className="lg:col-span-3 space-y-6">
-            {/* MODULES */}
-            <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-              <div className="px-4 py-4 border-b border-slate-200 bg-gradient-to-r from-indigo-50 via-violet-50 to-fuchsia-50">
-                <div className="text-xs text-slate-600 font-bold uppercase tracking-wide">
-                  Modules
-                </div>
-                <div className="text-sm font-extrabold text-slate-900 mt-1">
-                  Workspace Tools
-                </div>
-              </div>
+      <div className="flex flex-1 overflow-hidden">
+        {/* SIDEBAR */}
+        <aside className="w-64 bg-slate-200 border-r p-4 space-y-2">
+          {[
+            ["metadata", "METADATA"],
+            ["mapping", "MAPPING"],
+            ["chatbot", "CHATBOT"],
+          ].map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => setActivePage(key)}
+              className={`w-full px-4 py-3 rounded-lg font-semibold text-left ${
+                activePage === key
+                  ? "bg-white shadow text-indigo-700"
+                  : "hover:bg-slate-300"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </aside>
 
-              <div className="p-3 space-y-2">
-                <SideTab
-                  active={activeTab === "metadata"}
-                  title="Metadata"
-                  subtitle="Generate schema output"
-                  icon="📄"
-                  onClick={() => setActiveTab("metadata")}
-                />
-
-                <SideTab
-                  active={activeTab === "mapping"}
-                  title="Mapping"
-                  subtitle="Compare schemas"
-                  icon="🧩"
-                  onClick={() => setActiveTab("mapping")}
-                />
-
-                <SideTab
-                  active={activeTab === "chatbot"}
-                  title="Chatbot"
-                  subtitle="Quick insights summary"
-                  icon="✨"
-                  onClick={() => setActiveTab("chatbot")}
-                />
-              </div>
-            </div>
-
-            {/* STATUS + PROGRESS */}
-            <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-              <div className="px-4 py-4 border-b border-slate-200">
-                <div className="text-sm font-extrabold text-slate-900">
-                  Status
-                </div>
-                <div className="text-xs text-slate-500 mt-1">
-                  Step {activeIndex + 1} of {steps.length} • {progressPercent}%
-                </div>
-
-                <div className="mt-3 h-2 rounded-full bg-slate-100 overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 transition-all"
-                    style={{ width: `${progressPercent}%` }}
-                  />
-                </div>
-              </div>
-
-              <div className="p-4 space-y-3">
-                <div className="flex flex-wrap gap-2">
-                  <StatusChip color="emerald" text="Connected" />
-                </div>
-
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                  <div className="text-xs font-bold text-slate-600">
-                    Source DB
-                  </div>
-                  <div className="mt-2 space-y-2">
-                    <RowItem label="Host" value={dbConfig?.host || "—"} />
-                    <RowItem label="Port" value={String(dbConfig?.port || "—")} />
-                    <RowItem label="Database" value={dbConfig?.database || "—"} />
-                    <RowItem label="Schema" value={dbConfig?.schema_name || "—"} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </aside>
-
-          {/* MAIN */}
-          <main className="lg:col-span-9 space-y-6">
-            {/* METADATA TAB */}
-            {activeTab === "metadata" && (
-              <>
-                {/* DASHBOARD */}
-                <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-                  <div className="px-6 py-5 border-b border-slate-200 bg-gradient-to-r from-indigo-50 via-violet-50 to-fuchsia-50">
-                    <h2 className="text-lg font-extrabold text-slate-900">
-                      Dashboard
-                    </h2>
-                    <p className="text-sm text-slate-600 mt-1">
-                      Summary from generated metadata.
-                    </p>
-                  </div>
-
-                  <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <StatCard title="No. of Tables" value={metaDashboard.tables} sub="Detected" />
-                    <StatCard title="No. of Columns" value={metaDashboard.columns} sub="All tables" />
-                    <StatCard title="Relationships" value={metaDashboard.relationships} sub="Detected" />
-                    <StatCard title="Generated At" value={metaDashboard.generatedAt} sub="UTC" />
-                  </div>
-                </div>
-
-                {/* GENERATOR */}
-                <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-                  <div className="px-6 py-5 border-b border-slate-200 bg-gradient-to-r from-indigo-50 via-violet-50 to-fuchsia-50">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                      <div>
-                        <h2 className="text-lg font-extrabold text-slate-900">
-                          Metadata Generator
-                        </h2>
-                        <p className="text-sm text-slate-600 mt-1">
-                          Generate schema metadata and download output.use json format to get table-relationship details.
-                        </p>
-                      </div>
-
-                      <button
-                        onClick={handleGenerateMetadata}
-                        disabled={metaLoading}
-                        className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-white
-                                   bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600
-                                   shadow-md shadow-indigo-500/20 hover:shadow-lg hover:shadow-fuchsia-500/20
-                                   transition disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {metaLoading ? (
-                          <>
-                            <span className="h-4 w-4 rounded-full border-2 border-white/40 border-t-white animate-spin" />
-                            Generating...
-                          </>
-                        ) : (
-                          <>⚡ Generate</>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                      <div className="text-sm font-extrabold text-slate-900">
-                        Settings
-                      </div>
-
-                      <div className="mt-4">
-                        <label className="text-xs font-bold text-slate-600">
-                          Output Format
-                        </label>
-                        <select
-                          value={metaFormat}
-                          onChange={(e) => setMetaFormat(e.target.value)}
-                          className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none
-                                     focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition shadow-sm"
-                        >
-                          <option value="csv">CSV</option>
-                          <option value="json">JSON</option>
-                          <option value="xlsx">XLSX</option>
-                        </select>
-                      </div>
-
-                      {metaError && (
-                        <div className="mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-semibold">
-                          {metaError}
-                        </div>
-                      )}
-
-                      {metaResult?.saved_file && (
-                        <a
-                          href={getMetadataDownloadUrl(metaResult.saved_file)}
-                          className="mt-5 inline-flex justify-center w-full rounded-xl px-4 py-3
-                                     bg-emerald-50 border border-emerald-200 text-emerald-700 font-extrabold
-                                     hover:bg-emerald-100 transition"
-                        >
-                          ⬇ Download Metadata
-                        </a>
-                      )}
-                    </div>
-                    {metaResult?.relationships_file && (
-                      <a
-                        href={getMetadataDownloadUrl(metaResult.relationships_file)}
-                        className="mt-2 inline-flex justify-center w-full rounded-xl px-4 py-3
-                                  bg-indigo-50 border border-indigo-200 text-indigo-700 font-extrabold
-                                  hover:bg-indigo-100 transition"
-                      >
-                        ⬇ Download Relationships CSV
-                      </a>
-                    )}
-
-
-                    <div className="space-y-4">
-                    <PreviewBox data={metaResult} />
-
-                    <RelationshipPreview
-                      relationships={metaResult?.relationships_preview}
-                    />
-                  </div>
-
-                  </div>
-                </div>
-              </>
-            )}
-
-            {/* MAPPING TAB */}
-            {activeTab === "mapping" && (
-              <>
-                {/* DASHBOARD */}
-                <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-                  <div className="px-6 py-5 border-b border-slate-200 bg-gradient-to-r from-indigo-50 via-violet-50 to-fuchsia-50">
-                    <h2 className="text-lg font-extrabold text-slate-900">
-                      Dashboard
-                    </h2>
-                    <p className="text-sm text-slate-600 mt-1">
-                      Summary from generated mapping output.
-                    </p>
-                  </div>
-
-                  <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                    <StatCard
-  title="Source Tables Used"
-  value={mappingDashboard.sourceTablesUsed}
-  sub="Distinct source tables"
-/>
-
-<StatCard
-  title="Target Tables Used"
-  value={mappingDashboard.targetTablesUsed}
-  sub="Distinct target tables"
-/>
-
-<StatCard
-  title="Matched Table Pairs"
-  value={mappingDashboard.matchedTablePairs}
-  sub="Source → Target"
-/>
-
-<StatCard
-  title="Matched Columns"
-  value={mappingDashboard.matchedColumns}
-  sub="Column-level matches"
-/>
-
-<StatCard
-  title="Average Confidence Score"
-  value={mappingDashboard.avgConfidence}
-  sub="Ensemble score"
-/>
-
-
-                  </div>
-                </div>
-
-                {/* MAPPING TOOL */}
-                <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-                  <div className="px-6 py-5 border-b border-slate-200 bg-gradient-to-r from-indigo-50 via-violet-50 to-fuchsia-50">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                      <div>
-                        <h2 className="text-lg font-extrabold text-slate-900">
-                          Hybrid Mapping
-                        </h2>
-                        <p className="text-sm text-slate-600 mt-1">
-                          Map source schema to target schema and export output.
-                        </p>
-                      </div>
-
-                      <button
-                        onClick={handleRunMapping}
-                        disabled={mappingLoading || !targetCfg.database}
-                        className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-white
-                                 bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600
-                                 shadow-md shadow-indigo-500/20 hover:shadow-lg hover:shadow-fuchsia-500/20
-                                 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {mappingLoading ? (
-                          <>
-                            <span className="h-4 w-4 rounded-full border-2 border-white/40 border-t-white animate-spin" />
-                            Running...
-                          </>
-                        ) : (
-                          <>🧩 Run Mapping</>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Target Config */}
-                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                      <div className="text-sm font-extrabold text-slate-900">
-                        Target Database
-                      </div>
-
-                      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <InputField
-                          label="Host"
-                          name="host"
-                          value={targetCfg.host}
-                          onChange={handleTargetChange}
-                          placeholder="localhost"
-                        />
-
-                        <InputField
-                          label="Port"
-                          name="port"
-                          type="text"
-                          value={targetCfg.port}
-                          onChange={handleTargetChange}
-                          placeholder="5432"
-                        />
-
-                        <div className="md:col-span-2">
-                          <InputField
-                            label="Database"
-                            name="database"
-                            value={targetCfg.database}
-                            onChange={handleTargetChange}
-                            placeholder="target_database_name"
-                          />
-                        </div>
-
-                        <InputField
-                          label="Username"
-                          name="username"
-                          value={targetCfg.username}
-                          onChange={handleTargetChange}
-                          placeholder="postgres"
-                        />
-
-                        <InputField
-                          label="Password"
-                          name="password"
-                          type="password"
-                          value={targetCfg.password}
-                          onChange={handleTargetChange}
-                          placeholder="••••••••"
-                        />
-
-                        <div className="md:col-span-2">
-                          <InputField
-                            label="Schema"
-                            name="schema_name"
-                            value={targetCfg.schema_name}
-                            onChange={handleTargetChange}
-                            placeholder="public"
-                          />
-                        </div>
-
-                        <div className="md:col-span-2">
-                          <label className="text-xs font-bold text-slate-600">
-                            Output Format
-                          </label>
-                          <select
-                            value={mapFormat}
-                            onChange={(e) => setMapFormat(e.target.value)}
-                            className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none
-                                     focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition shadow-sm"
-                          >
-                            <option value="csv">CSV</option>
-                            <option value="json">JSON</option>
-                            <option value="xlsx">XLSX</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      {mappingError && (
-                        <div className="mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-semibold">
-                          {mappingError}
-                        </div>
-                      )}
-
-                      {mappingResult?.saved_file && (
-                        <a
-                          href={getMappingDownloadUrl(mappingResult.saved_file)}
-                          className="mt-5 inline-flex justify-center w-full rounded-xl px-4 py-3
-                                   bg-emerald-50 border border-emerald-200 text-emerald-700 font-extrabold
-                                   hover:bg-emerald-100 transition"
-                        >
-                          ⬇ Download Mapping
-                        </a>
-                      )}
-                    </div>
-
-                    <PreviewBox data={mappingResult} />
-                  </div>
-                </div>
-              </>
-            )}
-
-            {/* CHATBOT TAB */}
-            {activeTab === "chatbot" && (
-              <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-                <div className="px-6 py-5 border-b border-slate-200 bg-gradient-to-r from-indigo-50 via-violet-50 to-fuchsia-50">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div>
-                      <h2 className="text-lg font-extrabold text-slate-900">
-                        Chatbot
-                      </h2>
-                      <p className="text-sm text-slate-600 mt-1">
-                        Get quick insights through summary of your data.
-                      </p>
-                    </div>
-
-                    {onGoChat ? (
-                      <button
-                        onClick={onGoChat}
-                        className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-white
-                                   bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600
-                                   shadow-md shadow-indigo-500/20 hover:shadow-lg hover:shadow-fuchsia-500/20 transition"
-                      >
-                        💬 Open Chatbot
-                      </button>
-                    ) : (
-                      <StatusChip color="slate" text="Not Available" />
-                    )}
-                  </div>
-                </div>
-
-                <div className="p-6">
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                    <div className="text-sm font-extrabold text-slate-900">
-                      Chat Assistant Ready
-                    </div>
-                    <div className="text-xs text-slate-500 mt-1">
-                      Get instant insights from your data with smart summaries.
-                    </div>
-
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      <StatusChip color="emerald" text="Connected DB" />
-                      <StatusChip color="violet" text="AI Enabled" />
-                      <StatusChip color="indigo" text="Schema Context" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* FOOTER */}
-            <div className="text-xs text-slate-400 flex items-center justify-between">
-              <span className="inline-flex items-center gap-2">
-                <img src={logo} alt="ACIES Global" className="h-4 w-auto" />
-                ACIES Global
-              </span>
-              <span className="font-medium text-slate-500">
-                Tool Workspace • v1.0
-              </span>
-            </div>
-          </main>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ------------------ SMALL COMPONENTS ------------------ */
-
-function SideTab({ title, subtitle, active, icon, onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      type="button"
-      className={`w-full text-left group flex items-start gap-3 rounded-xl border px-3 py-3 transition ${
-        active
-          ? "border-indigo-200 bg-gradient-to-r from-indigo-50 via-violet-50 to-fuchsia-50 shadow-sm"
-          : "border-slate-200 bg-white hover:bg-slate-50"
-      }`}
-    >
-      <div
-        className={`mt-0.5 h-9 w-9 rounded-xl flex items-center justify-center text-sm font-bold shadow-sm ${
-          active
-            ? "bg-gradient-to-br from-indigo-600 to-fuchsia-600 text-white"
-            : "bg-slate-100 text-slate-700"
-        }`}
-      >
-        {icon}
-      </div>
-
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center justify-between gap-2">
-          <div className="text-sm font-extrabold text-slate-900 truncate">
-            {title}
-          </div>
-
-          {active && (
-            <span className="text-[10px] px-2 py-1 rounded-full bg-indigo-600 text-white font-bold">
-              ACTIVE
-            </span>
+        {/* CONTENT */}
+        <main className="flex-1 overflow-y-auto p-8 max-w-6xl mx-auto">
+          {activePage === "metadata" && (
+            <MetadataPage
+              dbConfig={dbConfig}
+              metadata={metadata}
+            />
           )}
-        </div>
 
-        <div className="text-xs text-slate-500 truncate mt-0.5">{subtitle}</div>
-      </div>
-    </button>
-  );
-}
+          {activePage === "mapping" && (
+            <MappingPage dbConfig={dbConfig} />
+          )}
 
-function StatusChip({ text, color = "indigo" }) {
-  const map = {
-    indigo: "bg-indigo-600 text-white",
-    emerald: "bg-emerald-600 text-white",
-    violet: "bg-violet-600 text-white",
-    amber: "bg-amber-500 text-white",
-    slate: "bg-slate-600 text-white",
-  };
-
-  return (
-    <span
-      className={`text-xs px-2.5 py-1 rounded-full font-semibold shadow-sm ${
-        map[color] || map.indigo
-      }`}
-    >
-      {text}
-    </span>
-  );
-}
-
-function RowItem({ label, value }) {
-  return (
-    <div className="flex items-center justify-between gap-3">
-      <span className="text-xs font-semibold text-slate-500">{label}</span>
-      <span className="text-xs font-extrabold text-slate-900 truncate max-w-[140px] text-right">
-        {value}
-      </span>
-    </div>
-  );
-}
-
-function InputField({
-  label,
-  name,
-  value,
-  onChange,
-  placeholder,
-  type = "text",
-}) {
-  return (
-    <div>
-      <label className="text-sm font-bold text-slate-700">{label}</label>
-      <input
-        name={name}
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        autoComplete="off"
-        spellCheck={false}
-        className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400
-                   shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition"
-      />
-    </div>
-  );
-}
-
-/**
- * ✅ PreviewBox without black background
- */
-function PreviewBox({ data }) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm">
-      <div className="px-4 py-3 border-b border-slate-200 bg-slate-50">
-        <p className="text-xs font-bold text-slate-700">Preview Output</p>
-      </div>
-
-      <pre className="text-xs p-4 text-slate-800 max-h-[420px] overflow-auto leading-relaxed bg-white">
-        {data ? JSON.stringify(data, null, 2) : "Preview will appear here..."}
-      </pre>
-    </div>
-  );
-}
-
-function StatCard({ title, value, sub }) {
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <p className="text-sm font-semibold text-slate-500">{title}</p>
-      <p className="text-2xl font-extrabold text-slate-900 mt-1">{value}</p>
-      <p className="text-xs text-slate-400 mt-1">{sub}</p>
-    </div>
-  );
-}
-
-function RelationshipPreview({ relationships }) {
-  if (!relationships || relationships.length === 0) return null;
-
-  return (
-    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-      <div className="px-4 py-3 border-b border-slate-200 bg-slate-50">
-        <p className="text-xs font-bold text-slate-700">
-          Relationships Preview
-        </p>
-      </div>
-
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-xs">
-          <thead className="bg-slate-100 text-slate-700">
-            <tr>
-              <th className="px-3 py-2 text-left">Source</th>
-              <th className="px-3 py-2 text-left">→</th>
-              <th className="px-3 py-2 text-left">Target</th>
-              <th className="px-3 py-2 text-left">Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            {relationships.map((r, i) => (
-              <tr
-                key={i}
-                className="border-t border-slate-200 hover:bg-slate-50"
-              >
-                <td className="px-3 py-2 font-medium text-slate-900">
-                  {r.source_table}.{r.source_column}
-                </td>
-                <td className="px-3 py-2 text-center text-slate-400">→</td>
-                <td className="px-3 py-2 font-medium text-slate-900">
-                  {r.target_table}.{r.target_column}
-                </td>
-                <td className="px-3 py-2">
-                  <span className="rounded-full bg-indigo-100 text-indigo-700 px-2 py-0.5 font-bold">
-                    {r.relationship_type || "FK"}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          {activePage === "chatbot" && (
+            <ChatbotPage dbConfig={dbConfig} />
+          )}
+        </main>
       </div>
     </div>
   );

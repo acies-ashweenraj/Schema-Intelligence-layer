@@ -1,0 +1,2154 @@
+{
+  "generated_at": "2026-02-03T06:18:22.392386Z",
+  "database": {
+    "db_type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "database": "master",
+    "username": "postgres",
+    "password": "ashween29",
+    "schema_name": "public",
+    "sqlite_path": null
+  },
+  "summary": {
+    "table_count": 5,
+    "column_count": 28,
+    "relationship_count": 3
+  },
+  "tables": [
+    {
+      "table_name": "action_tracker",
+      "description": "The action_tracker table represents a record of actions taken in response to incidents. It stores information about the action, the owner responsible, and the status of the action. This table is typically used in analytics and business workflows to track progress and identify areas for improvement in incident management.",
+      "row_count": 1000,
+      "column_count": 6,
+      "columns": [
+        {
+          "column_name": "action_id",
+          "data_type": "integer",
+          "kind": null,
+          "description": "The action_id column represents a unique identifier for each action recorded in the action_tracker table. It is an integer value that is used to track and reference individual actions. This column is crucial for tracking progress and identifying areas for improvement in incident management.",
+          "is_primary_key": true,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "action_id",
+            "data_type": "integer",
+            "kind": "numeric",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 1000,
+            "distinct_percent": 100.0,
+            "duplicate_count": 0,
+            "top_values": [
+              {
+                "value": 273,
+                "count": 1
+              },
+              {
+                "value": 51,
+                "count": 1
+              },
+              {
+                "value": 652,
+                "count": 1
+              }
+            ],
+            "sample_values": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20
+            ],
+            "entropy": 5.643856,
+            "numeric_stats": {
+              "min": 1,
+              "max": 1000,
+              "avg": 500.5,
+              "sum": 500500.0,
+              "stddev": 288.67499025721,
+              "p25": 250.75,
+              "median": 500.5,
+              "p75": 750.25,
+              "iqr": 499.5,
+              "range": 999.0,
+              "zero_count": 0,
+              "negative_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "incident_id",
+          "data_type": "integer",
+          "kind": null,
+          "description": "The incident_id column represents the ID of the incident to which the action is related. It is an integer value that is used to link actions to their corresponding incidents. This column is crucial for understanding the context of each action and identifying trends and patterns in incident management.",
+          "is_primary_key": true,
+          "is_foreign_key": true,
+          "ref_table": "incidents",
+          "ref_column": "incident_id",
+          "relationship_type": "foreign_key",
+          "profiling": {
+            "column": "incident_id",
+            "data_type": "integer",
+            "kind": "numeric",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 639,
+            "distinct_percent": 63.9,
+            "duplicate_count": 361,
+            "top_values": [
+              {
+                "value": 84,
+                "count": 5
+              },
+              {
+                "value": 623,
+                "count": 5
+              },
+              {
+                "value": 21,
+                "count": 5
+              }
+            ],
+            "sample_values": [
+              914,
+              662,
+              11,
+              10,
+              115,
+              159,
+              133,
+              768,
+              425,
+              192,
+              149,
+              703,
+              61,
+              442,
+              383,
+              515,
+              68,
+              572,
+              644,
+              562
+            ],
+            "entropy": 5.643856,
+            "numeric_stats": {
+              "min": 1,
+              "max": 999,
+              "avg": 492.504,
+              "sum": 492504.0,
+              "stddev": 294.734361729338,
+              "p25": 234.0,
+              "median": 482.5,
+              "p75": 760.5,
+              "iqr": 526.5,
+              "range": 998.0,
+              "zero_count": 0,
+              "negative_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "action_item",
+          "data_type": "text",
+          "kind": null,
+          "description": "The action_item column represents a brief description of the action taken in response to an incident. It is a text value that is used to track the specific steps taken to address each incident. This column is crucial for understanding the actions taken and identifying areas for improvement in incident management.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "action_item",
+            "data_type": "text",
+            "kind": "text",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 1000,
+            "distinct_percent": 100.0,
+            "duplicate_count": 0,
+            "top_values": [
+              {
+                "value": "Laugh southern civil cell there information while truth.",
+                "count": 1
+              },
+              {
+                "value": "One must save say run notice matter.",
+                "count": 1
+              },
+              {
+                "value": "Act program beyond fill prove help.",
+                "count": 1
+              }
+            ],
+            "sample_values": [
+              "Above water operation important she conference.",
+              "Term themselves third choose.",
+              "Machine worry let piece.",
+              "Kitchen ten ok help city think national.",
+              "Technology least cause six Mr Mrs reflect.",
+              "Member leader day candidate.",
+              "Citizen note rule site car.",
+              "Benefit heart wall experience identify modern letter.",
+              "Them rate sort scene name.",
+              "Speech too population become issue page.",
+              "Occur strategy where bank deep serve.",
+              "Same interest available for his.",
+              "Second human guy quality most part.",
+              "Two page item home during radio decide.",
+              "Since give three research organization.",
+              "Especially policy experience.",
+              "Step pull face challenge soldier believe.",
+              "Girl for trouble whom.",
+              "Control miss television each north.",
+              "Shake consumer usually explain will attack quality."
+            ],
+            "entropy": 5.643856,
+            "text_stats": {
+              "min_length": 13,
+              "max_length": 72,
+              "avg_length": 35.869,
+              "empty_string_count": 0,
+              "digit_only_count": 0,
+              "alpha_only_count": 0,
+              "alnum_only_count": 0,
+              "email_like_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "owner",
+          "data_type": "character varying",
+          "kind": null,
+          "description": "The owner column represents the person responsible for taking the action. It is a character varying value that is used to track accountability and responsibility for each action. This column is crucial for understanding who is responsible for each action and identifying areas for improvement in incident management.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "owner",
+            "data_type": "character varying",
+            "kind": "text",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 994,
+            "distinct_percent": 99.4,
+            "duplicate_count": 6,
+            "top_values": [
+              {
+                "value": "Jacob Flores",
+                "count": 2
+              },
+              {
+                "value": "Jason Jones",
+                "count": 2
+              },
+              {
+                "value": "Elizabeth Rodriguez",
+                "count": 2
+              }
+            ],
+            "sample_values": [
+              "Amy Wise",
+              "Patricia Stark",
+              "David Hodge",
+              "Steven Byrd",
+              "Jessica Garza",
+              "Angela Miller",
+              "Rebecca English",
+              "James Marshall",
+              "Jared Obrien",
+              "Angela Cantu",
+              "Emily Chan",
+              "Christina Miller",
+              "Elizabeth Acosta",
+              "Tammy Jefferson",
+              "Desiree Bell",
+              "John Clark",
+              "Richard Christian",
+              "Joseph Foster",
+              "Ryan Harvey",
+              "Emily Wright"
+            ],
+            "entropy": 5.643856,
+            "text_stats": {
+              "min_length": 8,
+              "max_length": 27,
+              "avg_length": 13.238,
+              "empty_string_count": 0,
+              "digit_only_count": 0,
+              "alpha_only_count": 0,
+              "alnum_only_count": 0,
+              "email_like_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "due_date",
+          "data_type": "date",
+          "kind": null,
+          "description": "The due_date column represents the deadline for completing the action. It is a date value that is used to track progress and identify areas for improvement in incident management. This column is crucial for ensuring timely completion of actions and maintaining a high level of incident management.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "due_date",
+            "data_type": "date",
+            "kind": "datetime",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 90,
+            "distinct_percent": 9.0,
+            "duplicate_count": 910,
+            "top_values": [
+              {
+                "value": "2026-03-17",
+                "count": 24
+              },
+              {
+                "value": "2026-04-30",
+                "count": 17
+              },
+              {
+                "value": "2026-04-04",
+                "count": 17
+              }
+            ],
+            "sample_values": [
+              "2026-03-24",
+              "2026-03-06",
+              "2026-03-13",
+              "2026-02-15",
+              "2026-03-06",
+              "2026-03-26",
+              "2026-02-06",
+              "2026-04-18",
+              "2026-02-19",
+              "2026-03-25",
+              "2026-02-24",
+              "2026-02-22",
+              "2026-04-25",
+              "2026-04-23",
+              "2026-04-18",
+              "2026-03-22",
+              "2026-03-05",
+              "2026-04-21",
+              "2026-04-07",
+              "2026-04-15"
+            ],
+            "entropy": 5.158563,
+            "date_stats": {
+              "min_date": "2026-02-02",
+              "max_date": "2026-05-02",
+              "range_days": 89,
+              "weekday_distribution": {
+                "Saturday": 163,
+                "Friday": 153,
+                "Tuesday": 146,
+                "Thursday": 146,
+                "Wednesday": 141,
+                "Monday": 127,
+                "Sunday": 124
+              },
+              "most_common_weekday": "Saturday",
+              "month_distribution": {
+                "3": 350,
+                "4": 327,
+                "2": 298,
+                "5": 25
+              },
+              "most_common_month": 3,
+              "weekend_count": 287
+            }
+          }
+        },
+        {
+          "column_name": "action_status",
+          "data_type": "character varying",
+          "kind": null,
+          "description": "The action_status column represents the current status of the action. It is a character varying value that is used to track progress and identify areas for improvement in incident management. This column is crucial for understanding the current status of each action and identifying trends and patterns in incident management.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "action_status",
+            "data_type": "character varying",
+            "kind": "text",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 3,
+            "distinct_percent": 0.3,
+            "duplicate_count": 997,
+            "top_values": [
+              {
+                "value": "Closed",
+                "count": 344
+              },
+              {
+                "value": "Open",
+                "count": 343
+              },
+              {
+                "value": "In Progress",
+                "count": 313
+              }
+            ],
+            "sample_values": [
+              "Open",
+              "Open",
+              "Open",
+              "Open",
+              "Open",
+              "In Progress",
+              "In Progress",
+              "In Progress",
+              "Closed",
+              "In Progress",
+              "Open",
+              "In Progress",
+              "Open",
+              "Closed",
+              "In Progress",
+              "In Progress",
+              "Closed",
+              "In Progress",
+              "Closed",
+              "Closed"
+            ],
+            "entropy": 1.580879,
+            "text_stats": {
+              "min_length": 4,
+              "max_length": 11,
+              "avg_length": 6.879,
+              "empty_string_count": 0,
+              "digit_only_count": 0,
+              "alpha_only_count": 687,
+              "alnum_only_count": 687,
+              "email_like_count": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table_name": "employees",
+      "description": "The employees table stores information about the staff members within an organization. It includes details such as employee ID, full name, department, job title, and email address. This table is crucial for HR and personnel management, and is often used to track employee training and development.",
+      "row_count": 1000,
+      "column_count": 5,
+      "columns": [
+        {
+          "column_name": "employee_id",
+          "data_type": "integer",
+          "kind": null,
+          "description": "The employee_id column represents a unique identifier for each employee. It is an integer value that is used to track and reference individual employees. This column is crucial for tracking employee information and identifying trends and patterns in personnel management.",
+          "is_primary_key": true,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "employee_id",
+            "data_type": "integer",
+            "kind": "numeric",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 1000,
+            "distinct_percent": 100.0,
+            "duplicate_count": 0,
+            "top_values": [
+              {
+                "value": 273,
+                "count": 1
+              },
+              {
+                "value": 51,
+                "count": 1
+              },
+              {
+                "value": 652,
+                "count": 1
+              }
+            ],
+            "sample_values": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20
+            ],
+            "entropy": 5.643856,
+            "numeric_stats": {
+              "min": 1,
+              "max": 1000,
+              "avg": 500.5,
+              "sum": 500500.0,
+              "stddev": 288.67499025721,
+              "p25": 250.75,
+              "median": 500.5,
+              "p75": 750.25,
+              "iqr": 499.5,
+              "range": 999.0,
+              "zero_count": 0,
+              "negative_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "full_name",
+          "data_type": "character varying",
+          "kind": null,
+          "description": "The full_name column represents the full name of each employee. It is a character varying value that is used to track employee information and identify individual employees. This column is crucial for understanding employee demographics and identifying trends and patterns in personnel management.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "full_name",
+            "data_type": "character varying",
+            "kind": "text",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 997,
+            "distinct_percent": 99.7,
+            "duplicate_count": 3,
+            "top_values": [
+              {
+                "value": "Thomas Edwards",
+                "count": 2
+              },
+              {
+                "value": "Kenneth Wilson",
+                "count": 2
+              },
+              {
+                "value": "Deborah Johnson",
+                "count": 2
+              }
+            ],
+            "sample_values": [
+              "Ruth Smith",
+              "Nicole King",
+              "Jeffrey King",
+              "Kelly Wilson",
+              "Alexander Bautista",
+              "Samantha Kirk",
+              "Mr. Thomas Edwards",
+              "Stacey Rodriguez",
+              "Kayla Gutierrez",
+              "Sarah Liu",
+              "Sean Ruiz",
+              "Arthur Wilson",
+              "Steven Gonzalez",
+              "David Hinton",
+              "David Becker",
+              "Angela Williams",
+              "Michelle Campbell",
+              "Carmen Smith",
+              "Julie Lewis",
+              "Dr. Shannon Holt MD"
+            ],
+            "entropy": 5.643856,
+            "text_stats": {
+              "min_length": 8,
+              "max_length": 25,
+              "avg_length": 13.357,
+              "empty_string_count": 0,
+              "digit_only_count": 0,
+              "alpha_only_count": 0,
+              "alnum_only_count": 0,
+              "email_like_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "department",
+          "data_type": "character varying",
+          "kind": null,
+          "description": "The department column represents the department to which each employee belongs. It is a character varying value that is used to track employee information and identify trends and patterns in personnel management. This column is crucial for understanding employee distribution and identifying areas for improvement in departmental management.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "department",
+            "data_type": "character varying",
+            "kind": "text",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 501,
+            "distinct_percent": 50.1,
+            "duplicate_count": 499,
+            "top_values": [
+              {
+                "value": "Engineer, broadcasting (operations)",
+                "count": 6
+              },
+              {
+                "value": "Aeronautical engineer",
+                "count": 6
+              },
+              {
+                "value": "Community education officer",
+                "count": 6
+              }
+            ],
+            "sample_values": [
+              "Production assistant, radio",
+              "Programmer, applications",
+              "Psychologist, forensic",
+              "Trade union research officer",
+              "Copywriter, advertising",
+              "Chiropodist",
+              "Geographical information systems officer",
+              "Community education officer",
+              "Risk analyst",
+              "Editor, film/video",
+              "Network engineer",
+              "Chief Technology Officer",
+              "Medical illustrator",
+              "Ambulance person",
+              "Nurse, learning disability",
+              "Biochemist, clinical",
+              "Data processing manager",
+              "Town planner",
+              "Designer, multimedia",
+              "Audiological scientist"
+            ],
+            "entropy": 5.603856,
+            "text_stats": {
+              "min_length": 3,
+              "max_length": 59,
+              "avg_length": 20.799,
+              "empty_string_count": 0,
+              "digit_only_count": 0,
+              "alpha_only_count": 143,
+              "alnum_only_count": 143,
+              "email_like_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "job_title",
+          "data_type": "character varying",
+          "kind": null,
+          "description": "The job_title column represents the job title of each employee. It is a character varying value that is used to track employee information and identify individual employees. This column is crucial for understanding employee roles and responsibilities and identifying trends and patterns in personnel management.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "job_title",
+            "data_type": "character varying",
+            "kind": "text",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 508,
+            "distinct_percent": 50.8,
+            "duplicate_count": 492,
+            "top_values": [
+              {
+                "value": "Dramatherapist",
+                "count": 6
+              },
+              {
+                "value": "Sports coach",
+                "count": 5
+              },
+              {
+                "value": "Chemical engineer",
+                "count": 5
+              }
+            ],
+            "sample_values": [
+              "Administrator, local government",
+              "Meteorologist",
+              "Phytotherapist",
+              "Scientific laboratory technician",
+              "Dramatherapist",
+              "Hospital pharmacist",
+              "Designer, interior/spatial",
+              "Early years teacher",
+              "Museum/gallery conservator",
+              "Fashion designer",
+              "Futures trader",
+              "Medical laboratory scientific officer",
+              "Television floor manager",
+              "Dentist",
+              "Education administrator",
+              "Designer, jewellery",
+              "Child psychotherapist",
+              "Neurosurgeon",
+              "Geologist, engineering",
+              "Financial planner"
+            ],
+            "entropy": 5.523856,
+            "text_stats": {
+              "min_length": 3,
+              "max_length": 59,
+              "avg_length": 20.726,
+              "empty_string_count": 0,
+              "digit_only_count": 0,
+              "alpha_only_count": 118,
+              "alnum_only_count": 118,
+              "email_like_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "email",
+          "data_type": "character varying",
+          "kind": null,
+          "description": "The email column represents the email address of each employee. It is a character varying value that is used to track employee information and communicate with individual employees. This column is crucial for maintaining effective communication and identifying trends and patterns in personnel management.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "email",
+            "data_type": "character varying",
+            "kind": "text",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 995,
+            "distinct_percent": 99.5,
+            "duplicate_count": 5,
+            "top_values": [
+              {
+                "value": "lisasmith@example.com",
+                "count": 2
+              },
+              {
+                "value": "scook@example.com",
+                "count": 2
+              },
+              {
+                "value": "fwilliams@example.org",
+                "count": 2
+              }
+            ],
+            "sample_values": [
+              "donaldsonangela@example.org",
+              "shanegordon@example.com",
+              "lisasmith@example.com",
+              "fpage@example.com",
+              "lynnross@example.com",
+              "jamesrivera@example.net",
+              "amy11@example.net",
+              "taylorkristi@example.org",
+              "david76@example.org",
+              "ddavis@example.org",
+              "kelly61@example.org",
+              "heatherbest@example.net",
+              "jonesspencer@example.org",
+              "taylormichael@example.net",
+              "tmichael@example.org",
+              "brooksjohnny@example.org",
+              "jimmy55@example.net",
+              "qstanley@example.net",
+              "brianharrison@example.org",
+              "qgray@example.org"
+            ],
+            "entropy": 5.643856,
+            "text_stats": {
+              "min_length": 16,
+              "max_length": 32,
+              "avg_length": 21.907,
+              "empty_string_count": 0,
+              "digit_only_count": 0,
+              "alpha_only_count": 0,
+              "alnum_only_count": 0,
+              "email_like_count": 1000
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table_name": "incidents",
+      "description": "The incidents table represents a record of all incidents that have occurred within an organization. It stores information about the incident date, category, location, severity, and description. This table is typically used in analytics and business workflows to identify trends and patterns in incident occurrence.",
+      "row_count": 1000,
+      "column_count": 7,
+      "columns": [
+        {
+          "column_name": "incident_id",
+          "data_type": "integer",
+          "kind": null,
+          "description": "The incident_id column represents a unique identifier for each incident. It is an integer value that is used to track and reference individual incidents. This column is crucial for understanding incident occurrence and identifying trends and patterns in incident management.",
+          "is_primary_key": true,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "incident_id",
+            "data_type": "integer",
+            "kind": "numeric",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 1000,
+            "distinct_percent": 100.0,
+            "duplicate_count": 0,
+            "top_values": [
+              {
+                "value": 273,
+                "count": 1
+              },
+              {
+                "value": 51,
+                "count": 1
+              },
+              {
+                "value": 652,
+                "count": 1
+              }
+            ],
+            "sample_values": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20
+            ],
+            "entropy": 5.643856,
+            "numeric_stats": {
+              "min": 1,
+              "max": 1000,
+              "avg": 500.5,
+              "sum": 500500.0,
+              "stddev": 288.67499025721,
+              "p25": 250.75,
+              "median": 500.5,
+              "p75": 750.25,
+              "iqr": 499.5,
+              "range": 999.0,
+              "zero_count": 0,
+              "negative_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "incident_date",
+          "data_type": "date",
+          "kind": null,
+          "description": "The incident_date column represents the date on which each incident occurred. It is a date value that is used to track incident occurrence and identify trends and patterns in incident management. This column is crucial for understanding incident timing and identifying areas for improvement in incident response.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "incident_date",
+            "data_type": "date",
+            "kind": "datetime",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 543,
+            "distinct_percent": 54.3,
+            "duplicate_count": 457,
+            "top_values": [
+              {
+                "value": "2025-06-20",
+                "count": 8
+              },
+              {
+                "value": "2025-05-15",
+                "count": 6
+              },
+              {
+                "value": "2025-01-04",
+                "count": 6
+              }
+            ],
+            "sample_values": [
+              "2024-10-19",
+              "2024-02-08",
+              "2024-09-16",
+              "2024-11-15",
+              "2025-03-23",
+              "2024-07-21",
+              "2025-09-21",
+              "2025-03-30",
+              "2024-06-02",
+              "2025-06-27",
+              "2025-06-20",
+              "2024-08-23",
+              "2024-12-02",
+              "2024-09-26",
+              "2024-08-30",
+              "2024-07-22",
+              "2024-11-04",
+              "2025-09-27",
+              "2026-01-20",
+              "2024-12-13"
+            ],
+            "entropy": 5.563856,
+            "date_stats": {
+              "min_date": "2024-02-03",
+              "max_date": "2026-02-01",
+              "range_days": 729,
+              "weekday_distribution": {
+                "Thursday": 162,
+                "Saturday": 149,
+                "Wednesday": 144,
+                "Friday": 141,
+                "Monday": 140,
+                "Tuesday": 135,
+                "Sunday": 129
+              },
+              "most_common_weekday": "Thursday",
+              "month_distribution": {
+                "1": 103,
+                "6": 100,
+                "5": 91,
+                "3": 89,
+                "7": 89,
+                "8": 86,
+                "12": 85,
+                "9": 76,
+                "11": 74,
+                "10": 74,
+                "4": 69,
+                "2": 64
+              },
+              "most_common_month": 1,
+              "weekend_count": 278
+            }
+          }
+        },
+        {
+          "column_name": "incident_category",
+          "data_type": "character varying",
+          "kind": null,
+          "description": "The incident_category column represents the category to which each incident belongs. It is a character varying value that is used to track incident information and identify trends and patterns in incident management. This column is crucial for understanding incident types and identifying areas for improvement in incident response.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "incident_category",
+            "data_type": "character varying",
+            "kind": "text",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 4,
+            "distinct_percent": 0.4,
+            "duplicate_count": 996,
+            "top_values": [
+              {
+                "value": "Near Miss",
+                "count": 269
+              },
+              {
+                "value": "Injury",
+                "count": 256
+              },
+              {
+                "value": "Fire",
+                "count": 244
+              }
+            ],
+            "sample_values": [
+              "Injury",
+              "Spill",
+              "Spill",
+              "Fire",
+              "Injury",
+              "Near Miss",
+              "Fire",
+              "Near Miss",
+              "Spill",
+              "Spill",
+              "Fire",
+              "Spill",
+              "Fire",
+              "Injury",
+              "Fire",
+              "Fire",
+              "Near Miss",
+              "Fire",
+              "Injury",
+              "Injury"
+            ],
+            "entropy": 1.976281,
+            "text_stats": {
+              "min_length": 4,
+              "max_length": 9,
+              "avg_length": 6.088,
+              "empty_string_count": 0,
+              "digit_only_count": 0,
+              "alpha_only_count": 731,
+              "alnum_only_count": 731,
+              "email_like_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "site_location",
+          "data_type": "character varying",
+          "kind": null,
+          "description": "The site_location column represents the location at which each incident occurred. It is a character varying value that is used to track incident information and identify trends and patterns in incident management. This column is crucial for understanding incident geography and identifying areas for improvement in incident response.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "site_location",
+            "data_type": "character varying",
+            "kind": "text",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 966,
+            "distinct_percent": 96.6,
+            "duplicate_count": 34,
+            "top_values": [
+              {
+                "value": "West Heather",
+                "count": 3
+              },
+              {
+                "value": "Jamesmouth",
+                "count": 3
+              },
+              {
+                "value": "Gibsonmouth",
+                "count": 3
+              }
+            ],
+            "sample_values": [
+              "New Connie",
+              "Felicialand",
+              "New Nicholasfort",
+              "North Johnbury",
+              "Port Saraview",
+              "Taylormouth",
+              "North Kristiville",
+              "Nicolebury",
+              "Lake Jessicastad",
+              "North Tammy",
+              "Sarahport",
+              "Susanmouth",
+              "Jefferyfort",
+              "Port Beckyberg",
+              "West Jeremiahton",
+              "Jamesmouth",
+              "Dawntown",
+              "Sotostad",
+              "Mcdonaldton",
+              "Lake Lori"
+            ],
+            "entropy": 5.643856,
+            "text_stats": {
+              "min_length": 6,
+              "max_length": 22,
+              "avg_length": 11.873,
+              "empty_string_count": 0,
+              "digit_only_count": 0,
+              "alpha_only_count": 522,
+              "alnum_only_count": 522,
+              "email_like_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "severity",
+          "data_type": "character varying",
+          "kind": null,
+          "description": "The severity column represents the level of severity associated with each incident. It is a character varying value that is used to track incident information and identify trends and patterns in incident management. This column is crucial for understanding incident impact and identifying areas for improvement in incident response.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "severity",
+            "data_type": "character varying",
+            "kind": "text",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 4,
+            "distinct_percent": 0.4,
+            "duplicate_count": 996,
+            "top_values": [
+              {
+                "value": "Medium",
+                "count": 259
+              },
+              {
+                "value": "Low",
+                "count": 259
+              },
+              {
+                "value": "High",
+                "count": 245
+              }
+            ],
+            "sample_values": [
+              "High",
+              "Low",
+              "Low",
+              "Low",
+              "High",
+              "High",
+              "Low",
+              "Medium",
+              "High",
+              "High",
+              "High",
+              "Medium",
+              "High",
+              "Critical",
+              "Medium",
+              "Critical",
+              "Medium",
+              "Low",
+              "Critical",
+              "Critical"
+            ],
+            "entropy": 1.911465,
+            "text_stats": {
+              "min_length": 3,
+              "max_length": 8,
+              "avg_length": 5.207,
+              "empty_string_count": 0,
+              "digit_only_count": 0,
+              "alpha_only_count": 1000,
+              "alnum_only_count": 1000,
+              "email_like_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "description",
+          "data_type": "text",
+          "kind": null,
+          "description": "The description column represents a brief description of each incident. It is a text value that is used to track incident information and identify trends and patterns in incident management. This column is crucial for understanding incident context and identifying areas for improvement in incident response.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "description",
+            "data_type": "text",
+            "kind": "text",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 1000,
+            "distinct_percent": 100.0,
+            "duplicate_count": 0,
+            "top_values": [
+              {
+                "value": "More now case but together thought former film. Decade everybody recent. Arm blue five building treatment she.",
+                "count": 1
+              },
+              {
+                "value": "Current respond perhaps minute less. Bit program enter movie. Leg mention Democrat education network lay tend doctor.\nToday time forward try.",
+                "count": 1
+              },
+              {
+                "value": "Anything enter style right peace push. War carry science free show for democratic. Themselves save bill standard always. Star success now indeed cold civil interesting air.",
+                "count": 1
+              }
+            ],
+            "sample_values": [
+              "Card modern deal term. Finally public computer. Owner time affect memory place. Hear which beat ever fly involve third.\nHear suddenly determine fill. Management understand line hope alone.",
+              "Quality player at notice model across difficult. Detail of edge tough.\nHair catch next shake. Local edge reflect office he surface political high. Region bring into.",
+              "Maintain ever wonder sense officer now when. Effect again do. Girl key detail major. Candidate fine stage suddenly stage.\nOthers company car almost. Money upon toward modern green.",
+              "Friend explain type ago scientist.\nShoulder recognize week among that will. Voice decision first body.",
+              "Past outside authority job. Company cost very perhaps family mention. Everyone ten always east leg everyone. Blood three whatever.",
+              "Floor such leg focus suggest threat heart. Painting leave man challenge international themselves.\nWide general price president color.",
+              "Message thank half TV beat range me road. Yet cause list garden foot benefit positive.\nIndicate major include recently water only. Election exactly last center store.\nMusic hand also.",
+              "Product agreement behind nice give large follow project. Show both power former year. Bit letter moment drive.\nBill paper upon goal speech billion. Beautiful study rate involve.",
+              "First gas room check door wall newspaper. Wrong meet still field hit husband thus. Last family suggest lawyer drive.",
+              "Candidate provide American remain enough chair join. Party particularly project mind draw order. Consumer operation past couple yeah.\nTonight protect attack mother. No sure sometimes job fine.",
+              "Kitchen lead day record support. Remember start day. First about every growth away long article.\nOil these box. Win future them moment perhaps Democrat memory. West fall rise with.",
+              "Military party left both without. Feel across customer ask large and.\nDog black fill successful while most capital. Admit realize society any. Lay yet hundred.",
+              "Authority finish blue various.\nQuestion subject rate game city each.\nStage teacher local site executive avoid never.\nBut way those account wonder participant.",
+              "Hold over central. Local section yourself capital leader. Hope half score treatment how probably. Him take clearly fund serious.",
+              "Very defense local bill number Mrs. Financial better TV yourself short. Poor resource including question good. Relate up smile learn still.",
+              "Season girl show everyone matter deep. Source from sense want peace.\nBit remember personal science about product. Collection available boy consider late ever weight.",
+              "Sister media once industry small have.\nCharge pretty very certain onto ago. Administration major PM improve either skill.",
+              "Pretty product travel best quality policy cost. On according address allow reflect sound.\nCertain Democrat listen card.\nBall particular student politics miss detail. Have tax first herself.",
+              "Should share finally light. Live power measure order. Staff term shake season whether.\nDevelopment against peace group join away rule case. Hard truth may argue she each.\nFamily only middle or.",
+              "Level fear face yourself century full deep firm. Able score night anything in kind material.\nWay head pretty. Bank character so player. Better soon cup quality."
+            ],
+            "entropy": 5.643856,
+            "text_stats": {
+              "min_length": 31,
+              "max_length": 199,
+              "avg_length": 147.824,
+              "empty_string_count": 0,
+              "digit_only_count": 0,
+              "alpha_only_count": 0,
+              "alnum_only_count": 0,
+              "email_like_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "reported_by",
+          "data_type": "integer",
+          "kind": null,
+          "description": "The reported_by column represents the person who reported each incident. It is an integer value that is used to track incident information and identify trends and patterns in incident management. This column is crucial for understanding incident reporting and identifying areas for improvement in incident response.",
+          "is_primary_key": false,
+          "is_foreign_key": true,
+          "ref_table": "employees",
+          "ref_column": "employee_id",
+          "relationship_type": "foreign_key",
+          "profiling": {
+            "column": "reported_by",
+            "data_type": "integer",
+            "kind": "numeric",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 633,
+            "distinct_percent": 63.3,
+            "duplicate_count": 367,
+            "top_values": [
+              {
+                "value": 99,
+                "count": 5
+              },
+              {
+                "value": 696,
+                "count": 5
+              },
+              {
+                "value": 549,
+                "count": 5
+              }
+            ],
+            "sample_values": [
+              558,
+              405,
+              108,
+              290,
+              349,
+              19,
+              638,
+              250,
+              820,
+              920,
+              422,
+              527,
+              816,
+              403,
+              261,
+              779,
+              982,
+              779,
+              713,
+              483
+            ],
+            "entropy": 5.603856,
+            "numeric_stats": {
+              "min": 1,
+              "max": 999,
+              "avg": 509.425,
+              "sum": 509425.0,
+              "stddev": 285.485758620286,
+              "p25": 267.25,
+              "median": 523.5,
+              "p75": 753.0,
+              "iqr": 485.75,
+              "range": 998.0,
+              "zero_count": 0,
+              "negative_count": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table_name": "risk_register",
+      "description": "The risk_register table stores information about potential hazards and risks within an organization. It includes details such as risk ID, assessment date, hazard type, and risk rating. This table is crucial for risk management and is often used to identify and mitigate potential threats.",
+      "row_count": 1000,
+      "column_count": 5,
+      "columns": [
+        {
+          "column_name": "risk_id",
+          "data_type": "integer",
+          "kind": null,
+          "description": "The risk_id column represents a unique identifier for each risk. It is an integer value that is used to track and reference individual risks. This column is crucial for understanding risk occurrence and identifying trends and patterns in risk management.",
+          "is_primary_key": true,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "risk_id",
+            "data_type": "integer",
+            "kind": "numeric",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 1000,
+            "distinct_percent": 100.0,
+            "duplicate_count": 0,
+            "top_values": [
+              {
+                "value": 273,
+                "count": 1
+              },
+              {
+                "value": 51,
+                "count": 1
+              },
+              {
+                "value": 652,
+                "count": 1
+              }
+            ],
+            "sample_values": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20
+            ],
+            "entropy": 5.643856,
+            "numeric_stats": {
+              "min": 1,
+              "max": 1000,
+              "avg": 500.5,
+              "sum": 500500.0,
+              "stddev": 288.67499025721,
+              "p25": 250.75,
+              "median": 500.5,
+              "p75": 750.25,
+              "iqr": 499.5,
+              "range": 999.0,
+              "zero_count": 0,
+              "negative_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "assessment_date",
+          "data_type": "date",
+          "kind": null,
+          "description": "The assessment_date column represents the date on which each risk was assessed. It is a date value that is used to track risk information and identify trends and patterns in risk management. This column is crucial for understanding risk timing and identifying areas for improvement in risk response.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "assessment_date",
+            "data_type": "date",
+            "kind": "datetime",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 544,
+            "distinct_percent": 54.4,
+            "duplicate_count": 456,
+            "top_values": [
+              {
+                "value": "2025-07-06",
+                "count": 6
+              },
+              {
+                "value": "2025-01-12",
+                "count": 6
+              },
+              {
+                "value": "2024-02-12",
+                "count": 6
+              }
+            ],
+            "sample_values": [
+              "2025-09-11",
+              "2025-10-01",
+              "2024-06-30",
+              "2024-09-30",
+              "2024-11-05",
+              "2024-09-12",
+              "2025-04-13",
+              "2025-08-31",
+              "2025-01-04",
+              "2025-07-22",
+              "2025-01-12",
+              "2024-02-29",
+              "2025-08-20",
+              "2024-12-03",
+              "2026-01-14",
+              "2025-07-23",
+              "2025-01-15",
+              "2025-02-19",
+              "2025-02-13",
+              "2025-11-16"
+            ],
+            "entropy": 5.603856,
+            "date_stats": {
+              "min_date": "2024-02-02",
+              "max_date": "2026-02-01",
+              "range_days": 730,
+              "weekday_distribution": {
+                "Tuesday": 155,
+                "Thursday": 146,
+                "Saturday": 145,
+                "Wednesday": 143,
+                "Sunday": 139,
+                "Monday": 139,
+                "Friday": 133
+              },
+              "most_common_weekday": "Tuesday",
+              "month_distribution": {
+                "1": 98,
+                "7": 90,
+                "12": 89,
+                "6": 87,
+                "5": 85,
+                "3": 84,
+                "2": 83,
+                "4": 79,
+                "10": 78,
+                "9": 77,
+                "8": 76,
+                "11": 74
+              },
+              "most_common_month": 1,
+              "weekend_count": 284
+            }
+          }
+        },
+        {
+          "column_name": "hazard_type",
+          "data_type": "character varying",
+          "kind": null,
+          "description": "The hazard_type column represents the type of hazard associated with each risk. It is a character varying value that is used to track risk information and identify trends and patterns in risk management. This column is crucial for understanding risk types and identifying areas for improvement in risk response.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "hazard_type",
+            "data_type": "character varying",
+            "kind": "text",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 3,
+            "distinct_percent": 0.3,
+            "duplicate_count": 997,
+            "top_values": [
+              {
+                "value": "Chemical",
+                "count": 364
+              },
+              {
+                "value": "Electrical",
+                "count": 319
+              },
+              {
+                "value": "Mechanical",
+                "count": 317
+              }
+            ],
+            "sample_values": [
+              "Chemical",
+              "Mechanical",
+              "Chemical",
+              "Mechanical",
+              "Chemical",
+              "Electrical",
+              "Chemical",
+              "Chemical",
+              "Electrical",
+              "Electrical",
+              "Electrical",
+              "Chemical",
+              "Electrical",
+              "Electrical",
+              "Chemical",
+              "Mechanical",
+              "Mechanical",
+              "Chemical",
+              "Mechanical",
+              "Chemical"
+            ],
+            "entropy": 1.577577,
+            "text_stats": {
+              "min_length": 8,
+              "max_length": 10,
+              "avg_length": 9.272,
+              "empty_string_count": 0,
+              "digit_only_count": 0,
+              "alpha_only_count": 1000,
+              "alnum_only_count": 1000,
+              "email_like_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "hazard_description",
+          "data_type": "text",
+          "kind": null,
+          "description": "The hazard_description column represents a brief description of each hazard. It is a text value that is used to track risk information and identify trends and patterns in risk management. This column is crucial for understanding risk context and identifying areas for improvement in risk response.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "hazard_description",
+            "data_type": "text",
+            "kind": "text",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 1000,
+            "distinct_percent": 100.0,
+            "duplicate_count": 0,
+            "top_values": [
+              {
+                "value": "Conference smile purpose large goal yes.\nGo challenge pretty. Buy discover body.",
+                "count": 1
+              },
+              {
+                "value": "Public west why medical admit. Walk if forward debate. Standard happen late truth.",
+                "count": 1
+              },
+              {
+                "value": "Lead until hour half remain why. Customer thank affect major degree.\nCreate product party several piece.",
+                "count": 1
+              }
+            ],
+            "sample_values": [
+              "Machine list message hour bit. Performance its appear.",
+              "Shake quickly their key though PM forward actually. Key others happen main pull. Industry TV focus meeting standard key.",
+              "Even customer price among can. Car apply street like member. Local learn discussion out writer Congress.",
+              "Person respond relationship sometimes. Owner style age staff describe watch institution. Somebody happen strategy feeling then suffer bit.",
+              "Authority keep type yes kid. Assume protect relationship two. Result send open market it.",
+              "Station relationship economic whom certain will. Involve he enough thus arrive artist civil. Enough piece economic must.",
+              "Magazine health attorney yeah without take. Subject customer small poor should. Apply better arm goal. Performance fish call compare avoid represent.",
+              "Right pull official. Campaign seek someone edge. Strong major instead there something grow. Relationship Democrat deep.",
+              "Gun impact fill surface well. While occur peace shake poor continue.\nAllow just investment dog. Forward everybody safe improve.",
+              "Today or next. Center finally education case statement.",
+              "Seat quite tend stand international discuss conference. Memory mouth group figure.",
+              "Easy education various assume follow. To article those campaign too. Reflect property medical maybe sit former create success. Research cold can.",
+              "Everyone laugh whose later partner use visit. Claim indeed record. Owner night tree watch bit.",
+              "Clear ahead first option common much. Fish him why change large.\nBlack important tend. Positive gas partner bag nice. Statement price free score.",
+              "Finish candidate road for consider never interview. Easy deal easy other lose rest. Possible score administration economy whom system own.",
+              "Food even make traditional too including. Wife by yeah short. Describe forward admit.",
+              "Stage office quite. Raise exist south industry class.\nWhich back official. Rate lawyer once third. Stuff weight statement whole check half step.",
+              "Go father player air line place. Citizen out avoid analysis. Enter seat finally only.",
+              "Respond operation air. Read choose student town while local. The toward say value pick arrive.",
+              "Rock whole force charge rest notice. Until guess check wait worker left."
+            ],
+            "entropy": 5.643856,
+            "text_stats": {
+              "min_length": 20,
+              "max_length": 149,
+              "avg_length": 104.988,
+              "empty_string_count": 0,
+              "digit_only_count": 0,
+              "alpha_only_count": 0,
+              "alnum_only_count": 0,
+              "email_like_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "risk_rating",
+          "data_type": "integer",
+          "kind": null,
+          "description": "The risk_rating column represents the level of risk associated with each risk. It is an integer value that is used to track risk information and identify trends and patterns in risk management. This column is crucial for understanding risk impact and identifying areas for improvement in risk response.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "risk_rating",
+            "data_type": "integer",
+            "kind": "numeric",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 10,
+            "distinct_percent": 1.0,
+            "duplicate_count": 990,
+            "top_values": [
+              {
+                "value": 3,
+                "count": 111
+              },
+              {
+                "value": 6,
+                "count": 107
+              },
+              {
+                "value": 9,
+                "count": 107
+              }
+            ],
+            "sample_values": [
+              1,
+              1,
+              7,
+              4,
+              5,
+              6,
+              10,
+              2,
+              3,
+              5,
+              2,
+              7,
+              3,
+              6,
+              8,
+              3,
+              5,
+              5,
+              2,
+              3
+            ],
+            "entropy": 3.163969,
+            "numeric_stats": {
+              "min": 1,
+              "max": 10,
+              "avg": 5.53,
+              "sum": 5530.0,
+              "stddev": 2.8620097833515525,
+              "p25": 3.0,
+              "median": 6.0,
+              "p75": 8.0,
+              "iqr": 5.0,
+              "range": 9.0,
+              "zero_count": 0,
+              "negative_count": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table_name": "trainings",
+      "description": "The trainings table represents a record of employee training and development. It stores information about the training title, completion date, and status. This table is typically used in analytics and business workflows to track employee training and development, and identify areas for improvement in training programs.",
+      "row_count": 1000,
+      "column_count": 5,
+      "columns": [
+        {
+          "column_name": "training_id",
+          "data_type": "integer",
+          "kind": null,
+          "description": "The training_id column represents a unique identifier for each training session. It is an integer value that is used to track and reference individual training sessions. This column is crucial for understanding employee training and development, and identifying trends and patterns in training programs.",
+          "is_primary_key": true,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "training_id",
+            "data_type": "integer",
+            "kind": "numeric",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 1000,
+            "distinct_percent": 100.0,
+            "duplicate_count": 0,
+            "top_values": [
+              {
+                "value": 273,
+                "count": 1
+              },
+              {
+                "value": 51,
+                "count": 1
+              },
+              {
+                "value": 652,
+                "count": 1
+              }
+            ],
+            "sample_values": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20
+            ],
+            "entropy": 5.643856,
+            "numeric_stats": {
+              "min": 1,
+              "max": 1000,
+              "avg": 500.5,
+              "sum": 500500.0,
+              "stddev": 288.67499025721,
+              "p25": 250.75,
+              "median": 500.5,
+              "p75": 750.25,
+              "iqr": 499.5,
+              "range": 999.0,
+              "zero_count": 0,
+              "negative_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "employee_id",
+          "data_type": "integer",
+          "kind": null,
+          "description": "The employee_id column represents the ID of the employee who participated in each training session. It is an integer value that is used to track employee training and development, and identify trends and patterns in training programs. This column is crucial for understanding employee training and development, and identifying areas for improvement in training programs.",
+          "is_primary_key": true,
+          "is_foreign_key": true,
+          "ref_table": "employees",
+          "ref_column": "employee_id",
+          "relationship_type": "foreign_key",
+          "profiling": {
+            "column": "employee_id",
+            "data_type": "integer",
+            "kind": "numeric",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 630,
+            "distinct_percent": 63.0,
+            "duplicate_count": 370,
+            "top_values": [
+              {
+                "value": 321,
+                "count": 5
+              },
+              {
+                "value": 841,
+                "count": 5
+              },
+              {
+                "value": 87,
+                "count": 4
+              }
+            ],
+            "sample_values": [
+              355,
+              198,
+              603,
+              768,
+              101,
+              75,
+              374,
+              463,
+              682,
+              209,
+              885,
+              880,
+              58,
+              420,
+              929,
+              427,
+              371,
+              959,
+              61,
+              133
+            ],
+            "entropy": 5.643856,
+            "numeric_stats": {
+              "min": 6,
+              "max": 1000,
+              "avg": 505.541,
+              "sum": 505541.0,
+              "stddev": 282.751340083473,
+              "p25": 261.75,
+              "median": 518.0,
+              "p75": 740.75,
+              "iqr": 479.0,
+              "range": 994.0,
+              "zero_count": 0,
+              "negative_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "training_title",
+          "data_type": "character varying",
+          "kind": null,
+          "description": "The training_title column represents the title of each training session. It is a character varying value that is used to track employee training and development, and identify trends and patterns in training programs. This column is crucial for understanding employee training and development, and identifying areas for improvement in training programs.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "training_title",
+            "data_type": "character varying",
+            "kind": "text",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 3,
+            "distinct_percent": 0.3,
+            "duplicate_count": 997,
+            "top_values": [
+              {
+                "value": "Hazard Awareness",
+                "count": 348
+              },
+              {
+                "value": "First Aid",
+                "count": 344
+              },
+              {
+                "value": "Fire Safety",
+                "count": 308
+              }
+            ],
+            "sample_values": [
+              "Fire Safety",
+              "Fire Safety",
+              "Fire Safety",
+              "First Aid",
+              "First Aid",
+              "Fire Safety",
+              "Fire Safety",
+              "Hazard Awareness",
+              "First Aid",
+              "Hazard Awareness",
+              "Fire Safety",
+              "Fire Safety",
+              "Hazard Awareness",
+              "First Aid",
+              "Fire Safety",
+              "Hazard Awareness",
+              "Fire Safety",
+              "First Aid",
+              "Hazard Awareness",
+              "First Aid"
+            ],
+            "entropy": 1.580879,
+            "text_stats": {
+              "min_length": 9,
+              "max_length": 16,
+              "avg_length": 12.052,
+              "empty_string_count": 0,
+              "digit_only_count": 0,
+              "alpha_only_count": 0,
+              "alnum_only_count": 0,
+              "email_like_count": 0
+            }
+          }
+        },
+        {
+          "column_name": "completion_date",
+          "data_type": "date",
+          "kind": null,
+          "description": "The completion_date column represents the date on which each training session was completed. It is a date value that is used to track employee training and development, and identify trends and patterns in training programs. This column is crucial for understanding employee training and development, and identifying areas for improvement in training programs.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "completion_date",
+            "data_type": "date",
+            "kind": "datetime",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 345,
+            "distinct_percent": 34.5,
+            "duplicate_count": 655,
+            "top_values": [
+              {
+                "value": "2025-06-21",
+                "count": 8
+              },
+              {
+                "value": "2025-10-24",
+                "count": 8
+              },
+              {
+                "value": "2025-10-03",
+                "count": 8
+              }
+            ],
+            "sample_values": [
+              "2025-09-22",
+              "2025-12-12",
+              "2025-08-13",
+              "2025-12-07",
+              "2025-05-11",
+              "2026-01-24",
+              "2025-08-21",
+              "2025-03-07",
+              "2025-05-26",
+              "2025-03-22",
+              "2025-05-29",
+              "2025-08-25",
+              "2025-06-28",
+              "2025-03-03",
+              "2025-11-14",
+              "2025-10-03",
+              "2026-01-29",
+              "2026-01-25",
+              "2025-10-16",
+              "2025-04-24"
+            ],
+            "entropy": 5.523856,
+            "date_stats": {
+              "min_date": "2025-02-01",
+              "max_date": "2026-02-01",
+              "range_days": 365,
+              "weekday_distribution": {
+                "Saturday": 154,
+                "Friday": 150,
+                "Monday": 148,
+                "Sunday": 144,
+                "Wednesday": 143,
+                "Thursday": 131,
+                "Tuesday": 130
+              },
+              "most_common_weekday": "Saturday",
+              "month_distribution": {
+                "10": 100,
+                "5": 99,
+                "4": 92,
+                "3": 89,
+                "9": 85,
+                "6": 83,
+                "1": 80,
+                "12": 77,
+                "8": 76,
+                "11": 76,
+                "7": 74,
+                "2": 69
+              },
+              "most_common_month": 10,
+              "weekend_count": 298
+            }
+          }
+        },
+        {
+          "column_name": "status",
+          "data_type": "character varying",
+          "kind": null,
+          "description": "The status column represents the current status of each training session. It is a character varying value that is used to track employee training and development, and identify trends and patterns in training programs. This column is crucial for understanding employee training and development, and identifying areas for improvement in training programs.",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "ref_table": null,
+          "ref_column": null,
+          "relationship_type": null,
+          "profiling": {
+            "column": "status",
+            "data_type": "character varying",
+            "kind": "text",
+            "row_count": 1000,
+            "not_null_count": 1000,
+            "null_count": 0,
+            "null_percent": 0.0,
+            "distinct_count": 2,
+            "distinct_percent": 0.2,
+            "duplicate_count": 998,
+            "top_values": [
+              {
+                "value": "Completed",
+                "count": 504
+              },
+              {
+                "value": "Pending",
+                "count": 496
+              }
+            ],
+            "sample_values": [
+              "Completed",
+              "Pending",
+              "Completed",
+              "Pending",
+              "Completed",
+              "Pending",
+              "Pending",
+              "Completed",
+              "Completed",
+              "Completed",
+              "Pending",
+              "Completed",
+              "Pending",
+              "Completed",
+              "Completed",
+              "Completed",
+              "Completed",
+              "Pending",
+              "Completed",
+              "Pending"
+            ],
+            "entropy": 0.998846,
+            "text_stats": {
+              "min_length": 7,
+              "max_length": 9,
+              "avg_length": 8.008,
+              "empty_string_count": 0,
+              "digit_only_count": 0,
+              "alpha_only_count": 1000,
+              "alnum_only_count": 1000,
+              "email_like_count": 0
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "relationships": {
+    "relationship_count": 3,
+    "items": [
+      {
+        "fk_table": "action_tracker",
+        "fk_column": "incident_id",
+        "pk_table": "incidents",
+        "pk_column": "incident_id",
+        "confidence": 1.0
+      },
+      {
+        "fk_table": "incidents",
+        "fk_column": "reported_by",
+        "pk_table": "employees",
+        "pk_column": "employee_id",
+        "confidence": 1.0
+      },
+      {
+        "fk_table": "trainings",
+        "fk_column": "employee_id",
+        "pk_table": "employees",
+        "pk_column": "employee_id",
+        "confidence": 1.0
+      }
+    ]
+  }
+}

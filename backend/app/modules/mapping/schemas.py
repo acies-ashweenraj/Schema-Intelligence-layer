@@ -22,3 +22,4 @@ class HybridMappingRequest(BaseModel):
 
     # ✅ ADD THIS
     output_format: str = "csv"  # csv | json | xlsx
+    min_confidence: float = 0.5

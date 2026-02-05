@@ -13,9 +13,14 @@ router = APIRouter(prefix="/metadata", tags=["Metadata"])
 def generate_metadata(payload: MetadataRequest):
     return run_metadata_generation(payload)
 
-
 @router.get("/download")
 def download_metadata(path: str):
     if not os.path.exists(path):
         raise HTTPException(status_code=404, detail="File not found")
-    return FileResponse(path, filename=os.path.basename(path))
+
+    return FileResponse(
+        path,
+        filename=os.path.basename(path),
+        media_type="application/octet-stream",
+    )
+

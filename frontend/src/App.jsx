@@ -4,8 +4,9 @@ import { auth } from "./firebase";
 
 import ConfigPage from "./pages/ConfigPage";
 import WorkspacePage from "./pages/WorkspacePage";
-import ChatPage from "./pages/chat";
 import LoginPage from "./pages/LoginPage";
+
+const METADATA_KEY = "metadata_state_v1";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -15,34 +16,54 @@ export default function App() {
   const [dbConfig, setDbConfig] = useState(null);
   const [metadata, setMetadata] = useState(null);
 
-  /* ---------------- AUTH LISTENER ---------------- */
+  /* ================= AUTH LISTENER ================= */
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
-      setUser(u);
+      if (!u) {
+        // 🔥 AUTH BOUNDARY RESET
+        resetWorkspace();
+        setUser(null);
+        setPage("config");
+      } else {
+        setUser(u);
+      }
+
       setLoadingAuth(false);
     });
 
     return () => unsub();
   }, []);
 
+  /* ================= WORKSPACE RESET ================= */
+  function resetWorkspace() {
+    sessionStorage.removeItem(METADATA_KEY);
+    setDbConfig(null);
+    setMetadata(null);
+  }
+
+  /* ================= PAGE TRANSITION WATCHER ================= */
+  useEffect(() => {
+    if (page === "config") {
+      // 🔥 CONFIG PAGE = NEW WORKSPACE
+      resetWorkspace();
+    }
+  }, [page]);
+
+  /* ================= CONNECT ================= */
   function handleConnected(cfg, meta) {
     setDbConfig(cfg);
     setMetadata(meta);
     setPage("workspace");
   }
 
-  function handleExit() {
-    setPage("config");
-    setDbConfig(null);
-    setMetadata(null);
-  }
-
+  /* ================= LOGOUT ================= */
   async function handleLogout() {
+    resetWorkspace();
     await signOut(auth);
     setPage("config");
   }
 
-  /* ---------------- WAIT FOR AUTH ---------------- */
+  /* ================= UI ================= */
   if (loadingAuth) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -51,29 +72,25 @@ export default function App() {
     );
   }
 
-  /* ---------------- NOT LOGGED IN ---------------- */
   if (!user) {
     return <LoginPage />;
   }
 
-  /* ---------------- APP ---------------- */
   return (
     <>
-      {page === "config" && <ConfigPage onConnected={handleConnected} />}
-
-      {page === "workspace" && (
-        <WorkspacePage
-          dbConfig={dbConfig}
-          metadata={metadata}
-          onExit={handleLogout}   // 🔐 logout
-          onGoChat={() => setPage("chat")}
+      {page === "config" && (
+        <ConfigPage
+          onConnected={handleConnected}
+          onExit={handleLogout}
         />
       )}
 
-      {page === "chat" && (
-        <ChatPage
+      {page === "workspace" && (
+        <WorkspacePage
+          key="workspace"
           dbConfig={dbConfig}
-          onExit={() => setPage("workspace")}
+          metadata={metadata}
+          onExit={handleLogout}
         />
       )}
     </>

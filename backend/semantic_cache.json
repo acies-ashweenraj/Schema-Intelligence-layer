@@ -19,7 +19,12 @@
     "tbl_emp_core_dtls": "Employee",
     "tbl_emp_prj_xref": "EmployeeProject",
     "tbl_pay_comp_hist": "PayComponent",
-    "tbl_prj_portfolio": "ProjectPortfolio"
+    "tbl_prj_portfolio": "ProjectPortfolio",
+    "action_tracker": "ActionTracker",
+    "employees": "Employee",
+    "incidents": "Incident",
+    "risk_register": "RiskRegister",
+    "trainings": "TrainingProgram"
   },
   "columns": {
     "week_datetime": "weeklydatetime",
@@ -119,7 +124,31 @@
     "prj_sys_gen_id": "projectSystemGenerator",
     "prj_lbl_nm": "projectlabelname",
     "dt_prj_start": "projectstartdate",
-    "dt_prj_end": "projectenddate"
+    "dt_prj_end": "projectenddate",
+    "action_id": "actionidentifier",
+    "incident_id": "incidentsummary",
+    "action_item": "actionitemdescription",
+    "owner": "ownername",
+    "due_date": "projectduedate",
+    "action_status": "actionstatus",
+    "employee_id": "employeename",
+    "full_name": "fullName",
+    "department": "departmentname",
+    "job_title": "jobtitle",
+    "email": "emailaddress",
+    "incident_date": "incidentdate",
+    "incident_category": "incidentcategoryname",
+    "site_location": "sitelocationname",
+    "severity": "risklevel",
+    "reported_by": "reportedbyuser",
+    "risk_id": "riskcategory",
+    "assessment_date": "assessmentdate",
+    "hazard_type": "hazardDescription",
+    "hazard_description": "hazardDescription",
+    "risk_rating": "riskassessmentscore",
+    "training_id": "trainingprogram",
+    "training_title": "trainingProgram",
+    "completion_date": "completionDate"
   },
   "relationships": {
     "audit_checks->site_master": "AUDITED_BY_SITE_MASTER",
@@ -138,6 +167,9 @@
     "tbl_emp_core_dtls->tbl_dept_master": "ASSIGNED_TO_THIS_RELATIONSHIP_NAME_IS_IN_ALL_CAPS_VERB_BASED_AND_CONVEYS_THE_BUSINESS_MEANING_OF_THE_CHILD_ENTITY_TBL_EMP_CORE_DTLS_BEING_ASSIGNED_TO_THE_PARENT_ENTITY_TBL_DEPT_MASTER_THE_DIRECTION_IS_FROM_CHILD_TO_PARENT",
     "tbl_emp_prj_xref->tbl_emp_core_dtls": "ASSIGNED_TO_THIS_RELATIONSHIP_NAME_IS_IN_ALL_CAPS_VERB_BASED_AND_CONVEYS_THE_BUSINESS_MEANING_OF_THE_RELATIONSHIP_BETWEEN_THE_CHILD_ENTITY_TBL_EMP_PRJ_XREF_AND_THE_PARENT_ENTITY_TBL_EMP_CORE_DTLS_INDICATING_THAT_AN",
     "tbl_emp_prj_xref->tbl_prj_portfolio": "ASSIGNED_TO_PORTFOLIO",
-    "tbl_pay_comp_hist->tbl_emp_core_dtls": "EMPLOYEE_HAD_PAY_COMP_HIST_THIS_RELATIONSHIP_NAME_IS_IN_ALL_CAPS_VERB_BASED_AND_DESCRIBES_THE_BUSINESS_MEANING_OF_THE_RELATIONSHIP_BETWEEN_THE_CHILD_ENTITY_TBL_PAY_COMP_HIST_AND_THE_PARENT_ENTITY_TBL_EMP_CORE_DTLS_THE_DIRECTION_OF_THE"
+    "tbl_pay_comp_hist->tbl_emp_core_dtls": "EMPLOYEE_HAD_PAY_COMP_HIST_THIS_RELATIONSHIP_NAME_IS_IN_ALL_CAPS_VERB_BASED_AND_DESCRIBES_THE_BUSINESS_MEANING_OF_THE_RELATIONSHIP_BETWEEN_THE_CHILD_ENTITY_TBL_PAY_COMP_HIST_AND_THE_PARENT_ENTITY_TBL_EMP_CORE_DTLS_THE_DIRECTION_OF_THE",
+    "action_tracker->incidents": "TRACKS_INCIDENT",
+    "incidents->employees": "ASSIGNED_TO",
+    "trainings->employees": "UNDERGOES_TRAINING_THIS_RELATIONSHIP_TYPE_IS_VERB_BASED_INDICATING_THE_DIRECTION_OF_THE_RELATIONSHIP_FROM_THE_CHILD_ENTITY_TRAININGS_TO_THE_PARENT_ENTITY_EMPLOYEES_AND_IT_CONVEYS_THE_BUSINESS_MEANING_OF_AN_EMPLOYEE_UNDERGOING_A_TRAINING"
   }
 }

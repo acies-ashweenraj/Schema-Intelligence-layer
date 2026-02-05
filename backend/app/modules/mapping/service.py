@@ -37,6 +37,7 @@ def run_hybrid_mapping_service(payload):
         qdrant_port=payload.qdrant_port,
         groq_cfg=GroqConfig(api_key=groq_key),
         top_k_dense=payload.top_k_dense,
+        min_confidence=payload.min_confidence
     )
 
     generated_at = datetime.utcnow().isoformat()
@@ -106,6 +107,8 @@ def run_hybrid_mapping_service(payload):
     # Preview rows for UI
     # --------------------------------------------------
     preview_rows = df.head(15).to_dict(orient="records")
+    # FULL rows for UI editing
+    all_rows = df.to_dict(orient="records")
 
     # --------------------------------------------------
     # Output format handling
@@ -136,16 +139,29 @@ def run_hybrid_mapping_service(payload):
     # --------------------------------------------------
     # FINAL API RESPONSE (Frontend-safe)
     # --------------------------------------------------
+    print("ALL ROWS COUNT:", len(all_rows))
+    print("DASHBOARD:", dashboard)
+
     return {
         "status": "success",
         "generated_at": generated_at,
         "saved_file": str(output_file),
 
-        # ✅ Dashboard (THIS FIXES EMPTY UI)
-        "dashboard": dashboard,
-
-        # preview
         "details": {
-            "preview_rows": preview_rows
+            "dashboard": {
+                "source_tables": len(source_tables),
+                "target_tables": len(target_tables),
+                "matched_tables": len(table_pairs),
+                "matched_columns": int(len(df)),
+                "avg_confidence_score": round(conf_sum / conf_count, 4)
+                if conf_count else None,
+            },
+
+            "preview_rows": preview_rows,
+
+            # 🔥 THIS IS WHAT YOUR UI NEEDS
+            "all_rows": all_rows,
         },
     }
+
+
